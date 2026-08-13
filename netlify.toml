@@ -9,5 +9,12 @@
 [build]
   command = "npm run build"
 
+[build.environment]
+  # Pinned so a fresh Netlify account can't pick a different default than the
+  # version this was already proven to build cleanly on. Next.js 16 requires
+  # 20.9+; this just removes the ambiguity rather than hoping Netlify's
+  # current default stays compatible.
+  NODE_VERSION = "22"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
