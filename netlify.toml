@@ -1,0 +1,13 @@
+# Every path on the live site (frxtechnologie.netlify.app) was 404ing —
+# root, static assets, everything returned the identical cached response.
+# That's the signature of Netlify never activating its Next.js Runtime: this
+# app has middleware (src/proxy.ts), an API route, and SSR admin pages, none
+# of which can be served as a plain static publish directory. Declaring the
+# plugin explicitly here is the documented, reliable fix — it doesn't depend
+# on dashboard auto-detection, and it computes and manages the publish
+# directory itself, overriding any incorrect manual value set in the UI.
+[build]
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
