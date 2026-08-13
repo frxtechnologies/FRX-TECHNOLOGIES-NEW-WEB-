@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# raw/unprocessed uploads used as source material for the generation scripts
+# in scripts/ — the derived outputs they produce already live in public/.
+/_incoming/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
