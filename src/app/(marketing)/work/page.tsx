@@ -3,7 +3,7 @@ import { getProjects } from "@/lib/content/server";
 import { PageIntro } from "@/components/sections/page-intro";
 import { WorkGallery } from "@/components/sections/work-gallery";
 import { WorkEmpty } from "@/components/sections/work-empty";
-import { Sparkle, WindowBuddy } from "@/components/art/characters";
+import { WindowBuddy } from "@/components/art/characters";
 import { PanelChart } from "@/components/art/scenes";
 
 export const metadata = pageMetadata({
@@ -30,7 +30,6 @@ export default async function WorkPage() {
           <>
             <WindowBuddy className="fxp-a fxp-a--win fxa-bob" />
             <PanelChart className="fxp-a fxp-a--panel2 fxa-bob" />
-            <Sparkle className="fxp-a fxp-a--spark" />
           </>
         }
       />

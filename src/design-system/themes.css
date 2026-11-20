@@ -1,0 +1,226 @@
+/*
+ * FRX PALETTES — four art-directed versions of the same brand, each in light and
+ * dark. Loaded after tokens.css. One mechanism: <html data-palette data-theme>
+ * selects a block of custom properties; nothing here changes layout, type or
+ * motion. The original FRX palette is the base in tokens.css (no block needed).
+ *
+ *   --fx-sub        secondary accent as a FILL (paler yellow / orange / gold / neon)
+ *   --fx-sub-text   the same accent adjusted to read as TEXT on this ground (≥4.5:1)
+ *   --fx-sub-ink    text colour to put ON a --fx-sub fill
+ *   --fx-sub-soft   translucent wash of the accent
+ *   --fx-hot / --fx-pink / --fx-warm  extra accents (only distinct in Neon Digital)
+ *
+ * FRX blue is the primary in every palette; it is never recoloured.
+ * Selectors include `.fx-root[data-pv=…]` so the admin can preview a palette
+ * inside a card without changing the page.
+ */
+
+/* ===== BLUE × ORANGE ======================================================= */
+:root[data-palette="orange"][data-theme="light"],
+:root[data-palette="orange"][data-theme="light"] .fx-root,
+.fx-root[data-pv="orange-light"] {
+  --fx-bg: #f7f3ee;
+  --fx-bg-2: #ece6de;
+  --fx-surface: #ffffff;
+  --fx-ink: #0d0d10;
+  --fx-ink-2: #4d4a47;
+  --fx-ink-3: #66615c;
+  --fx-line: rgb(13 13 16 / 0.14);
+  --fx-line-strong: rgb(13 13 16 / 0.32);
+  --fx-accent-tint: #ffe7d8;
+  --fx-panel-tint: #ffe7d8;
+  --fx-invert-bg: #0a0c12;
+  --fx-invert-ink: #f7f3ee;
+  --fx-sub: #ff6a13;
+  --fx-sub-text: #bf3f00;
+  --fx-sub-ink: #0d0d10;
+  --fx-sub-soft: rgb(255 106 19 / 0.16);
+  --fx-hot: #ff6a13;
+  --fx-pink: #ff6a13;
+  --fx-warm: #ff6a13;
+  --bg: #f7f3ee;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #ece6de;
+  --text: #0d0d10;
+  --text-muted: #4d4a47;
+  --text-faint: #66615c;
+  --border: rgb(13 13 16 / 0.14);
+  --border-strong: rgb(13 13 16 / 0.32);
+  --scrim: rgb(247 243 238 / 0.78);
+}
+:root[data-palette="orange"][data-theme="dark"],
+:root[data-palette="orange"][data-theme="dark"] .fx-root,
+.fx-root[data-pv="orange-dark"] {
+  --fx-bg: #0a0d14;
+  --fx-bg-2: #0f131c;
+  --fx-surface: #151a25;
+  --fx-ink: #f5f1ea;
+  --fx-ink-2: #adb0b8;
+  --fx-ink-3: #8b909b;
+  --fx-line: rgb(245 241 234 / 0.14);
+  --fx-line-strong: rgb(245 241 234 / 0.34);
+  --fx-accent-tint: #2a1608;
+  --fx-panel-tint: #ffe7d8;
+  --fx-invert-bg: #f5f1ea;
+  --fx-invert-ink: #0d0d10;
+  --fx-sub: #ff7a2e;
+  --fx-sub-text: #ff8f4d;
+  --fx-sub-ink: #0d0d10;
+  --fx-sub-soft: rgb(255 122 46 / 0.18);
+  --fx-hot: #ff7a2e;
+  --fx-pink: #ff7a2e;
+  --fx-warm: #ff7a2e;
+  --bg: #0a0d14;
+  --bg-elevated: #151a25;
+  --bg-sunken: #0f131c;
+  --text: #f5f1ea;
+  --text-muted: #adb0b8;
+  --text-faint: #8b909b;
+  --border: rgb(245 241 234 / 0.14);
+  --border-strong: rgb(245 241 234 / 0.34);
+  --scrim: rgb(10 13 20 / 0.78);
+}
+
+/* ===== BLUE × DEEP GOLDEN YELLOW =========================================== */
+:root[data-palette="gold"][data-theme="light"],
+:root[data-palette="gold"][data-theme="light"] .fx-root,
+.fx-root[data-pv="gold-light"] {
+  --fx-bg: #faf6ec;
+  --fx-bg-2: #efe8d6;
+  --fx-surface: #fffdf7;
+  --fx-ink: #0e0d0a;
+  --fx-ink-2: #55503f;
+  --fx-ink-3: #6b6551;
+  --fx-line: rgb(14 13 10 / 0.14);
+  --fx-line-strong: rgb(14 13 10 / 0.32);
+  --fx-accent-tint: #f5ebc4;
+  --fx-panel-tint: #f5ebc4;
+  --fx-invert-bg: #0e0d0a;
+  --fx-invert-ink: #faf6ec;
+  --fx-sub: #e0a100;
+  --fx-sub-text: #7d5700;
+  --fx-sub-ink: #0e0d0a;
+  --fx-sub-soft: rgb(224 161 0 / 0.2);
+  --fx-hot: #e0a100;
+  --fx-pink: #e0a100;
+  --fx-warm: #e0a100;
+  --bg: #faf6ec;
+  --bg-elevated: #fffdf7;
+  --bg-sunken: #efe8d6;
+  --text: #0e0d0a;
+  --text-muted: #55503f;
+  --text-faint: #6b6551;
+  --border: rgb(14 13 10 / 0.14);
+  --border-strong: rgb(14 13 10 / 0.32);
+  --scrim: rgb(250 246 236 / 0.78);
+}
+:root[data-palette="gold"][data-theme="dark"],
+:root[data-palette="gold"][data-theme="dark"] .fx-root,
+.fx-root[data-pv="gold-dark"] {
+  --fx-bg: #0d0c09;
+  --fx-bg-2: #14120d;
+  --fx-surface: #1b1912;
+  --fx-ink: #f6f0df;
+  --fx-ink-2: #b3ab94;
+  --fx-ink-3: #948c75;
+  --fx-line: rgb(246 240 223 / 0.14);
+  --fx-line-strong: rgb(246 240 223 / 0.34);
+  --fx-accent-tint: #2a2208;
+  --fx-panel-tint: #f5ebc4;
+  --fx-invert-bg: #f6f0df;
+  --fx-invert-ink: #0d0c09;
+  --fx-sub: #f2b705;
+  --fx-sub-text: #f4c430;
+  --fx-sub-ink: #0d0c09;
+  --fx-sub-soft: rgb(242 183 5 / 0.18);
+  --fx-hot: #f2b705;
+  --fx-pink: #f2b705;
+  --fx-warm: #f2b705;
+  --bg: #0d0c09;
+  --bg-elevated: #1b1912;
+  --bg-sunken: #14120d;
+  --text: #f6f0df;
+  --text-muted: #b3ab94;
+  --text-faint: #948c75;
+  --border: rgb(246 240 223 / 0.14);
+  --border-strong: rgb(246 240 223 / 0.34);
+  --scrim: rgb(13 12 9 / 0.78);
+}
+
+/* ===== NEON DIGITAL ========================================================= */
+:root[data-palette="neon"][data-theme="light"],
+:root[data-palette="neon"][data-theme="light"] .fx-root,
+.fx-root[data-pv="neon-light"] {
+  --fx-bg: #f1f4f2;
+  --fx-bg-2: #e3e9e5;
+  --fx-surface: #ffffff;
+  --fx-ink: #0b0f0d;
+  --fx-ink-2: #434c47;
+  --fx-ink-3: #5c6660;
+  --fx-line: rgb(11 15 13 / 0.14);
+  --fx-line-strong: rgb(11 15 13 / 0.32);
+  --fx-accent-tint: #d8f8e4;
+  --fx-panel-tint: #d8f8e4;
+  --fx-invert-bg: #0c0f0e;
+  --fx-invert-ink: #f1f4f2;
+  --fx-sub: #2eea7a;
+  --fx-sub-text: #007a3a;
+  --fx-sub-ink: #06130b;
+  --fx-sub-soft: rgb(46 234 122 / 0.2);
+  --fx-hot: #e5163a;
+  --fx-pink: #e83d9a;
+  --fx-warm: #e86a00;
+  --bg: #f1f4f2;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #e3e9e5;
+  --text: #0b0f0d;
+  --text-muted: #434c47;
+  --text-faint: #5c6660;
+  --border: rgb(11 15 13 / 0.14);
+  --border-strong: rgb(11 15 13 / 0.32);
+  --scrim: rgb(241 244 242 / 0.78);
+}
+:root[data-palette="neon"][data-theme="dark"],
+:root[data-palette="neon"][data-theme="dark"] .fx-root,
+.fx-root[data-pv="neon-dark"] {
+  --fx-bg: #0b0e0d;
+  --fx-bg-2: #111513;
+  --fx-surface: #171c1a;
+  --fx-ink: #eef3f0;
+  --fx-ink-2: #a5b0aa;
+  --fx-ink-3: #87928c;
+  --fx-line: rgb(238 243 240 / 0.14);
+  --fx-line-strong: rgb(238 243 240 / 0.34);
+  --fx-accent-tint: #0f2a1b;
+  --fx-panel-tint: #d8f8e4;
+  --fx-invert-bg: #eef3f0;
+  --fx-invert-ink: #0b0e0d;
+  --fx-sub: #39ff88;
+  --fx-sub-text: #39ff88;
+  --fx-sub-ink: #04110a;
+  --fx-sub-soft: rgb(57 255 136 / 0.16);
+  --fx-hot: #ff3b5c;
+  --fx-pink: #ff6ab8;
+  --fx-warm: #ff9a3c;
+  --bg: #0b0e0d;
+  --bg-elevated: #171c1a;
+  --bg-sunken: #111513;
+  --text: #eef3f0;
+  --text-muted: #a5b0aa;
+  --text-faint: #87928c;
+  --border: rgb(238 243 240 / 0.14);
+  --border-strong: rgb(238 243 240 / 0.34);
+  --scrim: rgb(11 14 13 / 0.78);
+}
+
+/* Preview cards (admin): carry their own ground and ink. */
+.fx-root[data-pv] {
+  background: var(--fx-bg);
+  color: var(--fx-ink);
+}
+
+/* The secondary accent is visible everywhere buttons sweep, text is selected and focus lands. */
+.fx-root ::selection {
+  background: var(--fx-sub);
+  color: var(--fx-sub-ink);
+}

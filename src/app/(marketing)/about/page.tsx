@@ -7,7 +7,7 @@ import { AboutPath } from "@/components/sections/about-path";
 import { ScrollWords } from "@/components/motion/scroll-words";
 import { FoundersSection } from "@/components/sections/founders-section";
 import { Technologies } from "@/components/sections/technologies";
-import { BlockStack, BotBuddy, CursorBuddy, Sparkle, WindowBuddy, Asterisk } from "@/components/art/characters";
+import { BlockStack, BotBuddy, CursorBuddy, WindowBuddy } from "@/components/art/characters";
 import { LaptopBuddy, PanelChart, PanelCode } from "@/components/art/scenes";
 import { JsonLd } from "@/components/shared/json-ld";
 import { SITE } from "@/lib/site";
@@ -64,7 +64,6 @@ export default async function AboutPage() {
             <BotBuddy className="fxp-a fxp-a--bot fxa-bob" />
             <PanelCode className="fxp-a fxp-a--panel1 fxa-bob" />
             <PanelChart className="fxp-a fxp-a--panel2 fxa-bob" />
-            <Sparkle className="fxp-a fxp-a--spark" />
           </>
         }
       />
@@ -120,7 +119,6 @@ export default async function AboutPage() {
             <h2 id="fxab-diff-h" className="fx-d1 fx-up" data-fx="reveal-lines">
               What makes FRX different
             </h2>
-            <Asterisk className="fxab-ast" />
           </header>
           <div className="fxab-diff-grid">
             {different.map((d, i) => (

@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 import { NAV_LINKS, SOCIAL } from "@/lib/site";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeSwitcher } from "./theme-switcher";
 import { InstagramIcon, LinkedInIcon } from "@/components/ui/icons";
 
 /**
@@ -172,7 +172,7 @@ export function MobileMenu({
         <div className="flex items-center justify-between px-[var(--gutter)] pt-5">
           <span className="t-eyebrow">Menu</span>
           <div className="flex items-center gap-3">
-            <ThemeToggle />
+            <ThemeSwitcher inline />
             <button
               type="button"
               onClick={onClose}

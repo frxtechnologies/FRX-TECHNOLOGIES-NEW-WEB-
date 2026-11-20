@@ -1,0 +1,183 @@
+.fxts {
+  position: relative;
+}
+.fxts-btn {
+  display: grid;
+  place-items: center;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg);
+  cursor: pointer;
+  transition:
+    transform 0.3s var(--ease-out),
+    border-color 0.2s;
+}
+.fxts-btn:hover {
+  transform: scale(1.08);
+  border-color: var(--border-strong);
+}
+.fxts-btn[aria-expanded="true"] {
+  border-color: var(--accent);
+}
+
+/* Two-dot swatch: ground with the primary and secondary accents overlapping on it. */
+.fxts-sw {
+  position: relative;
+  display: block;
+  inline-size: 1.7rem;
+  block-size: 1.7rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(128 128 128 / 0.35);
+  overflow: hidden;
+}
+.fxts-sw i {
+  position: absolute;
+  inline-size: 58%;
+  block-size: 58%;
+  border-radius: 50%;
+}
+.fxts-sw i:nth-child(1) {
+  inset: 8% auto auto 8%;
+}
+.fxts-sw i:nth-child(2) {
+  inset: auto 8% 8% auto;
+  mix-blend-mode: normal;
+}
+
+.fxts-panel {
+  position: absolute;
+  inset-block-start: calc(100% + 0.6rem);
+  inset-inline-end: 0;
+  z-index: 90;
+  inline-size: min(19rem, 92vw);
+  padding: 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  box-shadow: 0 30px 70px -28px rgb(0 0 0 / 0.55);
+  animation: fxts-in 0.28s var(--ease-out);
+}
+@keyframes fxts-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+.fxts-h {
+  margin: 0 0 0.6rem;
+  padding-inline: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+.fxts-list {
+  display: grid;
+  gap: 0.35rem;
+}
+.fxts-opt {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+.fxts-opt:hover {
+  background: var(--bg-sunken);
+}
+.fxts-opt[data-on="true"] {
+  border-color: var(--accent);
+  background: var(--bg-sunken);
+}
+.fxts-opt .fxts-sw {
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+}
+.fxts-txt {
+  display: grid;
+  line-height: 1.2;
+}
+.fxts-txt strong {
+  font-size: 0.92rem;
+}
+.fxts-txt small {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+.fxts-tick {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+}
+.fxts-opt[data-on="true"] .fxts-tick {
+  border-color: var(--accent);
+  background: radial-gradient(circle, var(--accent) 45%, transparent 50%);
+}
+.fxts-mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  margin-block-start: 0.7rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: var(--bg-sunken);
+}
+.fxts-mode button {
+  padding: 0.5rem 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
+}
+.fxts-mode button[aria-pressed="true"] {
+  background: var(--text);
+  color: var(--bg);
+}
+.fxts-inline {
+  display: grid;
+  gap: 0.2rem;
+}
+
+/* Phones: a bottom sheet, so it never collides with the nav or the viewport edge. */
+@media (max-width: 640px) {
+  .fxts-panel {
+    position: fixed;
+    inset-inline: 0.75rem;
+    inset-block: auto 0.75rem;
+    inline-size: auto;
+    animation-name: fxts-sheet;
+  }
+  @keyframes fxts-sheet {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxts-panel {
+    animation: none;
+  }
+}

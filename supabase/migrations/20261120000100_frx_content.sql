@@ -279,4 +279,9 @@ update public.founders
 
 update public.founders
    set role = 'Co-Founder & Director'
- where name = 'Raaef Usman' and role in ('Co-Founder', 'CEO', 'Co-founder');
+ where name = 'Raaef Usman' and role in ('Co-Founder', 'CEO', 'Co-founder', 'CTO', 'Co-Founder & CTO');
+
+-- ============================================================================
+-- 7. services — optional uploaded illustration per service (additive)
+-- ============================================================================
+alter table public.services add column if not exists art_path text;

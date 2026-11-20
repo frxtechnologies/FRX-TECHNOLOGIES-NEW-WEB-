@@ -50,13 +50,23 @@ export type AboutContent = {
   preview: string;
 };
 
+export type MediaContent = {
+  reelUrl: string;
+  reelHeading: string;
+  reelText: string;
+};
+
 export type Settings = {
   contact: Contact;
   social: Social;
   footer: FooterContent;
   hero: HeroContent;
   about: AboutContent;
+  theme: ThemeSettings;
+  media: MediaContent;
 };
+
+import type { ThemeSettings } from "@/lib/theme-config";
 
 type Base = { id: string; position: number; published: boolean };
 
@@ -101,6 +111,7 @@ export type ServiceRow = Base & {
   summary: string;
   capabilities: string[];
   use_cases: string[];
+  art_path: string | null;
 };
 
 export type ReviewRow = {

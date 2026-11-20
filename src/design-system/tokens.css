@@ -43,6 +43,15 @@
   --fx-accent-soft: rgb(4 92 236 / 0.1);
   --fx-invert-bg: #08090c;     /* sections that flip to black in light mode */
   --fx-invert-ink: #f4f2ed;
+  /* Restrained secondary accent: pale yellow. Never a primary — details only. */
+  --fx-sub: #ffe98f;
+  --fx-sub-text: #7a5f00;      /* the same hue, darkened to read as text (≥4.5:1) */
+  --fx-sub-ink: #0a0a0c;
+  --fx-sub-soft: rgb(255 233 143 / 0.5);
+  --fx-panel-tint: #dce7fc;     /* always-light tinted panel ground (service scenes, cards) */
+  --fx-hot: var(--fx-sub);     /* extra accents only diverge in Neon Digital */
+  --fx-pink: var(--fx-sub);
+  --fx-warm: var(--fx-sub);
 
   /* ===== 3. TYPE ========================================================= */
   --fx-font-display: var(--fx-face-display), "Arial Narrow", Arial, sans-serif;
@@ -199,6 +208,10 @@
   --fx-accent-soft: rgb(90 162 255 / 0.14);
   --fx-invert-bg: #f4f2ed;     /* "inverted" sections flip to paper in dark */
   --fx-invert-ink: #0a0a0c;
+  --fx-sub: #ffe98f;
+  --fx-sub-text: #ffe98f;
+  --fx-sub-ink: #0a0a0c;
+  --fx-sub-soft: rgb(255 233 143 / 0.16);
 
   --fx-rule: 2px solid var(--fx-ink);
   --fx-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);

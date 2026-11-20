@@ -1,12 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "@/design-system/tokens.css";
+import "@/design-system/themes.css";
 import "@/design-system/type.css";
 import "@/design-system/motion/fx.css";
 import { fxFontClasses } from "@/design-system/fonts";
 
 import { SITE, SOCIAL } from "@/lib/site";
-import { ThemeProvider, themeScript } from "@/components/providers/theme-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { getSettings } from "@/lib/content/server";
+import { buildThemeScript, parseThemeConfig, subAccentCss } from "@/lib/theme-config";
 import { IntroProvider } from "@/components/providers/intro-provider";
 import { JsonLd } from "@/components/shared/json-ld";
 
@@ -92,18 +95,21 @@ const websiteSchema = {
   url: SITE.url,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const theme = parseThemeConfig((await getSettings()).theme);
+  const subCss = subAccentCss(theme.subAccent);
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Applies the stored or system theme before first paint. Without this
             a dark-mode visitor sees a white flash on every cold load. */}
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: buildThemeScript(theme) }} />
+        {subCss ? <style dangerouslySetInnerHTML={{ __html: subCss }} /> : null}
         <JsonLd data={organizationSchema} />
         <JsonLd data={websiteSchema} />
       </head>
       <body className={fxFontClasses}>
-        <ThemeProvider>
+        <ThemeProvider config={theme}>
           <IntroProvider>{children}</IntroProvider>
         </ThemeProvider>
       </body>

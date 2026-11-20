@@ -1573,62 +1573,6 @@ section.fxt.fx-hz--live .fxt-track[data-fx-track] {
   }
 }
 
-/* ---- WHATSAPP FLOATING BUTTON ------------------------------------------------------------ */
-.fxwa {
-  position: fixed;
-  inset-inline-end: 1.25rem;
-  inset-block-end: 5.4rem;
-  z-index: calc(var(--z-assistant, 70) + 1);
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  block-size: 3.5rem;
-  border-radius: 999px;
-  background: var(--fx-blue);
-  color: #fff;
-  box-shadow: 0 14px 34px -12px rgb(4 92 236 / 0.7);
-  transition:
-    transform var(--fx-dur-base) var(--fx-ease-spring),
-    background-color var(--fx-dur-fast);
-}
-.fxwa-label {
-  max-inline-size: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  padding-inline-start: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition:
-    max-inline-size var(--fx-dur-base) var(--fx-ease-out),
-    padding var(--fx-dur-base) var(--fx-ease-out);
-}
-.fxwa-icon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  inline-size: 3.5rem;
-  block-size: 3.5rem;
-  transition: transform var(--fx-dur-base) var(--fx-ease-spring);
-}
-.fxwa:focus-visible,
-.fxwa:hover {
-  background: var(--fx-blue-deep);
-}
-.fxwa:hover .fxwa-label,
-.fxwa:focus-visible .fxwa-label {
-  max-inline-size: 11rem;
-  padding-inline-start: 1.2rem;
-}
-.fxwa:hover .fxwa-icon,
-.fxwa:focus-visible .fxwa-icon {
-  transform: rotate(-12deg) scale(1.08);
-}
-@media (hover: none) {
-  .fxwa:hover .fxwa-label {
-    max-inline-size: 0;
-    padding: 0;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .fxr-ring {
     animation: none;
@@ -1641,4 +1585,106 @@ section.fxt.fx-hz--live .fxt-track[data-fx-track] {
 }
 .fxo .frx-logo-dark {
   opacity: 1 !important;
+}
+
+/* ---- INSTAGRAM REEL ----------------------------------------------------------------------- */
+.fxreel {
+  position: relative;
+  background: var(--fx-bg);
+  padding-block: clamp(3rem, 7vw, 6rem);
+  overflow-x: clip;
+}
+.fxreel-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: center;
+}
+.fxreel-copy {
+  display: grid;
+  gap: 1.1rem;
+  justify-items: start;
+}
+.fxreel-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--fx-ink-2);
+}
+.fxreel-h {
+  font-size: clamp(3rem, 1rem + 8.4vw, 9rem);
+  line-height: 0.86;
+}
+.fxreel-lead {
+  max-inline-size: 30rem;
+  color: var(--fx-ink-2);
+}
+.fxreel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+/* Reserve the phone-shaped frame up front so the embed loading in never shifts the page. */
+.fxreel-stage {
+  position: relative;
+  justify-self: center;
+  inline-size: min(100%, 22rem);
+  min-block-size: 36rem;
+  padding: 0.7rem;
+  border-radius: 2.2rem;
+  background: var(--fx-ink);
+  box-shadow: var(--fx-shadow-lg);
+}
+.fxreel-frame {
+  inline-size: 100%;
+  min-block-size: 34.6rem;
+  border-radius: 1.6rem;
+  overflow: hidden;
+  background: #fff;
+}
+.fxreel-frame .instagram-media {
+  min-inline-size: 0 !important;
+}
+.fxreel-card {
+  position: absolute;
+  inset: 0.7rem;
+  z-index: 2;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 1.6rem;
+  background: var(--fx-accent-tint);
+  color: var(--fx-ink);
+  text-align: center;
+}
+.fxreel-stage[data-state="ready"] .fxreel-card {
+  display: none;
+}
+.fxreel-stage[data-state="idle"] .fxreel-frame,
+.fxreel-stage[data-state="loading"] .fxreel-frame,
+.fxreel-stage[data-state="failed"] .fxreel-frame {
+  visibility: hidden;
+}
+.fxreel-play {
+  inline-size: 4.2rem;
+  block-size: 4.2rem;
+  border-radius: 50%;
+  background: var(--fx-blue);
+  position: relative;
+  box-shadow: 4px 4px 0 var(--fx-sub);
+}
+.fxreel-play::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-35%, -50%);
+  border-inline-start: 1.3rem solid #fff;
+  border-block: 0.85rem solid transparent;
+}
+@media (max-width: 860px) {
+  .fxreel-wrap {
+    grid-template-columns: 1fr;
+  }
 }

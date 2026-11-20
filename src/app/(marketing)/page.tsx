@@ -3,10 +3,11 @@ import { FxHero } from "@/components/home/fx-hero";
 import { FxMarquee } from "@/components/home/fx-marquee";
 import { AboutPreview } from "@/components/sections/about-preview";
 import { SelectedWork } from "@/components/sections/selected-work";
-import { ServicesStage } from "@/components/sections/services-stage";
+import { ServicesPinned } from "@/components/sections/services-pinned";
 import { Technologies } from "@/components/sections/technologies";
 import { Testimonials, type TestimonialItem } from "@/components/sections/testimonials";
-import { FoundersSection } from "@/components/sections/founders-section";
+import { ReelSection } from "@/components/sections/reel-section";
+import { SOCIAL } from "@/lib/site";
 import { Faq } from "@/components/sections/faq";
 import { LeaveReview } from "@/components/sections/leave-review";
 import { ContactSection } from "@/components/sections/contact-section";
@@ -16,7 +17,6 @@ import {
   getAffiliations,
   getApprovedReviews,
   getFaqs,
-  getFounders,
   getProjects,
   getServices,
   getSettings,
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
  * approved testimonials or reviews exist.
  */
 export default async function HomePage() {
-  const [settings, projects, services, techs, affiliations, faqs, testimonials, reviews, founders] =
+  const [settings, projects, services, techs, affiliations, faqs, testimonials, reviews] =
     await Promise.all([
       getSettings(),
       getProjects(),
@@ -49,7 +49,6 @@ export default async function HomePage() {
       getFaqs(),
       getTestimonials(),
       getApprovedReviews(),
-      getFounders(),
     ]);
 
   const quotes: TestimonialItem[] = [
@@ -94,11 +93,16 @@ export default async function HomePage() {
       />
       <FxMarquee />
       <AboutPreview text={settings.about.preview} />
-      <SelectedWork projects={projects} />
-      <ServicesStage services={services} />
+      <ServicesPinned services={services} />
       <Technologies items={techs} affiliations={affiliations} />
       <Testimonials items={quotes} />
-      <FoundersSection founders={founders} />
+      <SelectedWork projects={projects} />
+      <ReelSection
+        url={settings.media.reelUrl}
+        heading={settings.media.reelHeading}
+        text={settings.media.reelText}
+        profileUrl={settings.social.instagram || SOCIAL.instagram}
+      />
       <Faq faqs={faqs} />
       <LeaveReview />
       <ContactSection contact={settings.contact} />

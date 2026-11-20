@@ -1,22 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import { gsap, useMotion } from "@/lib/gsap";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { useIntro } from "@/components/providers/intro-provider";
 import type { HeroContent } from "@/lib/content/types";
-import {
-  Asterisk,
-  BlockStack,
-  BotBuddy,
-  LoopArrow,
-  ScribbleRing,
-  Sparkle,
-  Squiggle,
-  WindowBuddy,
-  Zig,
-} from "@/components/art/characters";
+import { BlockStack, BotBuddy, LoopArrow, MarkerUnderline, Squiggle, WindowBuddy } from "@/components/art/characters";
 import { PanelChart, PanelCode, PanelToggles } from "@/components/art/scenes";
 import "./fx-hero.css";
 import "./fx-hero-extra.css";
@@ -36,15 +26,44 @@ function Slot({ src, fallback }: { src: string | null; fallback: React.ReactNode
 }
 
 /**
+ * Copy markup used by the admin-editable description: lines become paragraphs and
+ * **double-asterisk** phrases become highlighted marks that are revealed by motion.
+ */
+function Copy({ text }: { text: string }) {
+  return (
+    <>
+      {text
+        .split(/\r?\n/)
+        .map((l) => l.trim())
+        .filter(Boolean)
+        .map((line, i) => (
+          <p key={i} className={i === 0 ? "fxh-p fxh-p--lead" : "fxh-p"}>
+            {line.split("**").map((part, j) =>
+              j % 2 ? (
+                <mark key={j} className="fxh-mark">
+                  {part}
+                </mark>
+              ) : (
+                <Fragment key={j}>{part}</Fragment>
+              ),
+            )}
+          </p>
+        ))}
+    </>
+  );
+}
+
+/**
  * The homepage hero.
  *
  * BUILD. AUTOMATE. SCALE. set in Bricolage at the largest size the viewport can
- * hold (min of the type token, viewport height and viewport width), sharing the
- * rows with original characters, floating interface panels and hand-drawn
- * doodles. Artwork is replaceable: each character is an "asset slot" that an
- * uploaded image (admin → Homepage) overrides.
+ * hold, sharing rows with original characters, floating interface panels and
+ * hand-drawn marks. Layering is deliberate:
+ *   .fxh-zone  = the art zone (title + panels). Panels live INSIDE it, so they can
+ *                never reach the copy block below, which sits above it (z-index).
+ *   .fxh-foot  = copy + actions, always painted on top.
  *
- * Life, in layers (each on its own element so transforms never fight):
+ * Motion layers (each on its own element so transforms never fight):
  *   entry   .fxh-char          scale-in after the loader clears
  *   pointer .fxh-par           depth parallax toward the cursor
  *   idle    .fxh-float         slow bob; arm waves, cog turns, antenna pings
@@ -64,6 +83,7 @@ export function FxHero({ content, images }: HeroProps) {
         const q = (s: string) => el.querySelectorAll(s);
 
         gsap.set(q("[data-hide]"), { visibility: "visible" });
+        gsap.set(q(".fxh-mark"), { backgroundSize: "0% 55%" });
         const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
         tl.fromTo(q(".fxh-word"), { yPercent: 118 }, { yPercent: 0, duration: 1.25, stagger: 0.11 })
           .from(q(".fxh-eyebrow"), { opacity: 0, y: 14, duration: 0.8 }, 0.1)
@@ -73,18 +93,25 @@ export function FxHero({ content, images }: HeroProps) {
             { scale: 1, rotate: 0, duration: 1, ease: "back.out(1.7)", stagger: 0.12 },
             0.38,
           )
+          // the pale-yellow marker swipes in behind SCALE
+          .fromTo(q(".fxh-marker"), { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power3.inOut" }, 0.95)
           .fromTo(
             q("[data-draw]"),
             { drawSVG: "0%" },
             { drawSVG: "100%", duration: 0.95, ease: "power2.inOut", stagger: 0.12 },
             0.75,
           )
-          .from(q(".fxh-foot > *"), { opacity: 0, y: 22, duration: 0.9, stagger: 0.09 }, 0.7);
+          .from(q(".fxh-sub"), { opacity: 0, y: 22, duration: 0.9 }, 0.7)
+          .from(q(".fxh-p"), { opacity: 0, y: 18, duration: 0.8, stagger: 0.1 }, 0.85)
+          // highlighted phrases are "underlined" in one after another
+          .to(q(".fxh-mark"), { backgroundSize: "100% 55%", duration: 0.7, ease: "power2.inOut", stagger: 0.16 }, 1.3)
+          .from(q(".fxh-ctas > *"), { opacity: 0, y: 18, duration: 0.7, stagger: 0.08 }, 1.0);
       },
       reduced: () => {
         const el = root.current;
         if (!el) return;
         gsap.set(el.querySelectorAll("[data-hide]"), { visibility: "visible" });
+        gsap.set(el.querySelectorAll(".fxh-mark"), { backgroundSize: "100% 55%" });
       },
     },
     root,
@@ -165,8 +192,8 @@ export function FxHero({ content, images }: HeroProps) {
             const ny = (e.clientY / window.innerHeight - 0.5) * 2;
             pars.forEach((p, i) => {
               const depth = Number(p.dataset.depth ?? 1);
-              px[i](-nx * 16 * depth);
-              py[i](-ny * 10 * depth);
+              px[i](-nx * 14 * depth);
+              py[i](-ny * 8 * depth);
             });
           };
           window.addEventListener("pointermove", onMove, { passive: true });
@@ -203,13 +230,11 @@ export function FxHero({ content, images }: HeroProps) {
           .timeline({ scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.7 } })
           .to(
             ".fxh-row",
-            { x: (_i, t: HTMLElement) => Number(t.dataset.dir) * window.innerWidth * 0.16, ease: "none" },
+            { x: (_i, t: HTMLElement) => Number(t.dataset.dir) * window.innerWidth * 0.14, ease: "none" },
             0,
           )
-          .to(".fxh-panels", { yPercent: -18, ease: "none" }, 0)
-          .to(".fxh-stage", { yPercent: -10, ease: "none" }, 0)
-          .to(".fxh-foot", { opacity: 0, y: -40, ease: "none" }, 0)
-          .to(".fxh-scroll", { opacity: 0, ease: "none" }, 0);
+          .to(".fxh-panels", { yPercent: -16, ease: "none" }, 0)
+          .to(".fxh-foot", { opacity: 0, y: -30, ease: "none" }, 0.1);
       },
     },
     root,
@@ -223,104 +248,106 @@ export function FxHero({ content, images }: HeroProps) {
           FRX Technologies<span className="fxh-eyebrow-extra"> · software &amp; technology</span>
         </p>
 
-        <h1 id="fxh-title" className="fxh-title fx-mega fx-up">
-          <span className="sr-only">Build. Automate. Scale.</span>
+        <div className="fxh-zone">
+          <h1 id="fxh-title" className="fxh-title fx-mega fx-up">
+            <span className="sr-only">Build. Automate. Scale.</span>
 
-          {/* ROW 1 — BUILD. + the window */}
-          <span className="fxh-row" data-dir="-1" aria-hidden="true">
-            <span className="fxh-wordwrap">
-              <span className="fxh-mask">
-                <span className="fxh-word" data-hide>
-                  Build.
+            {/* ROW 1 — BUILD. + the window */}
+            <span className="fxh-row" data-dir="-1" aria-hidden="true">
+              <span className="fxh-wordwrap">
+                <span className="fxh-mask">
+                  <span className="fxh-word" data-hide>
+                    Build.
+                  </span>
                 </span>
+                <Squiggle className="fxh-doodle fxh-doodle--under" />
               </span>
-              <Squiggle className="fxh-doodle fxh-doodle--under" />
-            </span>
-            <span className="fxh-char fxh-char--window" data-hide>
-              <span className="fxh-par" data-depth="1.2">
-                <Slot src={images.window} fallback={<WindowBuddy className="fxh-art fxh-float" />} />
-              </span>
-            </span>
-            <Sparkle className="fxh-doodle fxh-doodle--spark1" />
-          </span>
-
-          {/* ROW 2 — AUTOMATE. + the loop arrow + the bot */}
-          <span className="fxh-row fxh-row--bot" data-dir="1" aria-hidden="true">
-            <span className="fxh-wordwrap">
-              <span className="fxh-mask">
-                <span className="fxh-word" data-hide>
-                  Automate.
+              <span className="fxh-char fxh-char--window" data-hide>
+                <span className="fxh-par" data-depth="1.2">
+                  <Slot src={images.window} fallback={<WindowBuddy className="fxh-art fxh-float" />} />
                 </span>
               </span>
             </span>
-            <LoopArrow className="fxh-doodle fxh-doodle--loop" />
-            <span className="fxh-char fxh-char--bot" data-hide>
-              <span className="fxh-par" data-depth="0.8">
-                <Slot src={images.bot} fallback={<BotBuddy className="fxh-art fxh-float" />} />
-              </span>
-            </span>
-            <Asterisk className="fxh-doodle fxh-doodle--ast" />
-          </span>
 
-          {/* ROW 3 — SCALE. + the blocks */}
-          <span className="fxh-row" data-dir="-1" aria-hidden="true">
-            <span className="fxh-wordwrap">
-              <span className="fxh-mask">
-                <span className="fxh-word" data-hide>
-                  Scale.
+            {/* ROW 2 — AUTOMATE. + the loop arrow + the bot */}
+            <span className="fxh-row fxh-row--bot" data-dir="1" aria-hidden="true">
+              <span className="fxh-wordwrap">
+                <span className="fxh-mask">
+                  <span className="fxh-word" data-hide>
+                    Automate.
+                  </span>
                 </span>
               </span>
-              <ScribbleRing className="fxh-doodle fxh-doodle--ring" />
-            </span>
-            <span className="fxh-char fxh-char--blocks" data-hide>
-              <span className="fxh-par" data-depth="1.5">
-                <Slot src={images.blocks} fallback={<BlockStack className="fxh-art fxh-float" />} />
+              <LoopArrow className="fxh-doodle fxh-doodle--loop" />
+              <span className="fxh-char fxh-char--bot" data-hide>
+                <span className="fxh-par" data-depth="0.8">
+                  <Slot src={images.bot} fallback={<BotBuddy className="fxh-art fxh-float" />} />
+                </span>
               </span>
             </span>
-            <Zig className="fxh-doodle fxh-doodle--zig" />
-            <Sparkle className="fxh-doodle fxh-doodle--spark2" />
-          </span>
-        </h1>
 
-        {/* Floating interface panels (desktop only — they need the empty right side). */}
-        <div className="fxh-panels" aria-hidden="true">
-          <span className="fxh-char fxh-panel fxh-panel--code" data-hide>
-            <span className="fxh-par" data-depth="2">
-              <PanelCode className="fxh-art fxh-float" />
+            {/* ROW 3 — SCALE. with a marker swipe + hand-drawn underline, and the blocks */}
+            <span className="fxh-row" data-dir="-1" aria-hidden="true">
+              <span className="fxh-wordwrap">
+                <span className="fxh-marker" />
+                <span className="fxh-mask">
+                  <span className="fxh-word" data-hide>
+                    Scale.
+                  </span>
+                </span>
+                <MarkerUnderline className="fxh-doodle fxh-doodle--mark" />
+              </span>
+              <span className="fxh-char fxh-char--blocks" data-hide>
+                <span className="fxh-par" data-depth="1.5">
+                  <Slot src={images.blocks} fallback={<BlockStack className="fxh-art fxh-float" />} />
+                </span>
+              </span>
             </span>
-          </span>
-          <span className="fxh-char fxh-panel fxh-panel--chart" data-hide>
-            <span className="fxh-par" data-depth="1.6">
-              <PanelChart className="fxh-art fxh-float" />
+          </h1>
+
+          {/* Floating interface panels (desktop only) — inside the art zone, so they cannot reach the copy. */}
+          <div className="fxh-panels" aria-hidden="true">
+            <span className="fxh-char fxh-panel fxh-panel--code" data-hide>
+              <span className="fxh-par" data-depth="2">
+                <PanelCode className="fxh-art fxh-float" />
+              </span>
             </span>
-          </span>
-          <span className="fxh-char fxh-panel fxh-panel--toggles" data-hide>
-            <span className="fxh-par" data-depth="1">
-              <PanelToggles className="fxh-art fxh-float" />
+            <span className="fxh-char fxh-panel fxh-panel--chart" data-hide>
+              <span className="fxh-par" data-depth="1.6">
+                <PanelChart className="fxh-art fxh-float" />
+              </span>
             </span>
-          </span>
+            <span className="fxh-char fxh-panel fxh-panel--toggles" data-hide>
+              <span className="fxh-par" data-depth="1">
+                <PanelToggles className="fxh-art fxh-float" />
+              </span>
+            </span>
+          </div>
         </div>
 
         <div className="fxh-foot">
           <div className="fxh-copy">
+            {/* Phone-only twin of the bot: it lives beside the headline where a phone has free space. */}
+            <span className="fxh-char fxh-char--bot-m" aria-hidden="true" data-hide>
+              <span className="fxh-par" data-depth="0.6">
+                <Slot src={images.bot} fallback={<BotBuddy className="fxh-art fxh-float" />} />
+              </span>
+            </span>
             <h2 className="fxh-sub fx-h2 fx-up">{content.supportingHeadline}</h2>
-            <p className="fxh-lead fx-lead">{content.description}</p>
+            <div className="fxh-body">
+              <Copy text={content.description} />
+            </div>
+            <div className="fxh-ctas">
+              <Link href="/contact" className="fx-btn fx-hover-shift">
+                Start a project <span className="fx-shift" aria-hidden="true">→</span>
+              </Link>
+              <Link href="/services" className="fx-btn fx-btn--outline fx-hover-shift">
+                What we do <span className="fx-shift" aria-hidden="true">→</span>
+              </Link>
+            </div>
           </div>
 
-          <div className="fxh-ctas">
-            <Link href="/contact" className="fx-btn fx-hover-shift">
-              Start a project <span className="fx-shift" aria-hidden="true">→</span>
-            </Link>
-            <Link href="/services" className="fx-btn fx-btn--outline fx-hover-shift">
-              What we do <span className="fx-shift" aria-hidden="true">→</span>
-            </Link>
-          </div>
         </div>
-
-        <a href="#after-hero" className="fxh-scroll fx-label" aria-label="Scroll to content">
-          <span>Scroll</span>
-          <i aria-hidden="true" />
-        </a>
       </div>
     </section>
   );

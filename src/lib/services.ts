@@ -33,6 +33,8 @@ export type Service = {
   /** Drives the abstract background scene on the detail page. */
   scene: "web" | "automation" | "software" | "interface" | "mobile" | "business" | "assistant" | "data";
   art: ServiceArt;
+  /** Optional uploaded illustration (admin → Services) that replaces the built-in art. */
+  artUrl?: string | null;
   /** Concrete situations where this service is the answer. */
   useCases: string[];
   problems: string[];

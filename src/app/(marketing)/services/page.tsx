@@ -7,7 +7,7 @@ import { ServiceArtView } from "@/components/art/registry";
 import { ServicesArtLife } from "@/components/sections/services-art-life";
 import { JsonLd } from "@/components/shared/json-ld";
 import { SITE } from "@/lib/site";
-import { Sparkle, Squiggle } from "@/components/art/characters";
+import { Squiggle } from "@/components/art/characters";
 
 export const metadata = pageMetadata({
   title: "Services",
@@ -40,7 +40,6 @@ export default async function ServicesPage() {
         lead="Custom software, intelligent automation and digital products — nine ways we help businesses move forward."
         art={
           <>
-            <Sparkle className="fxp-a fxp-a--spark" />
             <Squiggle className="fxp-a fxp-a--squig" />
           </>
         }

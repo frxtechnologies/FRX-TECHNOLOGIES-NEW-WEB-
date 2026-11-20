@@ -10,7 +10,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { PageIntro } from "@/components/sections/page-intro";
 import { ServiceArtView } from "@/components/art/registry";
 import { ServicesArtLife } from "@/components/sections/services-art-life";
-import { Asterisk, Sparkle, Squiggle } from "@/components/art/characters";
+import { Squiggle } from "@/components/art/characters";
 
 export function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.slug }));
@@ -75,7 +75,6 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
         art={
           <div className="fxsd-hero-art">
             <ServiceArtView art={service.art} className="fxsd-svg fxa-bob" />
-            <Sparkle className="fxp-a fxp-a--spark" />
             <Squiggle className="fxp-a fxp-a--squig" />
           </div>
         }
@@ -144,7 +143,6 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
             <h2 id="fxsd-caps" className="fx-d2 fx-up" data-fx="reveal-lines">
               What&apos;s included
             </h2>
-            <Asterisk className="fxsd-ast" />
           </div>
           <div>
             <ul className="fxsd-caps">

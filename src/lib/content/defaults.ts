@@ -1,4 +1,5 @@
 import { SOCIAL } from "@/lib/site";
+import { DEFAULT_THEME_SETTINGS } from "@/lib/theme-config";
 import type {
   AboutContent,
   FaqRow,
@@ -14,6 +15,12 @@ import type {
  */
 
 export const DEFAULT_SETTINGS: Settings = {
+  theme: DEFAULT_THEME_SETTINGS,
+  media: {
+    reelUrl: "https://www.instagram.com/reel/DfwXDBzOfos/",
+    reelHeading: "See us in motion.",
+    reelText: "A short reel from the FRX Technologies Instagram.",
+  },
   contact: {
     email: "frx.technologies@gmail.com",
     phone: "+44 7835 448310",
@@ -34,9 +41,9 @@ export const DEFAULT_SETTINGS: Settings = {
     copyright: "FRX Technologies. All rights reserved.",
   },
   hero: {
-    supportingHeadline: "We make technology work harder.",
+    supportingHeadline: "We engineer the systems businesses run on.",
     description:
-      "FRX Technologies builds custom software, intelligent automation and digital experiences that help businesses move forward.",
+      "FRX Technologies is a software and technology company founded in 2026 by Feroze Mohiuddin and Raaef Usman.\nWe build **custom software**, **intelligent AI automation**, **web experiences** and **digital products** that make businesses **easier to operate** and **ready to scale**.",
     imageWindow: "",
     imageBot: "",
     imageBlocks: "",

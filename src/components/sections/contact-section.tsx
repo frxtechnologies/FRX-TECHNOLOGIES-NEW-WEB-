@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { submitInquiry } from "@/app/actions/public";
 import { PROJECT_TYPES } from "@/lib/validation";
 import type { Contact } from "@/lib/content/types";
-import { Asterisk, LoopArrow, Squiggle } from "@/components/art/characters";
+import { LoopArrow, Squiggle } from "@/components/art/characters";
 
 const waLink = (n: string) => `https://wa.me/${n.replace(/\D/g, "")}`;
 const telLink = (p: string) => `tel:${p.replace(/[^\d+]/g, "")}`;
@@ -103,7 +103,6 @@ export function ContactSection({ contact, asPage = false }: { contact: Contact; 
               </a>
             </li>
           </ul>
-          <Asterisk className="fxc-ast" />
           <LoopArrow className="fxc-loop" />
         </div>
 

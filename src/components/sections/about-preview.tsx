@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ScrollWords } from "@/components/motion/scroll-words";
-import { Asterisk, Squiggle } from "@/components/art/characters";
+import { Squiggle } from "@/components/art/characters";
 
 /**
  * "A bit about us" — a large editorial paragraph that turns from neutral to FRX
@@ -21,7 +21,6 @@ export function AboutPreview({ text }: { text: string }) {
             A bit about us
           </h2>
           <Squiggle className="fxa-squig" />
-          <Asterisk className="fxa-ast" />
         </div>
 
         <ScrollWords as="p" className="fxa-text fx-h1" text={text} />

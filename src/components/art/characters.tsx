@@ -380,3 +380,18 @@ export function CursorBuddy({ className, style }: ArtProps) {
     </svg>
   );
 }
+
+/** A hand-drawn marker underline: one loose stroke, drawn on by `data-draw`. */
+export function MarkerUnderline({ className, style }: ArtProps) {
+  return (
+    <svg viewBox="0 0 400 30" className={className} style={style} aria-hidden="true" preserveAspectRatio="none">
+      <path
+        data-draw
+        d="M6 20C58 6 120 26 190 13s140-9 204 6"
+        {...doodle}
+        strokeWidth="9"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  );
+}

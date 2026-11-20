@@ -430,3 +430,24 @@
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
+
+/* theme management */
+.rm-lbl { font-size: 0.88rem; font-weight: 600; }
+.rm-seg { display: inline-grid; grid-auto-flow: column; gap: 0.25rem; padding: 0.25rem; border-radius: 999px; background: var(--bg-sunken); justify-self: start; }
+.rm-seg button { padding: 0.45rem 1.1rem; border: 0; border-radius: 999px; background: transparent; color: var(--text-muted); font: inherit; font-weight: 600; cursor: pointer; }
+.rm-seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.rm-pal { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 0.9rem; }
+.rm-palcard { display: grid; gap: 0.45rem; padding: 0.8rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-elevated); }
+.rm-palcard[data-default="true"] { border-color: var(--frx-blue); box-shadow: 0 0 0 3px rgb(4 92 236 / 0.18); }
+.rm-palcard small { color: var(--text-muted); }
+.rm-pv-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+.rm-pv { display: grid; gap: 0.5rem; padding: 0.7rem; border-radius: 8px; border: 1px solid var(--fx-line); position: relative; }
+.rm-pv-big { font-family: var(--fx-font-display); font-weight: 800; font-stretch: 75%; font-size: 1.8rem; line-height: 0.85; }
+.rm-pv-chips { display: flex; align-items: center; gap: 0.35rem; }
+.rm-pv-btn { font-style: normal; font-size: 0.65rem; font-weight: 700; padding: 0.3rem 0.6rem; border-radius: 4px; background: var(--fx-accent); color: #fff; }
+.rm-pv-sub { width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--fx-sub); }
+.rm-pv-tint { width: 1.6rem; height: 0.9rem; border-radius: 3px; background: var(--fx-accent-tint); border: 1px solid var(--fx-line); }
+.rm-pv-cap { position: absolute; right: 0.5rem; top: 0.4rem; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--fx-ink-3); }
+.rm-color { display: flex; gap: 0.5rem; align-items: center; }
+.rm-color input[type="color"] { width: 2.6rem; height: 2.4rem; padding: 0.15rem; border: 1px solid var(--border-strong); border-radius: 6px; background: transparent; }
+.rm-color input[type="text"] { flex: 1; }

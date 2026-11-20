@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { PublicFounder } from "@/lib/content/types";
-import { Sparkle, Squiggle } from "@/components/art/characters";
+import { Squiggle } from "@/components/art/characters";
 
 const initials = (n: string) =>
   n
@@ -51,7 +51,6 @@ export function FoundersSection({ founders, compact = false }: { founders: Publi
                     )}
                   </div>
                 </div>
-                <Sparkle className="fxf-spark" />
               </div>
               <div className="fxf-meta">
                 <h3 className="fxf-name fx-d3 fx-up">{f.name}</h3>

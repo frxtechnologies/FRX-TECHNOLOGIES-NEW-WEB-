@@ -154,6 +154,7 @@ export const getServices = cache(async (): Promise<Service[]> => {
       summary: o.summary || s.summary,
       capabilities: arr(o.capabilities, s.capabilities),
       useCases: arr(o.use_cases, s.useCases),
+      artUrl: mediaUrl(o.art_path),
     };
   });
 });
@@ -161,7 +162,7 @@ export const getServices = cache(async (): Promise<Service[]> => {
 /** Old roles that predate the corrected titles; mapped at read time as well as in the migration. */
 const ROLE_FIX: Record<string, Record<string, string>> = {
   "Feroze Mohiuddin": { Founder: "Founder & CEO", CTO: "Founder & CEO", "Founder & CTO": "Founder & CEO" },
-  "Raaef Usman": { "Co-Founder": "Co-Founder & Director", "Co-founder": "Co-Founder & Director", CEO: "Co-Founder & Director" },
+  "Raaef Usman": { "Co-Founder": "Co-Founder & Director", "Co-founder": "Co-Founder & Director", CEO: "Co-Founder & Director", CTO: "Co-Founder & Director", "Co-Founder & CTO": "Co-Founder & Director" },
 };
 
 export const getFounders = cache(async (): Promise<PublicFounder[]> => {

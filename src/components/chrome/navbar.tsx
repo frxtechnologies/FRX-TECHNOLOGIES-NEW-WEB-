@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { NAV_LINKS } from "@/lib/site";
 import { FrxLogo } from "@/components/brand/frx-logo";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeSwitcher } from "./theme-switcher";
 import { MobileMenu } from "./mobile-menu";
 import { ArrowIcon } from "@/components/ui/icons";
 
@@ -100,7 +100,7 @@ export function Navbar() {
             </nav>
 
             <div className="flex items-center gap-2 lg:gap-3">
-              <ThemeToggle />
+              <ThemeSwitcher />
 
               <Link href="/contact" className="frx-nav-cta hidden sm:inline-flex">
                 <span>Start a Project</span>

@@ -10,9 +10,8 @@ export const SITE = {
 } as const;
 
 export const SOCIAL = {
-  instagram:
-    "https://www.instagram.com/frx.technologies?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
-  linkedin: "https://www.linkedin.com/company/frx-technologies/?viewAsMember=true",
+  instagram: "https://www.instagram.com/frx.technologies/",
+  linkedin: "https://www.linkedin.com/company/frx-technologies",
 } as const;
 
 /**

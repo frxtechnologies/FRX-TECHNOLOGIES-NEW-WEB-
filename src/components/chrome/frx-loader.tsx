@@ -98,7 +98,7 @@ export function FrxLoader() {
         .to(".ld-rule i", { scaleX: 1, duration: 1.05, ease: "power2.inOut" }, 0)
 
         // 2 — readout lifts out, the lockup settles
-        .to(".ld-num-wrap, .ld-words, .ld-meta", { yPercent: -120, opacity: 0, duration: 0.4, ease: "power3.in" }, 1.05)
+        .to(".ld-num-wrap, .ld-words, .ld-meta, .ld-state", { yPercent: -120, opacity: 0, duration: 0.4, ease: "power3.in" }, 1.05)
         .fromTo(".ld-logo", { scale: 1.02 }, { scale: 1, duration: 0.5, ease: "expo.out" }, 1.05)
 
         // 3 — blue curtain rises, slanted, with the white lockup inside
@@ -133,22 +133,29 @@ export function FrxLoader() {
   return (
     <div ref={root} className="intro-shell ld" aria-hidden="true">
       <div className="ld-paper">
-        <ul className="ld-words">
-          <li className="is-on">Build.</li>
-          <li>Automate.</li>
-          <li>Scale.</li>
-        </ul>
+        {/* Three rows — top bar, logo stage, counter — so nothing can overlap the lockup. */}
+        <header className="ld-top">
+          <ul className="ld-words">
+            <li className="is-on">Build.</li>
+            <li>Automate.</li>
+            <li>Scale.</li>
+          </ul>
+          <p className="ld-meta">FRX Technologies</p>
+        </header>
 
-        <div className="ld-center">
-          <FrxLogo className="ld-logo" priority sizes="(max-width: 640px) 70vw, 30rem" />
+        <div className="ld-stage">
+          <div className="ld-center">
+            <FrxLogo className="ld-logo" priority sizes="(max-width: 640px) 70vw, 30rem" />
+          </div>
         </div>
 
-        <div className="ld-num-wrap">
-          <span className="ld-num">000</span>
-          <span className="ld-pct">%</span>
-        </div>
-
-        <p className="ld-meta">FRX Technologies</p>
+        <footer className="ld-foot">
+          <div className="ld-num-wrap">
+            <span className="ld-num">000</span>
+            <span className="ld-pct">%</span>
+          </div>
+          <p className="ld-state">Loading</p>
+        </footer>
 
         <div className="ld-rule">
           <i />

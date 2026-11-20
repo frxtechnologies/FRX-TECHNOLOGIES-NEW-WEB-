@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Asterisk, Sparkle } from "@/components/art/characters";
+import {  } from "@/components/art/characters";
 import { ChatBuddy, PhoneBuddy } from "@/components/art/scenes";
 import { useArtLife } from "@/components/motion/use-art-life";
 
@@ -35,8 +35,6 @@ export function Faq({ faqs }: { faqs: FaqItem[] }) {
             <span className="fxfaq-char fxfaq-char--phone">
               <PhoneBuddy className="fxfaq-svg fxa-bob" />
             </span>
-            <Asterisk className="fxfaq-d fxfaq-d--a" />
-            <Sparkle className="fxfaq-d fxfaq-d--b" />
             <span className="fxfaq-q" aria-hidden="true">?</span>
           </div>
         </div>
