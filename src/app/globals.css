@@ -176,6 +176,7 @@ body {
      the className, so :root cannot resolve them. */
   --font-sans: var(--fx-face-body), system-ui, "Segoe UI", sans-serif;
   --font-display: var(--fx-face-display), "Arial Narrow", Arial, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   margin: 0;
   background: var(--bg);
   color: var(--text);

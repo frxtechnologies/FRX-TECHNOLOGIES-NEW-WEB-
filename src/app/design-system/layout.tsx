@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import "@/design-system/tokens.css";
 import "@/design-system/type.css";
 import "@/design-system/motion/fx.css";
@@ -22,6 +23,8 @@ export const metadata: Metadata = {
 };
 
 export default function DesignSystemLayout({ children }: { children: React.ReactNode }) {
+  // Internal development reference only — not part of the production website.
+  if (process.env.NODE_ENV === "production") notFound();
   return (
     <div className={fxFontClasses}>
       <ClearIntroFlag />

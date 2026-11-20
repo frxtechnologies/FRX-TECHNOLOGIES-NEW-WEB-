@@ -1634,3 +1634,11 @@ section.fxt.fx-hz--live .fxt-track[data-fx-track] {
     animation: none;
   }
 }
+
+/* The footer ground is black in both themes, so it always uses the white-lettered lockup. */
+.fxo .frx-logo-light {
+  opacity: 0 !important;
+}
+.fxo .frx-logo-dark {
+  opacity: 1 !important;
+}

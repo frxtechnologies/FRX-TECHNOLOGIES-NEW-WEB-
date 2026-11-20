@@ -46,7 +46,11 @@ export function Technologies({
   heading?: string;
 }) {
   if (!items.length) return null;
+  // The wrapper is React-owned and never touched by ScrollTrigger: pinning moves the
+  // <section> into a .pin-spacer INSIDE this wrapper, so React can still remove the
+  // wrapper cleanly when the route changes (otherwise: removeChild NotFoundError).
   return (
+    <div className="fxt-host">
     <section className="fxt" id="technologies" data-fx="horizontal" aria-labelledby="fxt-title">
       <div className="fx-container fxt-head">
         <h2 id="fxt-title" className="fxt-h fx-d1 fx-up" data-fx="reveal-lines">
@@ -107,5 +111,6 @@ export function Technologies({
         </div>
       )}
     </section>
+    </div>
   );
 }

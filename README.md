@@ -96,3 +96,27 @@ email it didn't.
 `/` · `/services` · `/services/{web-development,ai-automation,software-development,ui-ux}` · `/about` · `/contact` · 404
 
 Plus `sitemap.xml`, `robots.txt`, `manifest.webmanifest`, and Organization / WebSite / Service JSON-LD.
+
+---
+
+## Content management
+
+Everything on the public site is editable in `/admin` (sign in as the admin email):
+Projects, Services, Technologies, Testimonials, FAQ, Affiliations, Founders, Reviews
+(moderation), Homepage hero (+ artwork slots), About page, Contact & social (incl. the
+WhatsApp number) and Footer. Built-in defaults live in `src/lib/content/defaults.ts` and
+`src/lib/services.ts`; anything saved in Supabase overrides them.
+
+**One-time database step** — run `supabase/migrations/20261120000100_frx_content.sql` in the
+Supabase SQL editor (additive and idempotent; touches no existing table or storage object).
+Afterwards verify access control with `node scripts/verify-rls.mjs`.
+
+## Deploying to Vercel
+
+1. Import the repo, framework preset **Next.js**, Node **22.x** (pinned in `package.json`).
+2. Set the environment variables from `.env.example` for **Production and Preview**:
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (required);
+   `NEXT_PUBLIC_ADMIN_EMAIL`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (optional).
+3. In Supabase → Authentication → URL Configuration, add the Vercel production and
+   preview URLs to the allowed redirect URLs.
+4. Deploy a Preview first and check: homepage loader, `/admin/login`, a contact submission.

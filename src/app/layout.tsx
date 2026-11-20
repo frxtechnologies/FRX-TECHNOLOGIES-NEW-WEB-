@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import "@/design-system/tokens.css";
 import "@/design-system/type.css";
@@ -13,16 +12,9 @@ import { JsonLd } from "@/components/shared/json-ld";
 
 /**
  * Display: Bricolage Grotesque. Body and all functional UI: Inter Tight. Both are
- * self-hosted variable fonts (src/design-system/fonts). JetBrains Mono remains
- * only for the few legacy technical readouts still on the old sections.
+ * self-hosted variable fonts (src/design-system/fonts) — no third-party font
+ * requests at build or runtime.
  */
-const mono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500"],
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
@@ -110,7 +102,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <JsonLd data={organizationSchema} />
         <JsonLd data={websiteSchema} />
       </head>
-      <body className={`${fxFontClasses} ${mono.variable}`}>
+      <body className={fxFontClasses}>
         <ThemeProvider>
           <IntroProvider>{children}</IntroProvider>
         </ThemeProvider>

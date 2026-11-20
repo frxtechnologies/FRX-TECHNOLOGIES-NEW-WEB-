@@ -1,4 +1,5 @@
 import "./admin.css";
+import "./admin-ext.css";
 
 /**
  * Loads the admin-only stylesheet and nothing else. Auth is not checked here
