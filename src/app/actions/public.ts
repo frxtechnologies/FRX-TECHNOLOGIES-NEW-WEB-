@@ -67,7 +67,12 @@ export async function submitInquiry(input: InquiryInput): Promise<FormResult> {
   const parsed = inquirySchema.safeParse(input);
   if (!parsed.success) {
     const keys = parsed.error.issues.map((i) => i.path[0]);
-    if (keys.includes("trap") || keys.includes("elapsed")) return { ok: true };
+    if (keys.includes("trap") || keys.includes("elapsed")) {
+      // Looks like a bot, so the visitor is told "sent" — but nothing is stored or emailed.
+      // Logged so a real person caught by this (e.g. autofill) is easy to diagnose.
+      console.warn("[inquiry] dropped as bot-like:", keys.filter((k) => k === "trap" || k === "elapsed").join(","));
+      return { ok: true };
+    }
     return { ok: false, error: "Please check the highlighted fields.", fieldErrors: fieldErrorsOf(parsed.error) };
   }
   const sb = anon();

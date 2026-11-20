@@ -85,6 +85,7 @@ export async function notifyNewEnquiry(e: EnquiryMail): Promise<void> {
       }),
     });
     if (!res.ok) console.error("[notify] Resend rejected the enquiry email:", res.status, await res.text().catch(() => ""));
+    else console.log(`[notify] enquiry email sent to ${to}`);
   } catch (err) {
     console.error("[notify] could not reach Resend:", err instanceof Error ? err.message : err);
   }

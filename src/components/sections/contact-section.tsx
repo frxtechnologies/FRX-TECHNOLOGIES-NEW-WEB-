@@ -117,7 +117,7 @@ export function ContactSection({ contact, asPage = false }: { contact: Contact; 
             </div>
           ) : (
             <form ref={formRef} onSubmit={onSubmit} noValidate className="fxc-form" aria-label="Project enquiry">
-              <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" value={trap} onChange={(e) => setTrap(e.target.value)} className="fxr-trap" />
+              <input type="text" name="fx_hp_check" id="fx_hp_check_c" tabIndex={-1} autoComplete="off" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other" aria-hidden="true" value={trap} onChange={(e) => setTrap(e.target.value)} className="fxr-trap" />
 
               <div className="fxc-two">
                 <Field id="name" label="Name" value={f.name} onChange={set("name")} error={errors.name} autoComplete="name" required />

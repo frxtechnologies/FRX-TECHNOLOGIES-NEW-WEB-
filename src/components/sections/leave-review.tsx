@@ -305,9 +305,14 @@ export function LeaveReview({ enabled = true }: { enabled?: boolean }) {
                 <form onSubmit={onSubmit} noValidate aria-label="Leave a review" className="fxr-form">
                   <input
                     type="text"
-                    name="website"
+                    name="fx_hp_check"
+                    id="fx_hp_check_r"
                     tabIndex={-1}
                     autoComplete="off"
+                    data-lpignore="true"
+                    data-1p-ignore="true"
+                    data-bwignore="true"
+                    data-form-type="other"
                     aria-hidden="true"
                     value={trap}
                     onChange={(e) => setTrap(e.target.value)}
