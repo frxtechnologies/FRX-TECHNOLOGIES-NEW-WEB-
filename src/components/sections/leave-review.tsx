@@ -223,7 +223,7 @@ export function LeaveReview({ enabled = true }: { enabled?: boolean }) {
   };
 
   return (
-    <section className="fxr" id="review" aria-labelledby="fxr-title">
+    <section className="fxr" data-glow id="review" aria-labelledby="fxr-title">
       <div className="fx-container">
         <header className="fxr-head">
           <h2 id="fxr-title" className="fxr-h fx-d1 fx-up" data-fx="reveal-lines">

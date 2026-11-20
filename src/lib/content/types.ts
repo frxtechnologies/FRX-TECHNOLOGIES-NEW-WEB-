@@ -50,6 +50,11 @@ export type AboutContent = {
   preview: string;
 };
 
+export type LayoutContent = {
+  /** Comma-separated homepage section ids the admin has hidden. */
+  hidden: string;
+};
+
 export type MediaContent = {
   reelUrl: string;
   reelHeading: string;
@@ -64,6 +69,7 @@ export type Settings = {
   about: AboutContent;
   theme: ThemeSettings;
   media: MediaContent;
+  layout: LayoutContent;
 };
 
 import type { ThemeSettings } from "@/lib/theme-config";

@@ -1,0 +1,257 @@
+/* Testimonials: large 3D flip cards in a deck. Prefix .fxq-. */
+
+.fxq {
+  position: relative;
+  background: var(--fx-bg);
+  padding-block: var(--fx-section-y);
+  overflow-x: clip;
+}
+.fxq-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: center;
+}
+.fxq-side {
+  display: grid;
+  gap: clamp(1.2rem, 3vw, 2rem);
+  align-content: center;
+}
+.fxq-h {
+  font-size: clamp(3rem, 1rem + 8vw, 9rem);
+  line-height: 0.86;
+}
+.fxq-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+.fxq-btn {
+  display: grid;
+  place-items: center;
+  inline-size: 3.4rem;
+  block-size: 3.4rem;
+  border: 2px solid var(--fx-ink);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--fx-ink);
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--fx-sub);
+  transition:
+    transform var(--fx-dur-base) var(--fx-ease-spring),
+    background-color var(--fx-dur-fast);
+}
+.fxq-btn:hover {
+  background: var(--fx-blue);
+  border-color: var(--fx-blue);
+  color: #fff;
+  transform: translate(-2px, -2px);
+}
+.fxq-hint {
+  color: var(--fx-ink-3);
+}
+
+/* ---- the deck ------------------------------------------------------------------- */
+.fxq-deck {
+  position: relative;
+  display: grid;
+  perspective: 1600px;
+  padding-block-end: 2.2rem;
+  padding-inline-end: 2.2rem;
+}
+.fxq-card {
+  --pos: 0;
+  grid-area: 1 / 1;
+  margin: 0;
+  min-block-size: clamp(22rem, 36vw, 28rem);
+  transform: translate(calc(var(--pos) * 1.1rem), calc(var(--pos) * 1.1rem)) rotate(calc(var(--pos) * 1.8deg))
+    scale(calc(1 - var(--pos) * 0.045));
+  transform-origin: 20% 100%;
+  z-index: calc(3 - var(--pos));
+  transition: transform 0.75s var(--fx-ease-out);
+}
+.fxq-card[data-pos="1"],
+.fxq-card[data-pos="2"] {
+  pointer-events: none;
+}
+.fxq-flip {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: inherit;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.9s var(--fx-ease-signal);
+}
+.fxq-card[data-flipped="true"] .fxq-flip {
+  transform: rotateY(180deg);
+}
+.fxq-face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.2rem;
+  padding: clamp(1.4rem, 3vw, 2.6rem);
+  border: 2.5px solid var(--fx-ink);
+  border-radius: var(--fx-radius-4);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 8px 8px 0 var(--fx-sub);
+}
+.fxq-front {
+  background: var(--fx-surface);
+  color: var(--fx-ink);
+}
+.fxq-back {
+  background: var(--fx-blue);
+  color: #fff;
+  align-items: flex-start;
+  justify-content: flex-end;
+  transform: rotateY(180deg);
+  background-image: radial-gradient(rgb(255 255 255 / 0.16) 1.2px, transparent 1.6px);
+  background-size: 22px 22px;
+}
+.fxq-card[data-pos="1"] .fxq-face > *,
+.fxq-card[data-pos="2"] .fxq-face > * {
+  opacity: 0;
+}
+.fxq-card[data-pos="1"] .fxq-front,
+.fxq-card[data-pos="2"] .fxq-front {
+  background: var(--fx-panel-tint);
+}
+.fxq-quote-mark {
+  font: 800 6rem/0.6 var(--fx-font-display);
+  color: var(--fx-sub-text);
+  block-size: 2.4rem;
+}
+.fxq-stars {
+  color: var(--fx-sub-text);
+  letter-spacing: 0.25em;
+  font-size: 1.2rem;
+}
+.fxq-text {
+  margin: 0;
+  font: 700 clamp(1.25rem, 0.9rem + 1.5vw, 2.1rem) / 1.18 var(--fx-font-display);
+  font-stretch: 87%;
+  letter-spacing: -0.008em;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 9;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.fxq-turn {
+  color: var(--fx-ink-3);
+}
+.fxq-back .fxq-turn {
+  color: rgb(255 255 255 / 0.75);
+}
+.fxq-avatar {
+  display: grid;
+  place-items: center;
+  inline-size: clamp(7rem, 14vw, 10rem);
+  block-size: clamp(7rem, 14vw, 10rem);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--fx-blue-deep);
+  box-shadow: 5px 5px 0 var(--fx-sub);
+  font: 800 2.6rem/1 var(--fx-font-display);
+}
+.fxq-avatar img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+.fxq-name {
+  font: 800 clamp(1.8rem, 1rem + 2.4vw, 3.2rem) / 0.95 var(--fx-font-display);
+  font-stretch: 75%;
+  text-transform: uppercase;
+}
+.fxq-role {
+  font-size: 1.02rem;
+  color: rgb(255 255 255 / 0.9);
+}
+
+/* ---- empty state: honest ghost cards -------------------------------------------- */
+.fxq--empty .fxq-wrap {
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+.fxq-ghosts {
+  position: relative;
+  min-block-size: clamp(9rem, 20vw, 14rem);
+  max-inline-size: 38rem;
+}
+.fxq-ghost {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: min(100%, 24rem);
+  block-size: clamp(8rem, 18vw, 12rem);
+  border: 2.5px dashed var(--fx-line-strong);
+  border-radius: var(--fx-radius-4);
+  background: var(--fx-bg);
+}
+.fxq-ghost--b {
+  transform: translate(1.6rem, 1.2rem) rotate(2deg);
+}
+.fxq-ghost--c {
+  transform: translate(3.2rem, 2.4rem) rotate(4deg);
+}
+.fxq-ghost--a {
+  display: grid;
+  align-content: center;
+  gap: 0.55rem;
+  padding: 1.1rem 1.4rem;
+  border-style: solid;
+  border-color: var(--fx-ink);
+  box-shadow: 6px 6px 0 var(--fx-sub);
+}
+.fxq-ghost--a b {
+  font: 800 3.4rem/0.5 var(--fx-font-display);
+  color: var(--fx-sub-text);
+  block-size: 1.6rem;
+}
+.fxq-ghost--a i {
+  display: block;
+  block-size: 0.6rem;
+  border-radius: 99px;
+  background: var(--fx-line-strong);
+}
+.fxq-ghost--a i:nth-of-type(2) {
+  inline-size: 82%;
+}
+.fxq-ghost--a i:nth-of-type(3) {
+  inline-size: 56%;
+}
+.fxq-empty-copy {
+  display: grid;
+  gap: 1.2rem;
+  justify-items: start;
+  max-inline-size: 36rem;
+}
+
+@media (max-width: 900px) {
+  .fxq-wrap {
+    grid-template-columns: 1fr;
+  }
+  .fxq-deck {
+    padding-inline-end: 1.4rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxq-flip {
+    transition: none;
+  }
+}

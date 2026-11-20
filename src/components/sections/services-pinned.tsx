@@ -9,6 +9,8 @@ import { ServiceScene } from "./service-scene";
 import "./services-pinned.css";
 
 const TONES = ["tint", "ink", "blue", "paper"] as const;
+/** Only the properties GSAP animates — never `all`, which would also strip React inline styles (chip positions). */
+const ANIMATED = "opacity,visibility,transform,translate,rotate,scale";
 export type PinnedService = Service & { artUrl?: string | null };
 
 /**
@@ -118,8 +120,8 @@ export function ServicesPinned({ services }: { services: PinnedService[] }) {
           st.kill();
           steps.forEach((s) => {
             s.inert = false;
-            gsap.set(s, { clearProps: "all" });
-            s.querySelectorAll(".fxsp-title-in, [data-l='body'], .fxsp-l").forEach((n) => gsap.set(n, { clearProps: "all" }));
+            gsap.set(s, { clearProps: ANIMATED });
+            s.querySelectorAll(".fxsp-title-in, [data-l='body'], .fxsp-l").forEach((n) => gsap.set(n, { clearProps: ANIMATED }));
           });
           el.style.removeProperty("--fxsp-p");
           setActive(0);

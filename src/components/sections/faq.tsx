@@ -22,7 +22,7 @@ export function Faq({ faqs }: { faqs: FaqItem[] }) {
 
   if (!faqs.length) return null;
   return (
-    <section ref={root} className="fxfaq" id="faq" aria-labelledby="fxfaq-title">
+    <section ref={root} className="fxfaq" data-glow id="faq" aria-labelledby="fxfaq-title">
       <div className="fx-container fxfaq-wrap">
         <div className="fxfaq-side">
           <h2 id="fxfaq-title" className="fxfaq-h fx-d1 fx-up" data-fx="reveal-lines">

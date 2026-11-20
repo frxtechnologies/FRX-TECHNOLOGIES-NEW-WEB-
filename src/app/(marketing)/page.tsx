@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageJsonLd } from "@/components/shared/page-jsonld";
 import { FxHero } from "@/components/home/fx-hero";
 import { FxMarquee } from "@/components/home/fx-marquee";
 import { AboutPreview } from "@/components/sections/about-preview";
@@ -71,6 +72,11 @@ export default async function HomePage() {
     })),
   ];
 
+  const hide = new Set(settings.layout.hidden.split(",").filter(Boolean));
+  const show = (id: string) => !hide.has(id);
+
+  const homeDescription = settings.hero.description.replace(/\*\*/g, "").replace(/\s*\n\s*/g, " ");
+
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -92,20 +98,21 @@ export default async function HomePage() {
         }}
       />
       <FxMarquee />
-      <AboutPreview text={settings.about.preview} />
-      <ServicesPinned services={services} />
-      <Technologies items={techs} affiliations={affiliations} />
-      <Testimonials items={quotes} />
-      <SelectedWork projects={projects} />
-      <ReelSection
+      {show("about") && <AboutPreview text={settings.about.preview} />}
+      {show("services") && <ServicesPinned services={services} />}
+      {show("technologies") && <Technologies items={techs} affiliations={affiliations} />}
+      {show("testimonials") && <Testimonials items={quotes} />}
+      {show("work") && <SelectedWork projects={projects} />}
+      {show("reel") && <ReelSection
         url={settings.media.reelUrl}
         heading={settings.media.reelHeading}
         text={settings.media.reelText}
         profileUrl={settings.social.instagram || SOCIAL.instagram}
-      />
-      <Faq faqs={faqs} />
-      <LeaveReview />
-      <ContactSection contact={settings.contact} />
+      />}
+      {show("faq") && <Faq faqs={faqs} />}
+      {show("review") && <LeaveReview />}
+      {show("contact") && <ContactSection contact={settings.contact} />}
+      <PageJsonLd path="" name="Home" description={homeDescription} />
       <JsonLd data={faqSchema} />
     </>
   );

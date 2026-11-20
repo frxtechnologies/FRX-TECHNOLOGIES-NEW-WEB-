@@ -644,117 +644,6 @@ section.fxt.fx-hz--live .fxt-track[data-fx-track] {
   }
 }
 
-/* ---- TESTIMONIALS ------------------------------------------------------------ */
-.fxq {
-  background: var(--fx-bg);
-}
-.fxq-wrap {
-  display: grid;
-  gap: clamp(2rem, 4vw, 3.5rem);
-}
-.fxq-h {
-  font-size: clamp(3rem, 1rem + 9.4vw, 10.5rem);
-  line-height: 0.86;
-  max-inline-size: 12ch;
-}
-.fxq-deck {
-  display: grid;
-  max-inline-size: 58rem;
-  padding-block-end: 2.5rem;
-}
-.fxq-card {
-  --pos: 0;
-  grid-area: 1 / 1;
-  display: grid;
-  gap: 1.6rem;
-  align-content: space-between;
-  padding: clamp(1.4rem, 3vw, 2.8rem);
-  border-radius: var(--fx-radius-4);
-  background: var(--fx-surface);
-  border: 1px solid var(--fx-line);
-  box-shadow: var(--fx-shadow-md);
-  transform: translate(calc(var(--pos) * 1.1rem), calc(var(--pos) * 1.1rem)) rotate(calc(var(--pos) * 1.6deg))
-    scale(calc(1 - var(--pos) * 0.045));
-  transform-origin: 20% 100%;
-  z-index: calc(3 - var(--pos));
-  transition:
-    transform 0.7s var(--fx-ease-out),
-    opacity 0.4s;
-}
-.fxq-card:nth-child(1) {
-  background: var(--fx-accent-tint);
-}
-.fxq-card[data-pos="0"] {
-  background: var(--fx-surface);
-}
-.fxq-card[data-pos="1"] {
-  background: var(--fx-accent-tint);
-}
-.fxq-card[data-pos="1"] > *,
-.fxq-card[data-pos="2"] > * {
-  opacity: 0;
-}
-.fxq-stars {
-  color: var(--fx-accent-text);
-  letter-spacing: 0.25em;
-  font-size: 1.1rem;
-}
-.fxq-text {
-  line-height: 1.18;
-}
-.fxq-who {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.fxq-who > span:last-child {
-  display: grid;
-}
-.fxq-avatar {
-  display: grid;
-  place-items: center;
-  flex: none;
-  inline-size: 3.5rem;
-  block-size: 3.5rem;
-  border-radius: 50%;
-  overflow: hidden;
-  background: var(--fx-blue);
-  color: #fff;
-  font-family: var(--fx-font-display);
-  font-weight: 800;
-  font-size: 1.2rem;
-}
-.fxq-avatar img {
-  inline-size: 100%;
-  block-size: 100%;
-  object-fit: cover;
-}
-.fxq-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-.fxq-btn {
-  inline-size: 3.2rem;
-  block-size: 3.2rem;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--fx-line-strong);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--fx-ink);
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition:
-    background-color var(--fx-dur-fast) var(--fx-ease-out),
-    color var(--fx-dur-fast) var(--fx-ease-out);
-}
-.fxq-btn:hover {
-  background: var(--fx-blue);
-  border-color: var(--fx-blue);
-  color: #fff;
-}
-
 /* ---- FOUNDERS ----------------------------------------------------------------- */
 .fxf {
   background: var(--fx-bg-2);
@@ -1687,4 +1576,94 @@ section.fxt.fx-hz--live .fxt-track[data-fx-track] {
   .fxreel-wrap {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---- closing statement + footer upgrades --------------------------------------------------- */
+.fxo-close {
+  display: grid;
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  margin-block-end: clamp(2rem, 5vw, 4rem);
+}
+.fxo-cta {
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+.fxo-cta .fx-label {
+  color: var(--fx-ink-3);
+}
+.fxo-cta-h {
+  font-size: clamp(2.2rem, 1rem + 4vw, 4.6rem);
+  line-height: 0.9;
+}
+.fxo-cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+}
+.fxo-mail {
+  color: var(--fx-sub-text);
+  overflow-wrap: anywhere;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
+  transition: background-size var(--fx-dur-base) var(--fx-ease-out);
+}
+.fxo-mail:hover,
+.fxo-mail:focus-visible {
+  background-size: 100% 2px;
+}
+/* the giant letters: one word per line on phones, one line on wide screens */
+.fxo-big {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.22em;
+  padding-inline: var(--fx-gutter);
+  margin: 0;
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  text-transform: uppercase;
+  font-size: clamp(3rem, 11.2vw, 17rem);
+  line-height: 0.88;
+  letter-spacing: -0.006em;
+  user-select: none;
+}
+.fxo-word {
+  display: inline-flex;
+  white-space: nowrap;
+}
+.fxo-l {
+  display: inline-block;
+  will-change: transform;
+}
+.fxo-word:nth-child(1) {
+  color: #f4f2ed;
+}
+.fxo-word:nth-child(2) {
+  color: var(--fx-blue-bright);
+}
+.fxo-word:nth-child(3) .fxo-l {
+  color: transparent;
+  -webkit-text-stroke: 0;
+  color: var(--fx-sub);
+}
+.fxo-logoRow {
+  display: flex;
+  justify-content: flex-start;
+}
+.fxo-biglogo {
+  inline-size: min(26rem, 70vw);
+  cursor: pointer;
+}
+.fxo-soc {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--fx-ink);
+}
+.fxo-soc-ic {
+  flex: none;
+}
+.fxo-soc:hover .fx-link::after {
+  transform: scaleX(1);
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageJsonLd } from "@/components/shared/page-jsonld";
 import { pageMetadata } from "@/lib/metadata";
 import { getAffiliations, getFounders, getSettings, getTechnologies } from "@/lib/content/server";
 import { pairs, paragraphs } from "@/lib/content/parse";
@@ -150,6 +151,7 @@ export default async function AboutPage() {
           </Link>
         </div>
       </section>
+      <PageJsonLd path="/about" name="About" description="FRX Technologies is a software and technology company founded in 2026 by Feroze Mohiuddin and Raaef Usman." />
       <JsonLd data={aboutSchema} />
     </>
   );

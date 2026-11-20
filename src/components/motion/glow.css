@@ -1,0 +1,31 @@
+/* Pointer glow. Applies only to elements carrying data-glow. */
+[data-glow] {
+  position: relative;
+  isolation: isolate;
+  --gx: 72%;
+  --gy: 24%;
+}
+[data-glow]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background:
+    radial-gradient(circle 420px at var(--gx) var(--gy), color-mix(in srgb, var(--fx-blue) 24%, transparent), transparent 70%),
+    radial-gradient(circle 220px at var(--gx) var(--gy), color-mix(in srgb, var(--fx-sub) 38%, transparent), transparent 70%);
+  transition: opacity 0.6s var(--fx-ease-out);
+}
+[data-glow][data-glow-on]::before {
+  opacity: 1;
+}
+/* Touch and reduced motion: a quiet, fixed ambient glow instead of tracking. */
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  [data-glow]::before {
+    opacity: 0.55;
+    background:
+      radial-gradient(circle 380px at 82% 12%, color-mix(in srgb, var(--fx-blue) 16%, transparent), transparent 70%),
+      radial-gradient(circle 200px at 14% 88%, color-mix(in srgb, var(--fx-sub) 24%, transparent), transparent 70%);
+  }
+}

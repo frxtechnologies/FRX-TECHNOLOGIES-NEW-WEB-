@@ -79,12 +79,29 @@ const organizationSchema = {
   "@type": "Organization",
   name: SITE.name,
   url: SITE.url,
-  logo: `${SITE.url}/brand/frx-logo-light-mode.png`,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE.url}/brand/frx-logo-light-mode.png`,
+    width: 1101,
+    height: 477,
+  },
+  image: `${SITE.url}/brand/og.jpg`,
   description: SITE.description,
   sameAs: [SOCIAL.instagram, SOCIAL.linkedin],
+  foundingDate: "2026",
+  email: "frx.technologies@gmail.com",
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      email: "frx.technologies@gmail.com",
+      telephone: "+44 7835 448310",
+      availableLanguage: ["en"],
+    },
+  ],
   founder: [
-    { "@type": "Person", name: "Feroze Mohiuddin", jobTitle: "Founder" },
-    { "@type": "Person", name: "Raaef Usman", jobTitle: "Co-Founder" },
+    { "@type": "Person", name: "Feroze Mohiuddin", jobTitle: "Founder & CEO" },
+    { "@type": "Person", name: "Raaef Usman", jobTitle: "Co-Founder & Director" },
   ],
 };
 

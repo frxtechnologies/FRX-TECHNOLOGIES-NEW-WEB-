@@ -241,7 +241,7 @@ export function FxHero({ content, images }: HeroProps) {
   );
 
   return (
-    <section ref={root} className="fxh" aria-labelledby="fxh-title">
+    <section ref={root} className="fxh" data-glow aria-labelledby="fxh-title">
       <div className="fxh-stage fx-container">
         <p className="fxh-eyebrow fx-label" data-hide>
           <span className="fxh-dot" aria-hidden="true" />

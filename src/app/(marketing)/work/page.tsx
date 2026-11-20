@@ -1,4 +1,5 @@
 import { pageMetadata } from "@/lib/metadata";
+import { PageJsonLd } from "@/components/shared/page-jsonld";
 import { getProjects } from "@/lib/content/server";
 import { PageIntro } from "@/components/sections/page-intro";
 import { WorkGallery } from "@/components/sections/work-gallery";
@@ -36,6 +37,7 @@ export default async function WorkPage() {
       <section className="fxw fxw--page" aria-label="Projects">
         <div className="fx-container">{projects.length ? <WorkGallery projects={projects} /> : <WorkEmpty />}</div>
       </section>
+      <PageJsonLd path="/work" name="Work" description="Selected projects from FRX Technologies." />
     </>
   );
 }

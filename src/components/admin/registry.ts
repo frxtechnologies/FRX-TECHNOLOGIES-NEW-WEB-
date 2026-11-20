@@ -160,6 +160,21 @@ export const SETTINGS_PAGES: Record<string, { title: string; intro: string; bloc
           { name: "imageBlocks", label: "Artwork slot: SCALE character", type: "image", folder: "hero" },
         ],
       },
+      {
+        key: "layout",
+        title: "Homepage sections",
+        intro: "Untick a section to hide it from the homepage. Nothing is deleted — tick it again to bring it back.",
+        defaults: { ...d.layout },
+        fields: [
+          {
+            name: "hidden",
+            label: "Hide these sections",
+            type: "multi",
+            options: ["about|A bit about us", "services|Services", "technologies|Technologies", "testimonials|Testimonials", "work|Selected work", "reel|Instagram reel", "faq|FAQ", "review|Leave a review", "contact|Contact"],
+            hint: "Checked = hidden.",
+          },
+        ],
+      },
     ],
   },
   media: {
@@ -249,6 +264,7 @@ export const ADMIN_NAV: { href: string; label: string; group: string }[] = [
   { href: "/admin", label: "Overview", group: "Inbox" },
   { href: "/admin/inquiries", label: "Inquiries", group: "Inbox" },
   { href: "/admin/reviews", label: "Reviews", group: "Inbox" },
+  { href: "/admin/library", label: "Media library", group: "Content" },
   { href: "/admin/projects", label: "Projects", group: "Content" },
   { href: "/admin/services", label: "Services", group: "Content" },
   { href: "/admin/technologies", label: "Technologies", group: "Content" },

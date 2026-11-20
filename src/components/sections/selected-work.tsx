@@ -7,7 +7,7 @@ import { WorkEmpty } from "./work-empty";
 export function SelectedWork({ projects }: { projects: ProjectView[] }) {
   const shown = projects.slice(0, 4);
   return (
-    <section className="fxw" id="work" aria-labelledby="fxw-title">
+    <section className="fxw" data-glow id="work" aria-labelledby="fxw-title">
       <div className="fx-container">
         <header className="fxw-head">
           <h2 id="fxw-title" className="fxw-h fx-d1 fx-up" data-fx="reveal-lines">

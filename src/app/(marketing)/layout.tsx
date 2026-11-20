@@ -8,6 +8,8 @@ import { PageTransition } from "@/components/chrome/page-transition";
 import { CustomCursor } from "@/components/chrome/custom-cursor";
 import { QuickAssistant } from "@/components/assistant/quick-assistant";
 import { FxScope } from "@/components/motion/fx-scope";
+import { GlowField } from "@/components/motion/glow-field";
+import "@/components/motion/glow.css";
 import { FxDefs } from "@/design-system/outline";
 import { FxArtDefs } from "@/components/art/characters";
 import { getServices, getSettings } from "@/lib/content/server";
@@ -34,6 +36,7 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
       <FxDefs />
       <FxArtDefs />
       <MotionReady />
+      <GlowField />
       <SmoothScroll />
       <FrxLoader />
       <PageTransition />

@@ -16,6 +16,7 @@ import type {
 
 export const DEFAULT_SETTINGS: Settings = {
   theme: DEFAULT_THEME_SETTINGS,
+  layout: { hidden: "" },
   media: {
     reelUrl: "https://www.instagram.com/reel/DfwXDBzOfos/",
     reelHeading: "See us in motion.",

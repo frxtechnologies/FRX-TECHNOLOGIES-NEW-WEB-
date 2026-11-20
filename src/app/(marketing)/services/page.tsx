@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PageJsonLd } from "@/components/shared/page-jsonld";
 import { pageMetadata } from "@/lib/metadata";
 import { PROCESS, SERVICE_LABEL } from "@/lib/services";
 import { getServices } from "@/lib/content/server";
@@ -113,6 +114,7 @@ export default async function ServicesPage() {
           </Link>
         </div>
       </section>
+      <PageJsonLd path="/services" name="Services" description="Custom software, AI automation, web and mobile applications, business systems, AI assistants, UI/UX and analytics." />
       <JsonLd data={schema} />
     </>
   );

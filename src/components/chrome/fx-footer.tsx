@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FrxLogo } from "@/components/brand/frx-logo";
 import { NAV_LINKS } from "@/lib/site";
 import { SERVICE_LABEL, type Service } from "@/lib/services";
+import { FooterBounce } from "./footer-bounce";
 import type { Settings } from "@/lib/content/types";
 
 const SOCIAL_LABEL: Record<string, string> = {
@@ -19,6 +20,28 @@ const SOCIAL_LABEL: Record<string, string> = {
  * owner has configured (empty ones are simply not shown). All of it is editable
  * in admin → Settings; none of it is hard-coded here.
  */
+function SocialIcon({ name }: { name: string }) {
+  const p = { fill: "none", stroke: "currentColor", strokeWidth: 1.9, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+  return (
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" className="fxo-soc-ic">
+      {name === "instagram" && (
+        <>
+          <rect {...p} x="3.5" y="3.5" width="17" height="17" rx="5" />
+          <circle {...p} cx="12" cy="12" r="4" />
+          <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
+        </>
+      )}
+      {name === "linkedin" && (
+        <>
+          <rect {...p} x="3.5" y="3.5" width="17" height="17" rx="3" />
+          <path {...p} d="M8 10.5V16M8 7.8v.1M11.5 16v-3.2a2.3 2.3 0 0 1 4.6 0V16M11.5 10.5V16" />
+        </>
+      )}
+      {name !== "instagram" && name !== "linkedin" && <circle {...p} cx="12" cy="12" r="8" />}
+    </svg>
+  );
+}
+
 export function FxFooter({ settings, services }: { settings: Settings; services: Service[] }) {
   const { contact, social, footer } = settings;
   const socials = Object.entries(social).filter(([, url]) => url && /^https?:\/\//.test(url));
@@ -26,11 +49,7 @@ export function FxFooter({ settings, services }: { settings: Settings; services:
 
   return (
     <footer className="fxo" aria-labelledby="fxo-title">
-      <div className="fxo-big" aria-hidden="true">
-        <span>Build.</span>
-        <span>Automate.</span>
-        <span className="fx-outline fx-outline--lg">Scale.</span>
-      </div>
+      <FooterBounce email={contact.email} />
 
       <div className="fx-container fxo-grid">
         <div className="fxo-brand">
@@ -92,8 +111,9 @@ export function FxFooter({ settings, services }: { settings: Settings; services:
               <ul className="fxo-social">
                 {socials.map(([k, url]) => (
                   <li key={k}>
-                    <a className="fx-link" href={url} target="_blank" rel="noopener noreferrer">
-                      {SOCIAL_LABEL[k] ?? k}
+                    <a className="fxo-soc" href={url} target="_blank" rel="noopener noreferrer" aria-label={`FRX Technologies on ${SOCIAL_LABEL[k] ?? k} (opens in a new tab)`}>
+                      <SocialIcon name={k} />
+                      <span className="fx-link">{SOCIAL_LABEL[k] ?? k}</span>
                     </a>
                   </li>
                 ))}

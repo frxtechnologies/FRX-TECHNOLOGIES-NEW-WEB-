@@ -9,6 +9,13 @@ import { SITE } from "@/lib/site";
  * gap, not a cosmetic one. This is the one place that's decided now, so it
  * can't drift back out of sync per-page again.
  */
+export const OG_IMAGE = {
+  url: "/brand/og.jpg",
+  width: 1200,
+  height: 630,
+  alt: "FRX Technologies — Build. Automate. Scale.",
+} as const;
+
 export function pageMetadata({
   title,
   description,
@@ -26,13 +33,21 @@ export function pageMetadata({
     description,
     alternates: { canonical: path },
     openGraph: {
+      type: "website",
+      siteName: SITE.name,
+      locale: "en",
       title: fullTitle,
       description,
       url,
+      // A page-level openGraph REPLACES the layout's (Next does not deep-merge), so the
+      // share image must be repeated here or every inner page would lose it.
+      images: [OG_IMAGE],
     },
     twitter: {
+      card: "summary_large_image",
       title: fullTitle,
       description,
+      images: [OG_IMAGE.url],
     },
   };
 }

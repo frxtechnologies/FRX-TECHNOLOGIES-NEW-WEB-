@@ -10,7 +10,7 @@ import { Squiggle } from "@/components/art/characters";
  */
 export function AboutPreview({ text }: { text: string }) {
   return (
-    <section className="fxa" id="about-preview" aria-labelledby="fxa-title">
+    <section className="fxa" data-glow id="about-preview" aria-labelledby="fxa-title">
       <div className="fx-container fxa-wrap">
         <div className="fxa-head">
           <p className="fx-label fxa-eyebrow">

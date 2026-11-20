@@ -8,7 +8,7 @@ import { previewUrl, uploadMedia } from "./media";
 export type FieldDef = {
   name: string;
   label: string;
-  type: "text" | "textarea" | "url" | "image" | "images" | "boolean" | "number" | "lines" | "select";
+  type: "text" | "textarea" | "url" | "image" | "images" | "boolean" | "number" | "lines" | "select" | "multi";
   required?: boolean;
   hint?: string;
   placeholder?: string;
@@ -194,6 +194,33 @@ export function FieldInput({
     case "number":
       control = <input {...common} type="number" value={(v as number) ?? 0} onChange={(e) => setValue(f.name, Number(e.target.value))} />;
       break;
+    case "multi": {
+      // Stored as a comma-separated string of the CHECKED option values.
+      const on = new Set(String(v ?? "").split(",").filter(Boolean));
+      control = (
+        <div className="rm-multi" role="group" aria-label={f.label}>
+          {f.options?.map((o) => {
+            const [value, label] = o.split("|");
+            return (
+              <label key={value} className="rm-check">
+                <input
+                  type="checkbox"
+                  checked={on.has(value)}
+                  onChange={(e) => {
+                    const next = new Set(on);
+                    if (e.target.checked) next.add(value);
+                    else next.delete(value);
+                    setValue(f.name, [...next].join(","));
+                  }}
+                />
+                <span>{label ?? value}</span>
+              </label>
+            );
+          })}
+        </div>
+      );
+      break;
+    }
     case "select":
       control = (
         <select {...common} value={(v as string) ?? ""} onChange={(e) => setValue(f.name, e.target.value)}>

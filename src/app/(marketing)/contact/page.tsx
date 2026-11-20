@@ -1,4 +1,5 @@
 import { pageMetadata } from "@/lib/metadata";
+import { PageJsonLd } from "@/components/shared/page-jsonld";
 import { getSettings } from "@/lib/content/server";
 import { ContactSection } from "@/components/sections/contact-section";
 import { JsonLd } from "@/components/shared/json-ld";
@@ -54,6 +55,7 @@ export default async function ContactPage() {
           </ol>
         </div>
       </section>
+      <PageJsonLd path="/contact" name="Contact" description="Contact FRX Technologies by email, phone, WhatsApp or the project enquiry form." />
       <JsonLd data={schema} />
     </>
   );

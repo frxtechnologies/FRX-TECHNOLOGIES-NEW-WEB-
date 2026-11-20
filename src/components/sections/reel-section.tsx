@@ -93,7 +93,7 @@ export function ReelSection({
   if (!link) return null;
 
   return (
-    <section className="fxreel" id="reel" aria-labelledby="fxreel-title">
+    <section className="fxreel" data-glow id="reel" aria-labelledby="fxreel-title">
       <div className="fx-container fxreel-wrap">
         <div className="fxreel-copy">
           <p className="fx-label fxreel-eyebrow">

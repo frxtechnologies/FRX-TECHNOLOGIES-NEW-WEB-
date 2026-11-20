@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { PageJsonLd } from "@/components/shared/page-jsonld";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -201,6 +202,8 @@ export default async function ServiceDetailPage({ params }: PageProps<"/services
           </Link>
         </div>
       </section>
+
+      <PageJsonLd path={`/services/${service.slug}`} name={service.name} description={service.summary} trail={[{ name: "Services", path: "/services" }]} />
 
       <JsonLd data={schema} />
       <JsonLd data={breadcrumbSchema} />
