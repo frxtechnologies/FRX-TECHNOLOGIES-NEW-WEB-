@@ -235,7 +235,6 @@ function build(root: HTMLElement, c: Conditions, splits: SplitText[], cleanups: 
           pin: true,
           scrub: 0.6,
           invalidateOnRefresh: true,
-          anticipatePin: 1,
         },
       });
       cleanups.push(() => {

@@ -123,7 +123,6 @@ export function ReelSection({
               className="instagram-media"
               data-instgrm-permalink={link}
               data-instgrm-version="14"
-              data-instgrm-captioned
               style={{ background: "#fff", border: 0, margin: 0, maxWidth: 540, minWidth: 280, width: "100%" }}
             >
               <a href={link} target="_blank" rel="noopener noreferrer">

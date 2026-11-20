@@ -261,8 +261,12 @@
 @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
   .fxsp {
     padding: 0;
+    /* one screen of stage + 0.42 screen of scrolling per service (stage stays put via sticky) */
+    block-size: calc(max(100svh, 33rem) + 42svh * var(--fxsp-n, 6));
   }
   .fxsp-pin {
+    position: sticky;
+    inset-block-start: 0;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: clamp(0.6rem, 1.8svh, 1.3rem);

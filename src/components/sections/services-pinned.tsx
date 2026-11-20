@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { gsap, ScrollTrigger, useMotion } from "@/lib/gsap";
 import { SERVICE_LABEL, type Service } from "@/lib/services";
 import { useArtLife } from "@/components/motion/use-art-life";
@@ -97,11 +97,12 @@ export function ServicesPinned({ services }: { services: PinnedService[] }) {
         };
 
         const st = ScrollTrigger.create({
-          trigger: pin,
+          // No JS pin: the stage is `position: sticky` inside a section that is exactly
+          // one screen + 0.42 screens per service tall (see the CSS). Sticky stays on the
+          // compositor — no fixed↔static flip, so no layout-shift report and no jitter.
+          trigger: el,
           start: "top top",
-          end: () => `+=${Math.round(window.innerHeight * 0.42 * N)}`,
-          pin: true,
-          anticipatePin: 1,
+          end: "bottom bottom",
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             el.style.setProperty("--fxsp-p", self.progress.toFixed(3));
@@ -152,7 +153,13 @@ export function ServicesPinned({ services }: { services: PinnedService[] }) {
   };
 
   return (
-    <section ref={root} className="fxsp" id="services" aria-labelledby="fxsp-title">
+    <section
+      ref={root}
+      className="fxsp"
+      id="services"
+      aria-labelledby="fxsp-title"
+      style={{ "--fxsp-n": services.length } as CSSProperties}
+    >
       <div className="fxsp-pin">
         <div className="fx-container fxsp-head">
           <h2 id="fxsp-title" className="fxsp-h fx-d1 fx-up" data-fx="reveal-lines">
