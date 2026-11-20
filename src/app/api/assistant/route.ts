@@ -27,13 +27,35 @@ const fail = (reason: Fail, status: number) => NextResponse.json({ ok: false, re
 const clean = (v: unknown, max: number) =>
   typeof v === "string" ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "").replace(/[ \t]+/g, " ").trim().slice(0, max) : "";
 
+/**
+ * The webhook address from the environment, forgiving about how it was pasted into the
+ * hosting dashboard: surrounding quotes/spaces are dropped, a bare Make hook ID
+ * ("abc123…") becomes https://hook.eu1.make.com/abc123…, and a missing "https://" is added.
+ * Returns null when it is empty or still not a usable address (the widget then falls back
+ * to its authored answers instead of showing a chat that cannot work).
+ */
+function webhookUrl(): string | null {
+  let v = (process.env.ASSISTANT_WEBHOOK_URL ?? "").trim().replace(/^["']+|["']+$/g, "").trim();
+  if (!v) return null;
+  if (/^[a-z0-9]{20,64}$/i.test(v)) v = `https://hook.eu1.make.com/${v}`;
+  else if (v.startsWith("//")) v = `https:${v}`;
+  else if (!/^https?:\/\//i.test(v)) v = `https://${v}`;
+  try {
+    const u = new URL(v);
+    return u.protocol === "https:" || u.protocol === "http:" ? u.toString() : null;
+  } catch {
+    console.error("[assistant] ASSISTANT_WEBHOOK_URL is set but is not a valid web address.");
+    return null;
+  }
+}
+
 /** Cheap capability probe so the widget knows whether to show the AI chat or the authored answers. */
 export async function GET() {
-  return NextResponse.json({ enabled: !!process.env.ASSISTANT_WEBHOOK_URL });
+  return NextResponse.json({ enabled: !!webhookUrl() });
 }
 
 export async function POST(request: Request) {
-  const url = process.env.ASSISTANT_WEBHOOK_URL;
+  const url = webhookUrl();
   if (!url) return fail("unconfigured", 503);
 
   // Browsers always send Origin on cross-site POSTs; refuse anything not from this site.
