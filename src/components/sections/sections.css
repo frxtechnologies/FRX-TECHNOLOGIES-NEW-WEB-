@@ -1667,3 +1667,9 @@ section.fxt.fx-hz--live .fxt-track[data-fx-track] {
 .fxo-soc:hover .fx-link::after {
   transform: scaleX(1);
 }
+
+/* The footer is black in every palette and mode: its accent text must be the bright fill colour, not
+   the darkened "text on a light ground" variant. */
+.fxo {
+  --fx-sub-text: var(--fx-sub);
+}

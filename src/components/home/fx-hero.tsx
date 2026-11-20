@@ -83,7 +83,7 @@ export function FxHero({ content, images }: HeroProps) {
         const q = (s: string) => el.querySelectorAll(s);
 
         gsap.set(q("[data-hide]"), { visibility: "visible" });
-        gsap.set(q(".fxh-mark"), { backgroundSize: "0% 55%" });
+        gsap.set(q(".fxh-mark"), { backgroundSize: "0% 100%" });
         const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
         tl.fromTo(q(".fxh-word"), { yPercent: 118 }, { yPercent: 0, duration: 1.25, stagger: 0.11 })
           .from(q(".fxh-eyebrow"), { opacity: 0, y: 14, duration: 0.8 }, 0.1)
@@ -104,14 +104,14 @@ export function FxHero({ content, images }: HeroProps) {
           .from(q(".fxh-sub"), { opacity: 0, y: 22, duration: 0.9 }, 0.7)
           .from(q(".fxh-p"), { opacity: 0, y: 18, duration: 0.8, stagger: 0.1 }, 0.85)
           // highlighted phrases are "underlined" in one after another
-          .to(q(".fxh-mark"), { backgroundSize: "100% 55%", duration: 0.7, ease: "power2.inOut", stagger: 0.16 }, 1.3)
+          .to(q(".fxh-mark"), { backgroundSize: "100% 100%", duration: 0.7, ease: "power2.inOut", stagger: 0.16 }, 1.3)
           .from(q(".fxh-ctas > *"), { opacity: 0, y: 18, duration: 0.7, stagger: 0.08 }, 1.0);
       },
       reduced: () => {
         const el = root.current;
         if (!el) return;
         gsap.set(el.querySelectorAll("[data-hide]"), { visibility: "visible" });
-        gsap.set(el.querySelectorAll(".fxh-mark"), { backgroundSize: "100% 55%" });
+        gsap.set(el.querySelectorAll(".fxh-mark"), { backgroundSize: "100% 100%" });
       },
     },
     root,

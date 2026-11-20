@@ -319,3 +319,12 @@ img.fxh-art {
     block-size: 4.3rem;
   }
 }
+
+/* Highlighted phrases read like a real highlighter: dark ink on the accent fill, full line height.
+   (Ink-on-fill is the only pairing that holds up in all eight palette/mode combinations.) */
+.fxh-mark {
+  color: var(--fx-sub-ink);
+  background: linear-gradient(var(--fx-sub), var(--fx-sub)) left center / 100% 100% no-repeat;
+  padding-inline: 0.18em;
+  border-radius: 0.12em;
+}
