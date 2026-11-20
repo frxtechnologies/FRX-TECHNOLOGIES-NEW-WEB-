@@ -4,8 +4,8 @@ export const SITE = {
   url: "https://frxtechnologies.com",
   title: "FRX Technologies | AI, Software & Digital Experiences",
   description:
-    "Modern websites, AI automation and custom software built around real business needs.",
-  philosophy: "Build smarter. Launch faster. Grow further.",
+    "FRX Technologies is a software and technology company building custom software, AI automation, web experiences and digital products.",
+  philosophy: "Build. Automate. Scale.",
   statement: "Building the technology behind modern businesses.",
 } as const;
 
@@ -31,12 +31,12 @@ export const FOUNDERS: {
 }[] = [
   {
     name: "Feroze Mohiuddin",
-    role: "Founder",
+    role: "Founder & CEO",
     image: "/images/founders/feroze-mohiuddin.png",
   },
   {
     name: "Raaef Usman",
-    role: "Co-Founder",
+    role: "Co-Founder & Director",
     image: null,
   },
 ];
@@ -50,6 +50,7 @@ export const CAPABILITY_STATS = [
 
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/work", label: "Work" },
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

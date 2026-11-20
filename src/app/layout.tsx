@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import "@/design-system/tokens.css";
+import "@/design-system/type.css";
+import "@/design-system/motion/fx.css";
+import { fxFontClasses } from "@/design-system/fonts";
 
 import { SITE, SOCIAL } from "@/lib/site";
 import { ThemeProvider, themeScript } from "@/components/providers/theme-provider";
@@ -8,24 +11,10 @@ import { IntroProvider } from "@/components/providers/intro-provider";
 import { JsonLd } from "@/components/shared/json-ld";
 
 /**
- * Manrope: a modern grotesk with genuinely usable tight tracking at display
- * sizes, which is what this design leans on. JetBrains Mono carries the
- * technical register — indices, eyebrows, counters.
+ * Display: Bricolage Grotesque. Body and all functional UI: Inter Tight. Both are
+ * self-hosted variable fonts (src/design-system/fonts) — no third-party font
+ * requests at build or runtime.
  */
-const sans = Manrope({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["400", "500"],
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
@@ -113,7 +102,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <JsonLd data={organizationSchema} />
         <JsonLd data={websiteSchema} />
       </head>
-      <body className={`${sans.variable} ${mono.variable}`}>
+      <body className={fxFontClasses}>
         <ThemeProvider>
           <IntroProvider>{children}</IntroProvider>
         </ThemeProvider>

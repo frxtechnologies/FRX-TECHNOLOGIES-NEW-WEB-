@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 
 type IntroContextValue = {
   /** True once the intro has finished, or immediately when it is skipped. */
@@ -26,10 +26,11 @@ const IntroContext = createContext<IntroContextValue>({
 export function IntroProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
-  const value = useMemo<IntroContextValue>(
-    () => ({ ready, markReady: () => setReady(true) }),
-    [ready],
-  );
+  // Stable identity: consumers (the loader) list this in effect dependencies,
+  // and a new function on every `ready` flip made the loader tear down and
+  // replay its own timeline the moment it called markReady().
+  const markReady = useCallback(() => setReady(true), []);
+  const value = useMemo<IntroContextValue>(() => ({ ready, markReady }), [ready, markReady]);
 
   return <IntroContext.Provider value={value}>{children}</IntroContext.Provider>;
 }

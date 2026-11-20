@@ -1,0 +1,200 @@
+/*
+ * FRX MOTION CSS  (requires tokens.css)
+ * Initial states, hover conventions and baselines for pin / horizontal.
+ * Everything that animates in JS is VISIBLE by default unless `.js-motion`
+ * is on <html> (set by the pre-paint script), and a CSS failsafe un-hides it
+ * after 3s if the bundle never arrives.
+ */
+
+.js-motion [data-fx^="reveal-"],
+.js-motion [data-fx="fade-up"],
+.js-motion [data-fx="image-reveal"] {
+  visibility: hidden;
+  animation: fx-unhide 0s linear 3s forwards;
+}
+
+@keyframes fx-unhide {
+  to {
+    visibility: visible;
+  }
+}
+
+[data-fx="image-reveal"] {
+  overflow: hidden;
+}
+
+[data-fx="image-reveal"] > * {
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* ---- hover conventions (fine pointers only — touch gets no sticky hover) -- */
+.fx-link {
+  position: relative;
+  display: inline-block;
+}
+
+.fx-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -0.1em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--fx-dur-base) var(--fx-ease-out);
+}
+
+.fx-shift {
+  display: inline-block;
+  transition: transform var(--fx-dur-base) var(--fx-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fx-link:hover::after,
+  .fx-link:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  .fx-hover-lift {
+    transition:
+      transform var(--fx-dur-base) var(--fx-ease-out),
+      box-shadow var(--fx-dur-base) var(--fx-ease-out);
+  }
+  .fx-hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--fx-shadow-md);
+  }
+
+  .fx-hover-zoom {
+    overflow: hidden;
+  }
+  .fx-hover-zoom > * {
+    transition: transform var(--fx-dur-slow) var(--fx-ease-out);
+  }
+  .fx-hover-zoom:hover > * {
+    transform: scale(1.04);
+  }
+
+  .fx-hover-shift:hover .fx-shift,
+  .fx-hover-shift:focus-visible .fx-shift {
+    transform: translateX(6px);
+  }
+}
+
+/* ---- button (Inter Tight, 4px radius, sweep layer) ----------------------- */
+.fx-btn {
+  --fx-btn-bg: var(--fx-accent);
+  --fx-btn-ink: var(--fx-on-accent);
+  --fx-btn-sweep: var(--fx-ink);
+  --fx-btn-sweep-ink: var(--fx-bg);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.95em 1.4em;
+  border: 1px solid var(--fx-btn-bg);
+  border-radius: var(--fx-radius-2);
+  background: var(--fx-btn-bg);
+  color: var(--fx-btn-ink);
+  font-family: var(--fx-font-body);
+  font-size: 0.95rem;
+  font-weight: var(--fx-wght-semibold);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition:
+    color var(--fx-dur-base) var(--fx-ease-out),
+    border-color var(--fx-dur-base) var(--fx-ease-out);
+}
+
+.fx-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--fx-btn-sweep);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--fx-dur-base) var(--fx-ease-signal);
+}
+
+.fx-btn--ink {
+  --fx-btn-bg: var(--fx-ink);
+  --fx-btn-ink: var(--fx-bg);
+  --fx-btn-sweep: var(--fx-accent);
+  --fx-btn-sweep-ink: var(--fx-on-accent);
+}
+
+.fx-btn--outline {
+  --fx-btn-bg: transparent;
+  --fx-btn-ink: var(--fx-ink);
+  --fx-btn-sweep: var(--fx-ink);
+  --fx-btn-sweep-ink: var(--fx-bg);
+  border-color: var(--fx-line-strong);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fx-btn:hover,
+  .fx-btn:focus-visible {
+    color: var(--fx-btn-sweep-ink);
+    border-color: var(--fx-btn-sweep);
+  }
+  .fx-btn:hover::before,
+  .fx-btn:focus-visible::before {
+    transform: scaleX(1);
+  }
+  .fx-btn:hover .fx-shift,
+  .fx-btn:focus-visible .fx-shift {
+    transform: translateX(5px);
+  }
+}
+
+/* ---- pin: every step visible until JS takes over ------------------------- */
+.fx-pin--live [data-fx-step] {
+  opacity: 0.18;
+  transition: opacity var(--fx-dur-base) var(--fx-ease-out);
+}
+
+.fx-pin--live [data-fx-step].is-active {
+  opacity: 1;
+}
+
+/* ---- horizontal: native snap rail below desktop -------------------------- */
+[data-fx="horizontal"] [data-fx-track] {
+  display: flex;
+  gap: var(--fx-space-5);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-inline: var(--fx-gutter);
+  scrollbar-width: thin;
+}
+
+[data-fx="horizontal"] [data-fx-track] > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.fx-hz--live [data-fx-track] {
+  overflow: visible;
+  scroll-snap-type: none;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx-root *,
+  .fx-root *::before,
+  .fx-root *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .js-motion [data-fx^="reveal-"],
+  .js-motion [data-fx="fade-up"],
+  .js-motion [data-fx="image-reveal"] {
+    visibility: visible;
+  }
+}

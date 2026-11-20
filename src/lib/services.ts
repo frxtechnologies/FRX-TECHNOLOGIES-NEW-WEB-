@@ -1,8 +1,25 @@
 export type ServiceSlug =
-  | "web-development"
-  | "ai-automation"
   | "software-development"
-  | "ui-ux";
+  | "ai-automation"
+  | "web-development"
+  | "mobile-app-development"
+  | "web-applications-saas"
+  | "business-systems-crm"
+  | "ai-assistants-chatbots"
+  | "ui-ux"
+  | "data-analytics-bi";
+
+/** Which original illustration represents the service (see components/art). */
+export type ServiceArt =
+  | "blocks"
+  | "bot"
+  | "window"
+  | "phone"
+  | "laptop"
+  | "board"
+  | "chat"
+  | "cursor"
+  | "chart";
 
 export type Service = {
   slug: ServiceSlug;
@@ -14,7 +31,10 @@ export type Service = {
   tagline: string;
   summary: string;
   /** Drives the abstract background scene on the detail page. */
-  scene: "web" | "automation" | "software" | "interface";
+  scene: "web" | "automation" | "software" | "interface" | "mobile" | "business" | "assistant" | "data";
+  art: ServiceArt;
+  /** Concrete situations where this service is the answer. */
+  useCases: string[];
   problems: string[];
   approach: { heading: string; body: string }[];
   capabilities: string[];
@@ -32,6 +52,13 @@ export const SERVICES: Service[] = [
     summary:
       "Intelligent systems that automate repetitive processes, move information between platforms and trigger the next action without anyone remembering to do it.",
     scene: "automation",
+    art: "bot",
+    useCases: [
+          "Route new enquiries to the right person and log them automatically.",
+          "Keep two systems in sync without anyone re-typing data.",
+          "Turn a monthly reporting scramble into a scheduled, automatic report.",
+          "Classify and summarise incoming documents before a human sees them."
+    ],
     problems: [
       "The same data is typed into three different tools every day.",
       "Enquiries sit unanswered because nobody was notified.",
@@ -77,6 +104,13 @@ export const SERVICES: Service[] = [
     summary:
       "Premium responsive websites designed around a specific business — its audience, its content and the actions it needs visitors to take.",
     scene: "web",
+    art: "window",
+    useCases: [
+          "A company website the team can edit without a developer.",
+          "An online store connected to stock and fulfilment.",
+          "A fast landing experience for a launch or a campaign.",
+          "A rebuild of a slow or outdated site on a modern foundation."
+    ],
     problems: [
       "The site looks like everyone else's because it started as a template.",
       "Editing a single paragraph requires a developer.",
@@ -121,6 +155,13 @@ export const SERVICES: Service[] = [
     summary:
       "Dashboards, portals, internal tools and SaaS platforms built around specific operational workflows rather than bent to fit generic software.",
     scene: "software",
+    art: "blocks",
+    useCases: [
+          "Replace the spreadsheet the whole business depends on.",
+          "A customer or partner portal with its own logins.",
+          "An internal tool shaped around one team's daily workflow.",
+          "A first version of a product, built to be extended."
+    ],
     problems: [
       "The business runs on a spreadsheet nobody is allowed to touch.",
       "Off-the-shelf software covers 60% of the process and blocks the rest.",
@@ -178,6 +219,13 @@ export const SERVICES: Service[] = [
     summary:
       "Interface and interaction design focused on hierarchy, usability and motion — for products people use every day and for experiences people remember.",
     scene: "interface",
+    art: "cursor",
+    useCases: [
+          "Untangle a product that needs training to use.",
+          "Design a coherent system for a product that grew screen by screen.",
+          "Prototype an idea before committing engineering time.",
+          "Bring a mobile experience up to the standard of the desktop one."
+    ],
     problems: [
       "Users need training to complete a routine task.",
       "Every new screen invents its own patterns.",
@@ -213,6 +261,241 @@ export const SERVICES: Service[] = [
     ],
     technologies: ["React", "Next.js", "Flutter", "FlutterFlow", "Bubble", "Webflow"],
     related: ["web-development", "software-development"],
+  },
+  {
+    slug: "mobile-app-development",
+    index: "04",
+    name: "Mobile Apps",
+    title: "Mobile Application Development",
+    tagline: "Your product, in everyone's pocket.",
+    summary:
+      "iOS and Android applications built to feel native, connected to the systems and data your business already runs on.",
+    scene: "mobile",
+    art: "phone",
+    useCases: [
+      "A customer-facing app for bookings, orders or accounts.",
+      "A field-staff app that works from a phone instead of paperwork.",
+      "A companion app for an existing web platform.",
+      "An internal app for approvals, checklists or reporting.",
+    ],
+    problems: [
+      "Customers expect an app and the business only has a website.",
+      "Staff in the field still record work on paper and re-type it later.",
+      "An existing web system is unusable on a small screen.",
+      "Two separate apps for two platforms doubles every cost.",
+    ],
+    approach: [
+      {
+        heading: "Start from the thumb",
+        body: "Mobile flows are designed for one hand, interrupted attention and unreliable connections, not shrunk from desktop screens.",
+      },
+      {
+        heading: "One codebase where it makes sense",
+        body: "Cross-platform frameworks such as Flutter let one team ship to both platforms, with native work reserved for where it is genuinely needed.",
+      },
+      {
+        heading: "Connect it to the real system",
+        body: "The app talks to the same data and rules as the rest of the business, so there is one source of truth rather than another silo.",
+      },
+    ],
+    capabilities: [
+      "iOS and Android applications",
+      "Cross-platform development with Flutter",
+      "Customer apps and internal staff apps",
+      "Authentication, push notifications and offline support",
+      "API and backend integration",
+      "App store release preparation",
+    ],
+    technologies: ["Flutter", "FlutterFlow", "Firebase", "Supabase", "Node.js"],
+    related: ["software-development", "ui-ux"],
+  },
+  {
+    slug: "web-applications-saas",
+    index: "05",
+    name: "Web Apps & SaaS",
+    title: "Web Applications & SaaS Platforms",
+    tagline: "Products people sign in to, every day.",
+    summary:
+      "Multi-user web applications and subscription platforms — accounts, permissions, dashboards and billing-ready foundations — built to grow past a first version.",
+    scene: "software",
+    art: "laptop",
+    useCases: [
+      "Turn a service you deliver by hand into a product customers log into.",
+      "A multi-tenant platform where each client sees only their own data.",
+      "A dashboard-first product for a specific industry.",
+      "An MVP to test an idea with real users.",
+    ],
+    problems: [
+      "The service works, but it only scales as fast as you can personally deliver it.",
+      "A prototype exists but it was never built to carry real users.",
+      "Customers ask for logins, history and self-service you cannot offer.",
+      "Every new client means a new spreadsheet.",
+    ],
+    approach: [
+      {
+        heading: "Model accounts and permissions early",
+        body: "Who can see and change what is the hardest thing to retrofit. It is designed before the first screen.",
+      },
+      {
+        heading: "Ship the smallest useful product",
+        body: "The first release covers the workflow that matters most, goes into real use, and is extended by what real usage shows.",
+      },
+      {
+        heading: "Build the foundations of a business",
+        body: "Authentication, roles, audit trails and a clean data model are part of the build, so growth does not mean a rewrite.",
+      },
+    ],
+    capabilities: [
+      "SaaS and subscription platforms",
+      "Multi-user dashboards and admin panels",
+      "Authentication, roles and permissions",
+      "Customer portals and self-service",
+      "APIs and third-party integrations",
+      "MVPs and first product releases",
+    ],
+    technologies: ["Next.js", "React", "TypeScript", "Supabase", "PostgreSQL", "Node.js"],
+    related: ["software-development", "business-systems-crm"],
+  },
+  {
+    slug: "business-systems-crm",
+    index: "06",
+    name: "Business Systems",
+    title: "Business Systems: CRM, CMS, LMS & POS",
+    tagline: "The system your business actually runs on.",
+    summary:
+      "CRM, CMS, LMS, point-of-sale and business management platforms, shaped around your process instead of a vendor's idea of one.",
+    scene: "business",
+    art: "board",
+    useCases: [
+      "A CRM that matches how your team really sells and follows up.",
+      "A content system so non-technical staff can publish.",
+      "A learning platform for courses, cohorts and progress tracking.",
+      "A point-of-sale and stock system for a retail or food business.",
+    ],
+    problems: [
+      "Off-the-shelf software covers most of the process and blocks the rest.",
+      "Customer, stock and sales information live in different places.",
+      "Staff work around the system instead of in it.",
+      "Reporting means exporting three files and merging them.",
+    ],
+    approach: [
+      {
+        heading: "Map how the work really flows",
+        body: "We trace the process as it is practised, not as it is documented, and keep what works.",
+      },
+      {
+        heading: "Build the system around it",
+        body: "Records, stages, permissions and reports are designed around your workflow, with the screens staff use hours a day made fast.",
+      },
+      {
+        heading: "Connect what already exists",
+        body: "Where a good tool already works, it is integrated rather than replaced.",
+      },
+    ],
+    capabilities: [
+      "CRM and sales pipeline platforms",
+      "CMS and content management",
+      "LMS and learning platforms",
+      "POS and inventory systems",
+      "Business management and operations tools",
+      "Custom dashboards and admin panels",
+    ],
+    technologies: ["Next.js", "Node.js", ".NET Core", "PostgreSQL", "SQL Server", "MySQL"],
+    related: ["software-development", "data-analytics-bi"],
+  },
+  {
+    slug: "ai-assistants-chatbots",
+    index: "07",
+    name: "AI Assistants",
+    title: "AI Assistants, Chatbots & Voice Receptionists",
+    tagline: "Answers at any hour, in your voice.",
+    summary:
+      "Chatbots, knowledge assistants, AI voice receptionists and sales assistants grounded in your own information and connected to your workflow.",
+    scene: "assistant",
+    art: "chat",
+    useCases: [
+      "A website assistant that answers common questions from your own content.",
+      "A voice receptionist that answers calls and captures the details.",
+      "An internal assistant that finds answers in company documents.",
+      "A sales assistant that qualifies enquiries and books the next step.",
+    ],
+    problems: [
+      "The same questions arrive by phone, chat and email all day.",
+      "Calls go unanswered outside working hours.",
+      "Staff spend time searching documents for answers that exist.",
+      "Leads wait too long for a first response.",
+    ],
+    approach: [
+      {
+        heading: "Ground it in your information",
+        body: "An assistant is only as good as what it knows. It answers from your content, and says so when it does not know.",
+      },
+      {
+        heading: "Connect it to the workflow",
+        body: "Conversations create enquiries, bookings or tasks in the systems you already use, rather than ending in a chat window.",
+      },
+      {
+        heading: "Keep a human in the loop",
+        body: "Clear hand-off to a person, reviewable conversations and sensible limits keep the assistant predictable.",
+      },
+    ],
+    capabilities: [
+      "Website and WhatsApp chatbots",
+      "AI voice receptionists",
+      "AI sales and enquiry assistants",
+      "Internal knowledge assistants",
+      "Hand-off to staff and CRM integration",
+      "Conversation review and analytics",
+    ],
+    technologies: ["OpenAI", "Azure OpenAI", "Gemini", "LangChain", "n8n", "Node.js"],
+    related: ["ai-automation", "business-systems-crm"],
+  },
+  {
+    slug: "data-analytics-bi",
+    index: "08",
+    name: "Data & Analytics",
+    title: "Data Analytics & Business Intelligence",
+    tagline: "Answers, not exports.",
+    summary:
+      "Dashboards, reporting pipelines and business intelligence that turn the data you already collect into decisions you can act on.",
+    scene: "data",
+    art: "chart",
+    useCases: [
+      "One live dashboard in place of a weekly reporting scramble.",
+      "Combine sales, stock and customer data that sit in different tools.",
+      "Track the handful of numbers a team actually manages by.",
+      "Clean and structure messy historical data before it is analysed.",
+    ],
+    problems: [
+      "Nobody can answer a simple question without exporting three reports.",
+      "Numbers differ depending on who built the spreadsheet.",
+      "Reports are out of date by the time they are shared.",
+      "Data exists, but nobody trusts it.",
+    ],
+    approach: [
+      {
+        heading: "Agree what to measure",
+        body: "We start from the decisions the business makes and work backwards to the few numbers that inform them.",
+      },
+      {
+        heading: "Bring the data together",
+        body: "Sources are connected and cleaned once, so every report draws from the same, trusted figures.",
+      },
+      {
+        heading: "Make it visible",
+        body: "Dashboards are designed to be read in seconds, with the detail one click away.",
+      },
+    ],
+    capabilities: [
+      "Business intelligence dashboards",
+      "Reporting automation and scheduled reports",
+      "Data pipelines and integration",
+      "Data cleaning and modelling",
+      "Power BI and custom analytics views",
+      "KPI tracking for operations and sales",
+    ],
+    technologies: ["Power BI", "PostgreSQL", "SQL Server", "Python", "Node.js"],
+    related: ["business-systems-crm", "ai-automation"],
   },
 ];
 
@@ -349,3 +632,33 @@ export const BELIEFS = [
     body: "The version that ships should not be the version that has to be thrown away to grow.",
   },
 ] as const;
+
+/** Display order and full names, as presented in the Services section. */
+export const SERVICE_ORDER: ServiceSlug[] = [
+  "software-development",
+  "ai-automation",
+  "web-development",
+  "mobile-app-development",
+  "web-applications-saas",
+  "business-systems-crm",
+  "ai-assistants-chatbots",
+  "ui-ux",
+  "data-analytics-bi",
+];
+
+export const SERVICE_LABEL: Record<ServiceSlug, string> = {
+  "software-development": "Custom Software Development",
+  "ai-automation": "AI Automation & Integrations",
+  "web-development": "Web Development & E-commerce",
+  "mobile-app-development": "Mobile Application Development",
+  "web-applications-saas": "Web Applications & SaaS",
+  "business-systems-crm": "Business Systems & CRM",
+  "ai-assistants-chatbots": "AI Assistants & Chatbots",
+  "ui-ux": "UI/UX & Digital Product Design",
+  "data-analytics-bi": "Data Analytics & Business Intelligence",
+};
+
+SERVICES.sort((a, b) => SERVICE_ORDER.indexOf(a.slug) - SERVICE_ORDER.indexOf(b.slug));
+SERVICES.forEach((s, i) => {
+  s.index = String(i + 1).padStart(2, "0");
+});

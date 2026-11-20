@@ -1,0 +1,147 @@
+/* FRX intro. Unlayered, prefix .ld-, driven by GSAP (see frx-loader.tsx). */
+
+.ld {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-loader, 100);
+  overflow: hidden;
+  /* The curtain is taller than the viewport; nothing may scroll it into view. */
+  contain: strict;
+}
+
+.ld-paper {
+  position: absolute;
+  inset: 0;
+  background: var(--fx-bg);
+  color: var(--fx-ink);
+  display: grid;
+  place-items: center;
+}
+
+.ld-center {
+  width: min(30rem, 70vw);
+}
+
+/* The lockup is wiped in along its own italic slant: the clip edge leans at
+   about the same angle as the letterforms, so the reveal looks cut from the
+   artwork rather than laid over it. --wipe runs 0→1. */
+.ld-logo {
+  --wipe: 0;
+  --lean: 9%;
+  clip-path: polygon(
+    0 0,
+    calc((100% + var(--lean)) * var(--wipe)) 0,
+    calc((100% + var(--lean)) * var(--wipe) - var(--lean)) 100%,
+    0 100%
+  );
+}
+
+.ld-words {
+  position: absolute;
+  inset-block-start: clamp(1.25rem, 3.5vw, 2.75rem);
+  inset-inline-start: var(--fx-gutter);
+  display: grid;
+  gap: 0.15rem;
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: clamp(1.1rem, 0.9rem + 0.9vw, 1.7rem);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.ld-words li {
+  color: var(--fx-ink-3);
+  opacity: 0.35;
+  transition:
+    opacity 0.25s var(--fx-ease-out),
+    color 0.25s var(--fx-ease-out);
+}
+
+.ld-words li.is-on {
+  opacity: 1;
+  color: var(--fx-accent-text);
+}
+
+.ld-num-wrap {
+  position: absolute;
+  inset-inline-start: var(--fx-gutter);
+  inset-block-end: clamp(1rem, 3vw, 2.25rem);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.15em;
+  overflow: clip;
+  padding-block: 0.06em;
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: clamp(5.5rem, 3rem + 17vw, 17rem);
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ld-pct {
+  font-size: 0.32em;
+  line-height: 1;
+  color: var(--fx-accent-text);
+  margin-block-start: 0.12em;
+}
+
+.ld-meta {
+  position: absolute;
+  inset-block-end: clamp(1.25rem, 3.4vw, 2.5rem);
+  inset-inline-end: var(--fx-gutter);
+  font-family: var(--fx-font-body);
+  font-size: var(--fx-fs-label);
+  font-weight: 600;
+  letter-spacing: var(--fx-ls-label);
+  text-transform: uppercase;
+  color: var(--fx-ink-3);
+}
+
+.ld-rule {
+  position: absolute;
+  inset-inline: var(--fx-gutter);
+  inset-block-end: 0;
+  height: 3px;
+  background: var(--fx-line);
+}
+
+.ld-rule i {
+  display: block;
+  height: 100%;
+  background: var(--fx-blue);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* Parallelogram, 124vh tall: the top-left sits 12vh lower than the top-right,
+   so the leading edge is slanted going up AND the trailing edge is slanted
+   going away. At translateY(0) it covers the viewport exactly. */
+.ld-blue {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: -12vh;
+  height: 124vh;
+  background: linear-gradient(150deg, var(--fx-blue-deep), var(--fx-blue) 45%, var(--fx-blue-bright));
+  clip-path: polygon(0 12vh, 100% 0, 100% 112vh, 0 124vh);
+  display: grid;
+  place-items: center;
+  will-change: transform;
+}
+
+/* All-white lockup: the X is blue in the artwork and would vanish on blue, so
+   the whole mark is flattened to white for this beat. */
+.ld-blue-logo {
+  width: min(30rem, 70vw);
+  filter: brightness(0) invert(1);
+}
+
+@media (max-width: 640px) {
+  .ld-center,
+  .ld-blue-logo {
+    width: 72vw;
+  }
+}

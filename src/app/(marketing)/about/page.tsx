@@ -1,127 +1,158 @@
-import { BELIEFS } from "@/lib/services";
-import { TECH_CATEGORIES } from "@/lib/technologies";
-import { SITE } from "@/lib/site";
-import { PageHero } from "@/components/shared/page-hero";
-import { ContactCta } from "@/components/shared/contact-cta";
-import { Founders } from "@/components/home/founders";
-import { Reveal, RevealLines } from "@/components/ui/reveal";
+import Link from "next/link";
 import { pageMetadata } from "@/lib/metadata";
+import { getAffiliations, getFounders, getSettings, getTechnologies } from "@/lib/content/server";
+import { pairs, paragraphs } from "@/lib/content/parse";
+import { PageIntro } from "@/components/sections/page-intro";
+import { AboutPath } from "@/components/sections/about-path";
+import { ScrollWords } from "@/components/motion/scroll-words";
+import { FoundersSection } from "@/components/sections/founders-section";
+import { Technologies } from "@/components/sections/technologies";
+import { BlockStack, BotBuddy, CursorBuddy, Sparkle, WindowBuddy, Asterisk } from "@/components/art/characters";
+import { LaptopBuddy, PanelChart, PanelCode } from "@/components/art/scenes";
+import { JsonLd } from "@/components/shared/json-ld";
+import { SITE } from "@/lib/site";
+import type { ReactNode } from "react";
 
 export const metadata = pageMetadata({
   title: "About",
   description:
-    "FRX Technologies combines software engineering, AI, automation and product design to build technology around real operational requirements.",
+    "FRX Technologies is a software and technology company founded in 2026 by Feroze Mohiuddin and Raaef Usman, building custom software, AI automation, web experiences and digital products.",
   path: "/about",
 });
 
-export default function AboutPage() {
+const DIFF_ART: ReactNode[] = [
+  <BlockStack key="a" className="fxab-art" />,
+  <WindowBuddy key="b" className="fxab-art" />,
+  <BotBuddy key="c" className="fxab-art" />,
+  <CursorBuddy key="d" className="fxab-art" />,
+];
+
+export default async function AboutPage() {
+  const [settings, founders, techs, affiliations] = await Promise.all([
+    getSettings(),
+    getFounders(),
+    getTechnologies(),
+    getAffiliations(),
+  ]);
+  const { about } = settings;
+  const story = paragraphs(about.story);
+  const values = pairs(about.values);
+  const different = pairs(about.different);
+
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "About FRX Technologies",
+    url: `${SITE.url}/about`,
+    mainEntity: {
+      "@type": "Organization",
+      name: SITE.name,
+      foundingDate: "2026",
+      founder: founders.map((f) => ({ "@type": "Person", name: f.name, jobTitle: f.role })),
+    },
+  };
+
   return (
     <>
-      <PageHero
+      <PageIntro
         eyebrow="About FRX"
-        lines={["Technology should solve", "the business,", "not complicate it."]}
-        body="FRX Technologies combines software engineering, artificial intelligence, automation and product design to build systems around how a business actually operates."
-        variant="wide"
+        title={about.lead}
+        lead="Founded in 2026 by Feroze Mohiuddin and Raaef Usman."
+        art={
+          <>
+            <LaptopBuddy className="fxp-a fxp-a--laptop fxa-bob" />
+            <BotBuddy className="fxp-a fxp-a--bot fxa-bob" />
+            <PanelCode className="fxp-a fxp-a--panel1 fxa-bob" />
+            <PanelChart className="fxp-a fxp-a--panel2 fxa-bob" />
+            <Sparkle className="fxp-a fxp-a--spark" />
+          </>
+        }
       />
 
-      {/* -- philosophy ---------------------------------------------------- */}
-      <section className="section">
-        <div className="container grid gap-[clamp(2rem,5vw,4.5rem)] lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.25fr)]">
-          <p className="t-eyebrow">Philosophy</p>
+      <div className="fxab">
+        <AboutPath />
 
-          <div className="flex flex-col gap-8">
-            <RevealLines
-              as="h2"
-              className="t-h3 max-w-[24ch]"
-              lines={[
-                "Most software fails for the",
-                <span key="p2">
-                  same reason: it was built to be{" "}
-                  <span className="accent">sold</span>, not used.
-                </span>,
-              ]}
-            />
-
-            <Reveal className="flex max-w-[58ch] flex-col gap-5 text-step-md leading-relaxed text-[var(--text-muted)]">
-              <p>
-                Generic platforms are shaped around the average of every business that
-                might buy them. That average doesn&apos;t exist. What exists is a specific
-                team with a specific process, and the gap between the two is where the
-                spreadsheets, the workarounds and the manual re-entry come from.
+        <section className="fx-container fxab-story" aria-labelledby="fxab-story-h">
+          <h2 id="fxab-story-h" className="fx-label fxab-kicker">
+            Our story
+          </h2>
+          <div className="fxab-story-body">
+            {story.map((p, i) => (
+              <p key={i} className={i === 0 ? "fx-h1 fxab-big" : "fx-lead"} data-fx="fade-up">
+                {p}
               </p>
-              <p>
-                FRX starts from the requirement instead. We map how the work actually
-                moves — who touches what, in what order, and where it stalls — then build
-                technology around that. Sometimes that&apos;s a website. Sometimes it&apos;s
-                an automation that quietly removes four hours a week. Sometimes it&apos;s a
-                full system. The stack follows the problem, never the other way around.
-              </p>
-              <p className="text-[var(--text)]">{SITE.philosophy}</p>
-            </Reveal>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* -- beliefs ------------------------------------------------------- */}
-      <section className="section bg-[var(--bg-elevated)]">
-        <div className="container">
-          <div className="mb-[clamp(2.5rem,5vw,4rem)] flex flex-col gap-5">
-            <p className="t-eyebrow">What we believe</p>
-            <RevealLines
-              as="h2"
-              className="t-h2 max-w-[18ch]"
-              lines={["Five rules we", "actually follow."]}
-            />
+        <section className="fxab-statement" aria-label="Our statement">
+          <div className="fx-container">
+            <ScrollWords as="p" className="fxab-statement-text fx-d2" text={about.statement} />
           </div>
+        </section>
 
-          <ul className="belief-list">
-            {BELIEFS.map((b, i) => (
-              <Reveal as="li" key={b.title} className="belief-row" delay={i * 0.05}>
-                <span className="t-index belief-index">
+        <section className="fx-container fxab-rules" aria-labelledby="fxab-rules-h">
+          <header className="fxab-rules-head">
+            <h2 id="fxab-rules-h" className="fx-d1 fx-up" data-fx="reveal-lines">
+              How we work
+            </h2>
+            <p className="fx-lead" data-fx="fade-up">
+              The rules we build by.
+            </p>
+          </header>
+          <ol className="fxab-rules-list">
+            {values.map((v, i) => (
+              <li key={v.title} className="fxab-rule" data-fx="fade-up">
+                <span className="fxab-rule-n fx-outline fx-outline--lg" aria-hidden="true">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <h3 className="belief-title">{b.title}</h3>
-                <p className="belief-body">{b.body}</p>
-              </Reveal>
+                <div>
+                  <h3 className="fx-d3 fx-up">{v.title}</h3>
+                  {v.body ? <p className="fx-body">{v.body}</p> : null}
+                </div>
+              </li>
             ))}
-          </ul>
-        </div>
-      </section>
+          </ol>
+        </section>
 
-      <Founders />
-
-      {/* -- capabilities, condensed --------------------------------------- */}
-      <section className="section bg-[var(--bg-elevated)]">
-        <div className="container">
-          <div className="mb-[clamp(2rem,4vw,3rem)] flex flex-col gap-5">
-            <p className="t-eyebrow">Capabilities</p>
-            <h2 className="t-h3 max-w-[20ch]">
-              What we work <span className="accent">across</span>.
+        <section className="fx-container fxab-diff" aria-labelledby="fxab-diff-h">
+          <header className="fxab-diff-head">
+            <h2 id="fxab-diff-h" className="fx-d1 fx-up" data-fx="reveal-lines">
+              What makes FRX different
             </h2>
-          </div>
-
-          <dl className="tech-table">
-            {TECH_CATEGORIES.map((cat) => (
-              <Reveal key={cat.key} className="tech-table-row">
-                <dt className="tech-table-label">{cat.label}</dt>
-                <dd className="tech-table-items">
-                  {cat.items.map((item) => (
-                    <span key={item} className="tech-chip">
-                      {item}
-                    </span>
-                  ))}
-                </dd>
-              </Reveal>
+            <Asterisk className="fxab-ast" />
+          </header>
+          <div className="fxab-diff-grid">
+            {different.map((d, i) => (
+              <article key={d.title} className="fxab-diff-card" data-tone={["tint", "paper", "ink", "blue"][i % 4]} data-fx="fade-up">
+                <div className="fxab-diff-art" aria-hidden="true">
+                  {DIFF_ART[i % DIFF_ART.length]}
+                </div>
+                <h3 className="fx-h2">{d.title}</h3>
+                {d.body ? <p className="fx-body">{d.body}</p> : null}
+              </article>
             ))}
-          </dl>
+          </div>
+        </section>
+      </div>
+
+      <FoundersSection founders={founders} />
+      <Technologies items={techs} affiliations={affiliations} />
+
+      <section className="fxab-cta" aria-labelledby="fxab-cta-h">
+        <div className="fx-container">
+          <h2 id="fxab-cta-h" className="fx-d1 fx-up" data-fx="reveal-lines">
+            Have something to build?
+          </h2>
+          <p className="fx-lead" data-fx="fade-up">
+            Tell us what you are trying to make work harder.
+          </p>
+          <Link href="/contact" className="fx-btn fx-btn--ink fx-hover-shift" data-fx="fade-up">
+            Start a project <span className="fx-shift" aria-hidden="true">→</span>
+          </Link>
         </div>
       </section>
-
-      <ContactCta
-        eyebrow="Work with FRX"
-        lines={["Have something", "worth building?"]}
-        body="If you've read this far, you probably have a specific problem in mind. Tell us about it."
-      />
+      <JsonLd data={aboutSchema} />
     </>
   );
 }

@@ -6,12 +6,15 @@ export const metadata = { title: "Admin overview", robots: { index: false, follo
 export default async function AdminOverviewPage() {
   const supabase = await createServerSupabase();
 
-  const [{ count: newCount }, { count: totalCount }, { count: assistantCount }, { count: founderCount }] =
+  const [{ count: newCount }, { count: totalCount }, { count: assistantCount }, { count: founderCount }, pendingReviews, publishedProjects] =
     await Promise.all([
       supabase.from("inquiries").select("*", { count: "exact", head: true }).eq("status", "new"),
       supabase.from("inquiries").select("*", { count: "exact", head: true }),
       supabase.from("assistant_entries").select("*", { count: "exact", head: true }),
       supabase.from("founders").select("*", { count: "exact", head: true }),
+      // These two tables come from the content migration; before it is run they simply read as 0.
+      supabase.from("reviews").select("*", { count: "exact", head: true }).eq("status", "pending"),
+      supabase.from("projects").select("*", { count: "exact", head: true }).eq("published", true),
     ]);
 
   const { data: recent } = await supabase
@@ -43,6 +46,14 @@ export default async function AdminOverviewPage() {
           <span className="admin-stat-value">{founderCount ?? 0}</span>
           <span className="admin-stat-label">Founders</span>
         </div>
+        <Link href="/admin/reviews" className="admin-stat">
+          <span className="admin-stat-value">{pendingReviews.count ?? 0}</span>
+          <span className="admin-stat-label">Reviews awaiting approval</span>
+        </Link>
+        <Link href="/admin/projects" className="admin-stat">
+          <span className="admin-stat-value">{publishedProjects.count ?? 0}</span>
+          <span className="admin-stat-label">Published projects</span>
+        </Link>
       </div>
 
       <div className="admin-card">

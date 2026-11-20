@@ -1,48 +1,108 @@
 import type { Metadata } from "next";
-
-import { Hero } from "@/components/home/hero";
-import { Rails } from "@/components/home/rails";
-import { IntroStatement } from "@/components/home/intro-statement";
-import { ServiceIndex } from "@/components/home/service-index";
-import { HorizontalJourney } from "@/components/home/horizontal-journey";
-import { GrowthFeature } from "@/components/home/growth-feature";
-import { Process } from "@/components/home/process";
-import { TechnologyScene } from "@/components/home/technology-scene";
-import { AutomationScene } from "@/components/home/automation-scene";
-import { BuildCategories } from "@/components/home/build-categories";
-import { Founders } from "@/components/home/founders";
-import { ReelSection } from "@/components/home/reel-section";
-import { ContactCta } from "@/components/shared/contact-cta";
+import { FxHero } from "@/components/home/fx-hero";
+import { FxMarquee } from "@/components/home/fx-marquee";
+import { AboutPreview } from "@/components/sections/about-preview";
+import { SelectedWork } from "@/components/sections/selected-work";
+import { ServicesStage } from "@/components/sections/services-stage";
+import { Technologies } from "@/components/sections/technologies";
+import { Testimonials, type TestimonialItem } from "@/components/sections/testimonials";
+import { FoundersSection } from "@/components/sections/founders-section";
+import { Faq } from "@/components/sections/faq";
+import { LeaveReview } from "@/components/sections/leave-review";
+import { ContactSection } from "@/components/sections/contact-section";
+import { JsonLd } from "@/components/shared/json-ld";
+import { mediaUrl } from "@/lib/content/media";
+import {
+  getAffiliations,
+  getApprovedReviews,
+  getFaqs,
+  getFounders,
+  getProjects,
+  getServices,
+  getSettings,
+  getTechnologies,
+  getTestimonials,
+} from "@/lib/content/server";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
 /**
- * The homepage narrative, in order:
- * hero → rails → statement + counters → services index → horizontal journey →
- * automation argument → automation mechanism → process → stack → what we build →
- * founders → reel → closing CTA.
+ * The homepage, in order:
+ *   A hero · B statement strip · C about · D selected work · E services ·
+ *   F technologies · G testimonials · H founders · I FAQ · J leave a review · K contact
+ * (the footer and the floating WhatsApp button live in the marketing layout).
  *
- * The order is chosen so surfaces alternate — light, elevated, black, blue —
- * and each section hands off to a different ground than it started on.
+ * Every section reads editable content (Supabase → admin) with in-code defaults,
+ * and nothing is invented: the testimonials section appears only once real,
+ * approved testimonials or reviews exist.
  */
-export default function HomePage() {
+export default async function HomePage() {
+  const [settings, projects, services, techs, affiliations, faqs, testimonials, reviews, founders] =
+    await Promise.all([
+      getSettings(),
+      getProjects(),
+      getServices(),
+      getTechnologies(),
+      getAffiliations(),
+      getFaqs(),
+      getTestimonials(),
+      getApprovedReviews(),
+      getFounders(),
+    ]);
+
+  const quotes: TestimonialItem[] = [
+    ...testimonials.map((t) => ({
+      id: t.id,
+      name: t.name,
+      designation: t.designation,
+      company: t.company,
+      text: t.text,
+      portrait: t.portrait,
+    })),
+    ...reviews.map((r) => ({
+      id: r.id,
+      name: r.name,
+      designation: "",
+      company: r.company,
+      text: r.text,
+      portrait: null,
+      rating: r.rating,
+    })),
+  ];
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  };
+
   return (
     <>
-      <Hero />
-      <Rails />
-      <IntroStatement />
-      <ServiceIndex />
-      <HorizontalJourney />
-      <GrowthFeature />
-      <AutomationScene />
-      <Process />
-      <TechnologyScene />
-      <BuildCategories />
-      <Founders />
-      <ReelSection />
-      <ContactCta />
+      <FxHero
+        content={settings.hero}
+        images={{
+          window: mediaUrl(settings.hero.imageWindow),
+          bot: mediaUrl(settings.hero.imageBot),
+          blocks: mediaUrl(settings.hero.imageBlocks),
+        }}
+      />
+      <FxMarquee />
+      <AboutPreview text={settings.about.preview} />
+      <SelectedWork projects={projects} />
+      <ServicesStage services={services} />
+      <Technologies items={techs} affiliations={affiliations} />
+      <Testimonials items={quotes} />
+      <FoundersSection founders={founders} />
+      <Faq faqs={faqs} />
+      <LeaveReview />
+      <ContactSection contact={settings.contact} />
+      <JsonLd data={faqSchema} />
     </>
   );
 }
