@@ -1,0 +1,177 @@
+/*
+ * FRX TYPOGRAPHY + LAYOUT UTILITIES  (requires tokens.css)
+ * ---------------------------------------------------------------------------
+ * Division of labour (decided in the typography stage):
+ *   Bricolage Grotesque  -> display: hero, oversized headings, editorial words
+ *   Inter Tight          -> everything functional: paragraphs, nav, buttons,
+ *                           labels, forms, admin UI
+ *
+ * Scale:    .fx-mega  .fx-d1  .fx-d2  .fx-d3          (display, Bricolage)
+ *           .fx-h1 .. .fx-h4                           (headings, Bricolage)
+ *           .fx-lead  .fx-body  .fx-small              (Inter Tight)
+ *           .fx-label  .fx-micro  .fx-nav              (Inter Tight, UI)
+ * Modifiers: .fx-up  .fx-w-*  .fx-wdth-*  .fx-accent  .fx-muted  .fx-outline
+ *
+ * Rules are unlayered on purpose (the existing globals.css puts its element
+ * resets in @layer base / components, and unlayered styles beat layered ones).
+ */
+
+.fx-root :where(h1, h2, h3, h4, h5, h6, p, figure, blockquote, ul, ol) {
+  margin: 0;
+}
+
+.fx-root :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.fx-root :where(a) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.fx-root ::selection {
+  background: var(--fx-accent);
+  color: var(--fx-on-accent);
+}
+
+.fx-root :focus-visible {
+  outline: 2px solid var(--fx-accent-text);
+  outline-offset: 3px;
+}
+
+/* ---- display (Bricolage) ------------------------------------------------ */
+.fx-mega,
+.fx-d1,
+.fx-d2,
+.fx-d3,
+.fx-h1,
+.fx-h2,
+.fx-h3,
+.fx-h4 {
+  font-family: var(--fx-font-display);
+  font-optical-sizing: auto; /* opsz follows the rendered size: 96 when huge */
+  font-weight: var(--fx-wght-black);
+  font-stretch: var(--fx-wdth-condensed);
+  letter-spacing: var(--fx-ls-display);
+  line-height: var(--fx-lh-display);
+  text-wrap: wrap;
+}
+
+.fx-mega {
+  font-size: var(--fx-fs-mega);
+  line-height: var(--fx-lh-mega);
+  letter-spacing: var(--fx-ls-mega);
+}
+
+.fx-d1 { font-size: var(--fx-fs-d1); }
+.fx-d2 { font-size: var(--fx-fs-d2); }
+.fx-d3 { font-size: var(--fx-fs-d3); }
+
+/* Headings sit one step calmer: bold, slightly wider, normal leading. */
+.fx-h1,
+.fx-h2,
+.fx-h3,
+.fx-h4 {
+  font-weight: var(--fx-wght-bold);
+  font-stretch: var(--fx-wdth-narrow);
+  letter-spacing: var(--fx-ls-heading);
+  line-height: var(--fx-lh-heading);
+  text-wrap: balance;
+}
+
+.fx-h1 { font-size: var(--fx-fs-h1); }
+.fx-h2 { font-size: var(--fx-fs-h2); }
+.fx-h3 { font-size: var(--fx-fs-h3); line-height: var(--fx-lh-subheading); }
+.fx-h4 { font-size: var(--fx-fs-h4); line-height: var(--fx-lh-snug); font-weight: var(--fx-wght-semibold); font-stretch: var(--fx-wdth-normal); }
+
+/* ---- body & UI (Inter Tight) ------------------------------------------- */
+.fx-lead,
+.fx-body,
+.fx-small,
+.fx-label,
+.fx-micro,
+.fx-nav {
+  font-family: var(--fx-font-body);
+  font-weight: var(--fx-wght-regular);
+}
+
+.fx-lead { font-size: var(--fx-fs-lead); line-height: var(--fx-lh-snug); letter-spacing: -0.014em; text-wrap: pretty; }
+.fx-body { font-size: var(--fx-fs-body); line-height: var(--fx-lh-body); letter-spacing: var(--fx-ls-body); text-wrap: pretty; }
+.fx-small { font-size: var(--fx-fs-small); line-height: var(--fx-lh-body); }
+
+.fx-label {
+  font-size: var(--fx-fs-label);
+  font-weight: var(--fx-wght-semibold);
+  letter-spacing: var(--fx-ls-label);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.fx-micro { font-size: var(--fx-fs-micro); line-height: 1.4; letter-spacing: 0.02em; }
+
+.fx-nav {
+  font-size: 0.875rem;
+  font-weight: var(--fx-wght-medium);
+  letter-spacing: -0.005em;
+}
+
+/* ---- modifiers ---------------------------------------------------------- */
+.fx-up { text-transform: uppercase; }
+.fx-w-hairline { font-weight: var(--fx-wght-hairline); }
+.fx-w-light { font-weight: var(--fx-wght-light); }
+.fx-w-regular { font-weight: var(--fx-wght-regular); }
+.fx-w-medium { font-weight: var(--fx-wght-medium); }
+.fx-w-semibold { font-weight: var(--fx-wght-semibold); }
+.fx-w-bold { font-weight: var(--fx-wght-bold); }
+.fx-w-black { font-weight: var(--fx-wght-black); }
+.fx-wdth-condensed { font-stretch: var(--fx-wdth-condensed); }
+.fx-wdth-narrow { font-stretch: var(--fx-wdth-narrow); }
+.fx-wdth-normal { font-stretch: var(--fx-wdth-normal); }
+.fx-accent { color: var(--fx-accent-text); }
+.fx-muted { color: var(--fx-ink-2); }
+.fx-faint { color: var(--fx-ink-3); }
+.fx-balance { text-wrap: balance; }
+.fx-nowrap { white-space: nowrap; }
+.fx-tabular { font-variant-numeric: tabular-nums; }
+.fx-measure { max-inline-size: var(--fx-w-prose); }
+
+/* ---- outline text ------------------------------------------------------- */
+/*
+ * Hollow letters with a clean contour. -webkit-text-stroke is NOT used: on a
+ * variable font it strokes every overlapping contour inside a glyph (see the
+ * outline study on /design-system). Instead an SVG filter (<FxDefs/>, mounted
+ * once per page) dilates the glyph and subtracts the original, leaving only a
+ * ring. The interior is genuinely transparent and the ring takes the element's
+ * own text colour, so it works on any background in either theme.
+ *
+ * Use on a few large words, not paragraphs (filters cost paint time).
+ *   .fx-outline          ~2px ring   — d2 / d3 / h1
+ *   .fx-outline--sm      ~1.2px ring — h2 and below
+ *   .fx-outline--lg      ~3.6px ring — mega / d1 on desktop (falls back to md on phones)
+ */
+.fx-outline { filter: url(#fx-outline-md); }
+.fx-outline--sm { filter: url(#fx-outline-sm); }
+.fx-outline--lg { filter: url(#fx-outline-lg); }
+
+@media (max-width: 640px) {
+  .fx-outline--lg { filter: url(#fx-outline-md); }
+}
+
+/* ---- layout ------------------------------------------------------------- */
+.fx-container {
+  inline-size: 100%;
+  max-inline-size: var(--fx-w-wide);
+  margin-inline: auto;
+  padding-inline: var(--fx-gutter);
+}
+
+.fx-container-content { max-inline-size: var(--fx-w-content); }
+.fx-container-narrow { max-inline-size: var(--fx-w-narrow); }
+.fx-section { padding-block: var(--fx-section-y); position: relative; }
+.fx-section-tight { padding-block: var(--fx-section-y-tight); position: relative; }
+.fx-stack { display: flex; flex-direction: column; gap: var(--fx-stack); }
+.fx-rule { border: 0; border-block-start: var(--fx-rule); margin: 0; }
+.fx-hairline { border: 0; border-block-start: var(--fx-border); margin: 0; }
+.fx-surface { background: var(--fx-surface); border: var(--fx-border); border-radius: var(--fx-radius-3); }
+.fx-invert { background: var(--fx-invert-bg); color: var(--fx-invert-ink); }
