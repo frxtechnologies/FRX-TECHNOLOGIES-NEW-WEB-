@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { ADMIN_EMAIL } from "@/lib/supabase/env";
+import { isAdminEmail } from "@/lib/supabase/env";
 import { AdminSidebar } from "@/components/admin/sidebar";
 
 /**
@@ -28,7 +28,7 @@ export default async function ProtectedAdminLayout({
     redirect("/admin/login");
   }
 
-  if (email !== ADMIN_EMAIL) {
+  if (!isAdminEmail(email)) {
     redirect("/admin/login");
   }
 

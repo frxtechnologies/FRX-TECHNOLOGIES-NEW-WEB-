@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { ADMIN_EMAIL } from "@/lib/supabase/env";
+import { ADMIN_EMAIL, isAdminEmail } from "@/lib/supabase/env";
 
 /**
  * Sends the admin's reply to an inquiry by email and records it on the row.
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user?.email !== ADMIN_EMAIL) {
+  if (!isAdminEmail(user?.email)) {
     return NextResponse.json({ ok: false, reason: "unauthorized" }, { status: 401 });
   }
 

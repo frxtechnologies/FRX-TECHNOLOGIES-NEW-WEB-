@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { ADMIN_EMAIL } from "@/lib/supabase/env";
+import { isAdminEmail } from "@/lib/supabase/env";
 
 /**
  * Called by the admin panel right after a content save so the public site shows
@@ -15,7 +15,7 @@ export async function POST() {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (user?.email !== ADMIN_EMAIL) {
+    if (!isAdminEmail(user?.email)) {
       return NextResponse.json({ ok: false }, { status: 401 });
     }
     revalidatePath("/", "layout");

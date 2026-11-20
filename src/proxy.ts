@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { ADMIN_EMAIL } from "@/lib/supabase/env";
+import { isAdminEmail } from "@/lib/supabase/env";
 
 /**
  * Next 16 renamed the `middleware` file/export to `proxy`, without changing
@@ -53,7 +53,7 @@ export async function proxy(request: NextRequest) {
 
   const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
   const isLoginRoute = request.nextUrl.pathname === "/admin/login";
-  const isAuthorized = user?.email === ADMIN_EMAIL;
+  const isAuthorized = isAdminEmail(user?.email);
 
   if (isAdminRoute && !isLoginRoute && !isAuthorized) {
     const redirectUrl = new URL("/admin/login", request.url);

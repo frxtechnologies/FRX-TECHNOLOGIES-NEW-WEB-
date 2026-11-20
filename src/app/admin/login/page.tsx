@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { isAdminEmail } from "@/lib/supabase/env";
 import { FrxLogo } from "@/components/brand/frx-logo";
 import { ActionButton } from "@/components/ui/button";
 
@@ -49,7 +50,7 @@ export default function AdminLoginPage() {
       return;
     }
 
-    if (data.user?.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    if (!isAdminEmail(data.user?.email)) {
       await supabase.auth.signOut();
       setError("This account doesn't have access to the admin panel.");
       setPending(false);
