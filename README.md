@@ -46,6 +46,24 @@ where its own typography is the point.
 
 Both lockups ship on every page and CSS picks one (`.frx-logo-light` / `.frx-logo-dark`), so the correct mark is on screen at first paint rather than after a JS theme read.
 
+## Ask FRX (AI assistant on Make)
+
+Ask FRX is a free-text chat answered by the Make scenario **"FRX Website Chat"**
+(Claude, with the instructions stored in the Make data store; it also saves leads who
+share contact details into that data store). The browser only calls
+`src/app/api/assistant/route.ts`, which forwards `{ message, history }` to the webhook
+in `ASSISTANT_WEBHOOK_URL` (server-only: anyone holding that URL can spend the
+scenario's AI credits) and returns the plain-text answer. The route checks the request
+comes from this site, rate-limits per visitor, caps input, and times out after 25s;
+answers are rendered as text, never HTML. Set `ASSISTANT_WEBHOOK_URL` in Vercel
+(Production and Preview).
+
+If the variable is missing or Make is down, the widget falls back to its authored
+questions and answers (admin → Quick Assistant), so it never shows a broken chat.
+To change what the assistant says or knows, edit its instructions in Make (the
+"FRX Assistant Builder API" scenario generates that prompt; the chat reads the saved
+copy in the data store, key `main`).
+
 ## New-enquiry emails to the owner
 
 When someone submits the contact form, the enquiry is saved to Supabase first
