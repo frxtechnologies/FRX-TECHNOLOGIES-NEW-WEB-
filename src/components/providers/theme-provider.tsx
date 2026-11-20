@@ -55,7 +55,11 @@ export const themeScript = `(function(){var d=document.documentElement;try{
 var s=localStorage.getItem("${STORAGE_KEY}");
 var t;
 if(s==="dark"||s==="light"){t=s;}
-else if(!sessionStorage.getItem("${INTRO_KEY}")){t="light";d.setAttribute("data-intro-light","1");}
+else if(!sessionStorage.getItem("${INTRO_KEY}")){t="light";
+/* Only routes that mount the loader may be hidden behind the intro guard. The
+   loader is what removes the attribute; /admin has none, so on a fresh session
+   it rendered fully visibility:hidden — a blank login page. */
+if(location.pathname.indexOf("/admin")!==0)d.setAttribute("data-intro-light","1");}
 else{t=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}
 d.setAttribute("data-theme",t);d.style.colorScheme=t;
 }catch(e){d.setAttribute("data-theme","light");}
