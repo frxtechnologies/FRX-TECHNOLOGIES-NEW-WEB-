@@ -1,6 +1,8 @@
 "use server";
 
+import { after } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { notifyNewEnquiry } from "@/lib/notify";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
 import {
   fieldErrorsOf,
@@ -83,5 +85,10 @@ export async function submitInquiry(input: InquiryInput): Promise<FormResult> {
     project_type: projectType,
     message: message || null,
   });
-  return error ? dbFailure(error) : { ok: true };
+  if (error) return dbFailure(error);
+
+  // Saved. Now tell the owner by email — after the response, so the visitor never waits,
+  // and best-effort: the enquiry is already in /admin/inquiries whatever happens here.
+  after(() => notifyNewEnquiry({ name, email, company, projectType, goal, message }));
+  return { ok: true };
 }

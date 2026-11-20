@@ -46,6 +46,22 @@ where its own typography is the point.
 
 Both lockups ship on every page and CSS picks one (`.frx-logo-light` / `.frx-logo-dark`), so the correct mark is on screen at first paint rather than after a JS theme read.
 
+## New-enquiry emails to the owner
+
+When someone submits the contact form, the enquiry is saved to Supabase first
+(`/admin/inquiries`), then `src/lib/notify.ts` emails the owner through Resend
+(`frx.technologies@gmail.com`, or `ENQUIRY_NOTIFY_EMAIL`). The email's Reply
+button answers the visitor directly (`reply_to` is their address). It runs after
+the response and is best-effort: a missing key or a Resend outage is logged and
+never loses the enquiry or shows the visitor an error.
+
+Minimum setup: create a Resend account **with the inbox that should receive the
+emails**, make an API key, and set `RESEND_API_KEY` in Vercel (Production and
+Preview). With only the key, mail is sent from Resend's shared sender
+(`onboarding@resend.dev`), which Resend allows to deliver only to the account
+owner's own email — exactly this use case. To send from your own domain
+instead, verify it in Resend and set `RESEND_FROM_EMAIL`.
+
 ## Sending replies from the admin panel
 
 `/admin/inquiries` can reply to a submission by email, via
