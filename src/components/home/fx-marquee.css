@@ -1,0 +1,65 @@
+.fxm {
+  position: relative;
+  padding-block: clamp(1rem, 3vw, 2.5rem);
+  overflow: clip;
+  background: var(--fx-bg);
+}
+
+.fxm-band {
+  background: var(--fx-blue);
+  color: #fff;
+  transform: rotate(-1.4deg);
+  margin-inline: -3vw;
+  padding-block: clamp(0.5rem, 1.4vw, 1.1rem);
+  overflow: clip;
+  box-shadow: var(--fx-shadow-accent);
+}
+
+.fxm-belt {
+  display: flex;
+  inline-size: max-content;
+  will-change: transform;
+}
+
+.fxm-unit {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.fxm-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding-inline: 0.18em;
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  text-transform: uppercase;
+  font-size: clamp(2.6rem, 1rem + 7vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.004em;
+  white-space: nowrap;
+}
+
+.fxm-star {
+  display: inline-block;
+  inline-size: 0.5em;
+  block-size: 0.5em;
+  margin-inline: 0.32em;
+  background: #fff;
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+}
+
+/* In dark mode the band is still brand blue — it is the one saturated thing on
+   the page and should read the same in both themes. */
+
+@media (prefers-reduced-motion: reduce) {
+  .fxm-band {
+    transform: none;
+    margin-inline: 0;
+  }
+  .fxm-belt {
+    transform: none !important;
+  }
+}

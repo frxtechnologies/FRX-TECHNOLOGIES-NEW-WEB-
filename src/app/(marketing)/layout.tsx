@@ -6,6 +6,8 @@ import { FrxLoader } from "@/components/chrome/frx-loader";
 import { PageTransition } from "@/components/chrome/page-transition";
 import { CustomCursor } from "@/components/chrome/custom-cursor";
 import { QuickAssistant } from "@/components/assistant/quick-assistant";
+import { FxDefs } from "@/design-system/outline";
+import { FxArtDefs } from "@/components/art/characters";
 
 /**
  * Every piece of the "premium marketing site" chrome lives here, scoped to
@@ -22,7 +24,10 @@ import { QuickAssistant } from "@/components/assistant/quick-assistant";
  */
 export default function MarketingLayout({ children }: LayoutProps<"/">) {
   return (
-    <>
+    <div className="fx-root">
+      {/* Shared SVG definitions, mounted once: outline filters + character gradients. */}
+      <FxDefs />
+      <FxArtDefs />
       <MotionReady />
       <SmoothScroll />
       <FrxLoader />
@@ -32,6 +37,6 @@ export default function MarketingLayout({ children }: LayoutProps<"/">) {
       <main id="main">{children}</main>
       <Footer />
       <QuickAssistant />
-    </>
+    </div>
   );
 }

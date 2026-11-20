@@ -1,0 +1,119 @@
+.fxn {
+  position: relative;
+  background: var(--fx-bg);
+  color: var(--fx-ink);
+  padding-block: clamp(4rem, 2rem + 9vw, 11rem);
+  overflow-x: clip;
+}
+
+.fxn-wrap {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+}
+
+.fxn-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--fx-ink-2);
+}
+
+.fxn-tick {
+  inline-size: 2.4rem;
+  block-size: 3px;
+  background: var(--fx-blue);
+}
+
+.fxn-head {
+  position: relative;
+}
+
+.fxn-statement {
+  max-inline-size: 15ch;
+  font-size: clamp(3rem, 1rem + 9.4vw, 11rem);
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.fxn-accent {
+  display: block;
+  color: var(--fx-accent-text);
+}
+
+.fxn-squig {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-end: -0.7rem;
+  inline-size: min(52%, 34rem);
+  block-size: clamp(1rem, 2vw, 1.8rem);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.fxn-ast {
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: -0.5rem;
+  inline-size: clamp(2.6rem, 6vw, 6rem);
+  overflow: visible;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+.fxn-body {
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem) clamp(2rem, 6vw, 7rem);
+  grid-template-columns: minmax(0, 1fr);
+  padding-block-start: clamp(1rem, 3vw, 2.5rem);
+  border-block-start: var(--fx-rule);
+}
+
+.fxn-lead {
+  max-inline-size: 40rem;
+  color: var(--fx-ink-2);
+}
+
+.fxn-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.fxn-stat dd {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.fxn-num {
+  display: block;
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: clamp(3.4rem, 1.4rem + 7vw, 8.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  color: var(--fx-accent-text);
+}
+
+.fxn-cap {
+  color: var(--fx-ink-3);
+  max-inline-size: 14ch;
+}
+
+@media (min-width: 1000px) {
+  .fxn-body {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .fxn-stats {
+    grid-template-columns: 1fr;
+  }
+  .fxn-stat dd {
+    grid-template-columns: auto 1fr;
+    align-items: end;
+    gap: 1rem;
+  }
+}

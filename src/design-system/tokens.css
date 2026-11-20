@@ -1,9 +1,9 @@
 /*
  * FRX DESIGN TOKENS
  * ---------------------------------------------------------------------------
- * Scope: everything lives on `.fx-root`, so the system can be adopted section
- * by section without touching the existing site. At adoption, the root layout
- * puts `fx-root` on <body> and ThemeProvider writes `data-fx-theme`.
+ * Scope: everything lives on `.fx-root`. The marketing layout wraps the public
+ * site in it. Dark mode follows the real <html data-theme="dark"> that
+ * ThemeProvider writes; `data-fx-theme` is only for isolated/nested use.
  *
  * Themes: LIGHT is the default. DARK is `[data-fx-theme="dark"]`.
  *
@@ -181,7 +181,8 @@
 }
 
 /* ===== DARK THEME ======================================================== */
-.fx-root[data-fx-theme="dark"] {
+.fx-root[data-fx-theme="dark"],
+:root[data-theme="dark"] .fx-root {
   --fx-bg: #08090c;            /* near-black, deliberately not grey */
   --fx-bg-2: #0f1116;
   --fx-surface: #14161c;

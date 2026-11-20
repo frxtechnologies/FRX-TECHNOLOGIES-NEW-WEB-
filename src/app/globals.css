@@ -20,7 +20,6 @@
   --frx-white: #ffffff;
 
   /* -- typography ------------------------------------------------------- */
-  --font-display: var(--font-sans);
 
   /* fluid scale. every value is bounded so 1366x768 never blows out. */
   --step--1: clamp(0.78rem, 0.74rem + 0.18vw, 0.875rem);
@@ -71,39 +70,39 @@
 /* -- LIGHT MODE — white + FRX blue ------------------------------------- */
 :root,
 :root[data-theme="light"] {
-  --bg: #ffffff;
-  --bg-elevated: #f6f7fa;
-  --bg-sunken: #eef0f5;
+  --bg: #f4f2ed;
+  --bg-elevated: #ffffff;
+  --bg-sunken: #e9e6df;
   --bg-inverted: var(--frx-black);
-  --text: #0a0f1c;
-  --text-muted: #5a6479;
-  --text-faint: #8b93a5;
+  --text: #0a0a0c;
+  --text-muted: #4f4e49;
+  --text-faint: #6b6a64;
   --text-on-inverted: #ffffff;
-  --border: rgb(10 15 28 / 0.12);
-  --border-strong: rgb(10 15 28 / 0.24);
+  --border: rgb(10 10 12 / 0.14);
+  --border-strong: rgb(10 10 12 / 0.32);
   --accent: var(--frx-blue);
   --accent-text: var(--frx-blue);
   --on-accent: #ffffff;
   --shadow-sm: 0 1px 2px rgb(10 15 28 / 0.06), 0 6px 20px -12px rgb(10 15 28 / 0.18);
   --shadow-lg: 0 24px 70px -40px rgb(4 40 110 / 0.45);
-  --scrim: rgb(255 255 255 / 0.72);
+  --scrim: rgb(244 242 237 / 0.78);
   --grid-line: rgb(10 15 28 / 0.07);
   color-scheme: light;
 }
 
 /* -- DARK MODE — black + FRX blue -------------------------------------- */
 :root[data-theme="dark"] {
-  --bg: #05070e;
+  --bg: #08090c;
   /* Far enough from --bg to actually read as a different surface. At the
      previous value the two were about five levels apart, so a section change
      was invisible and the padding between them looked like dead space rather
      than a boundary. Still nowhere near grey. */
-  --bg-elevated: #0c1220;
-  --bg-sunken: #010204;
+  --bg-elevated: #14161c;
+  --bg-sunken: #0f1116;
   --bg-inverted: #ffffff;
-  --text: #f4f6fb;
-  --text-muted: #97a1b6;
-  --text-faint: #626b7e;
+  --text: #f4f2ed;
+  --text-muted: #a3a29c;
+  --text-faint: #8a8983;
   --text-on-inverted: #05070e;
   --border: rgb(255 255 255 / 0.12);
   --border-strong: rgb(255 255 255 / 0.26);
@@ -112,7 +111,7 @@
   --on-accent: #ffffff;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.5);
   --shadow-lg: 0 30px 90px -50px rgb(0 140 255 / 0.5);
-  --scrim: rgb(5 7 14 / 0.72);
+  --scrim: rgb(8 9 12 / 0.78);
   --grid-line: rgb(255 255 255 / 0.07);
   color-scheme: dark;
 }
@@ -172,6 +171,11 @@ html {
 }
 
 body {
+  /* Bricolage Grotesque = display, Inter Tight = everything functional. Set on
+     body because next/font attaches its variables to the element that carries
+     the className, so :root cannot resolve them. */
+  --font-sans: var(--fx-face-body), system-ui, "Segoe UI", sans-serif;
+  --font-display: var(--fx-face-display), "Arial Narrow", Arial, sans-serif;
   margin: 0;
   background: var(--bg);
   color: var(--text);
@@ -338,28 +342,38 @@ video {
    ========================================================================== */
 
 .t-display {
+  font-family: var(--font-display);
   font-size: var(--step-5);
-  font-weight: 500;
-  letter-spacing: -0.045em;
+  font-weight: 700;
+  font-stretch: 87%;
+  letter-spacing: -0.012em;
   line-height: 0.94;
 }
 
 .t-mega {
+  font-family: var(--font-display);
   font-size: var(--step-6);
-  font-weight: 600;
-  letter-spacing: -0.05em;
+  font-weight: 800;
+  font-stretch: 75%;
+  letter-spacing: -0.008em;
   line-height: 0.86;
 }
 
 .t-h2 {
+  font-family: var(--font-display);
   font-size: var(--step-4);
-  letter-spacing: -0.04em;
+  font-weight: 700;
+  font-stretch: 87%;
+  letter-spacing: -0.012em;
   line-height: 0.98;
 }
 
 .t-h3 {
+  font-family: var(--font-display);
   font-size: var(--step-3);
-  letter-spacing: -0.035em;
+  font-weight: 700;
+  font-stretch: 87%;
+  letter-spacing: -0.01em;
   line-height: 1.04;
 }
 
@@ -371,16 +385,16 @@ video {
 }
 
 .t-eyebrow {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--step--1);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-faint);
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .t-index {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.04em;
 }
@@ -2806,8 +2820,18 @@ body.has-custom-cursor select {
    removed by the loader itself partway through its own exit animation, by
    which point the loader is still fully covering the viewport regardless.
    ========================================================================== */
-html[data-intro-light] body > *:not(.intro-shell) {
+html[data-intro-light] body > *:not(.intro-shell):not(.fx-root),
+html[data-intro-light] .fx-root > *:not(.intro-shell) {
   visibility: hidden;
+  /* Failsafe: if hydration never completes the loader never mounts and never
+     lifts this guard. After 6s the page shows regardless. */
+  animation: intro-guard-failsafe 0s linear 6s forwards;
+}
+
+@keyframes intro-guard-failsafe {
+  to {
+    visibility: visible;
+  }
 }
 
 /* ==========================================================================

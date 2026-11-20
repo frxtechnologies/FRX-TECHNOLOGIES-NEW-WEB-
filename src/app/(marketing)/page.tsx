@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 
-import { Hero } from "@/components/home/hero";
-import { Rails } from "@/components/home/rails";
-import { IntroStatement } from "@/components/home/intro-statement";
-import { ServiceIndex } from "@/components/home/service-index";
-import { HorizontalJourney } from "@/components/home/horizontal-journey";
+import { FxHero } from "@/components/home/fx-hero";
+import { FxMarquee } from "@/components/home/fx-marquee";
+import { FxManifesto } from "@/components/home/fx-manifesto";
+import { FxServices } from "@/components/home/fx-services";
 import { GrowthFeature } from "@/components/home/growth-feature";
 import { Process } from "@/components/home/process";
 import { TechnologyScene } from "@/components/home/technology-scene";
@@ -30,11 +29,10 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <Rails />
-      <IntroStatement />
-      <ServiceIndex />
-      <HorizontalJourney />
+      <FxHero />
+      <FxMarquee />
+      <FxManifesto />
+      <FxServices />
       <GrowthFeature />
       <AutomationScene />
       <Process />

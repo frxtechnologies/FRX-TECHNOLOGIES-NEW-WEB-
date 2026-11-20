@@ -1,0 +1,330 @@
+/* Homepage hero. Prefix .fxh-. Unlayered so it outranks legacy rules. */
+
+.fxh {
+  --fxh-size: min(var(--fx-fs-mega), 22.5svh, 24vw);
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  overflow-x: clip;
+  background: var(--fx-bg);
+  color: var(--fx-ink);
+  padding-block: calc(var(--nav-h, 4.5rem) + clamp(1.75rem, 5.5svh, 3.5rem)) clamp(1.25rem, 3.5svh, 2.5rem);
+}
+
+.fxh-stage {
+  position: relative;
+  display: grid;
+  gap: clamp(0.9rem, 2.4svh, 1.8rem);
+}
+
+.fxh-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  color: var(--fx-ink-2);
+}
+
+.fxh-dot {
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  border-radius: 50%;
+  background: var(--fx-blue);
+  box-shadow: 0 0 0 0 rgb(4 92 236 / 0.5);
+  animation: fxh-pulse 2.2s var(--fx-ease-out) infinite;
+}
+
+@keyframes fxh-pulse {
+  70%,
+  100% {
+    box-shadow: 0 0 0 0.7rem rgb(4 92 236 / 0);
+  }
+}
+
+/* ---- headline ------------------------------------------------------------- */
+.fxh-title {
+  font-size: var(--fxh-size);
+  line-height: 0.8;
+  display: grid;
+  gap: 0.075em;
+  position: relative;
+}
+
+.fxh-row {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.1em;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.fxh-wordwrap {
+  position: relative;
+  display: block;
+}
+
+/* Masks each word for the rise. Padded + counter-margined so Bricolage's tall
+   caps and the tight 0.8 line-height never clip a letter mid-reveal. */
+.fxh-mask {
+  display: block;
+  overflow: clip;
+  padding-block: 0.1em 0.04em;
+  margin-block: -0.1em -0.04em;
+}
+
+.fxh-word {
+  display: block;
+}
+
+/* Hidden until the loader clears and the entry timeline takes over. The CSS
+   animation is the failsafe if scripting never delivers it. */
+.js-motion .fxh [data-hide] {
+  visibility: hidden;
+  animation: fxh-unhide 0s linear 7s forwards;
+}
+
+@keyframes fxh-unhide {
+  to {
+    visibility: visible;
+  }
+}
+
+/* ---- characters ------------------------------------------------------------ */
+.fxh-char {
+  position: relative;
+  display: block;
+  flex: none;
+  align-self: flex-end;
+}
+
+.fxh-par {
+  display: block;
+  height: 100%;
+}
+
+.fxh-art {
+  display: block;
+  height: 100%;
+  width: auto;
+  overflow: visible;
+}
+
+/* Characters are taller than the row but must not make it taller: the negative
+   top margin hands the overshoot back, so the three rows keep the headline's
+   rhythm and the hero fits the viewport. */
+.fxh-char--window {
+  height: 1.02em;
+  margin-block-start: -0.26em;
+  margin-inline-start: 0.04em;
+}
+.fxh-char--bot {
+  height: 1.1em;
+  margin-block-start: -0.3em;
+  margin-inline-start: 0.02em;
+}
+.fxh-char--blocks {
+  height: 1.04em;
+  margin-block: -0.24em -0.04em;
+  margin-inline-start: 1.1em;
+}
+
+/* ---- doodles (blue, hand-drawn) -------------------------------------------- */
+.fxh-doodle {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.fxh-doodle--under {
+  inset-inline: 0.02em;
+  inset-block-end: -0.1em;
+  inline-size: 96%;
+  block-size: 0.1em;
+}
+
+.fxh-doodle--spark1 {
+  inset-block-start: -0.08em;
+  inset-inline-end: 4%;
+  inline-size: 0.3em;
+}
+
+.fxh-doodle--loop {
+  position: relative;
+  flex: none;
+  align-self: center;
+  inline-size: 0.78em;
+  margin-block-end: 0.18em;
+}
+
+.fxh-doodle--ast {
+  inset-block-start: -0.06em;
+  inset-inline-end: 6%;
+  inline-size: 0.22em;
+}
+
+.fxh-doodle--ring {
+  inset: -0.1em -0.1em -0.06em -0.08em;
+  inline-size: calc(100% + 0.18em);
+  block-size: calc(100% + 0.16em);
+}
+
+.fxh-doodle--zig {
+  inset-block-start: 0.12em;
+  inset-inline-end: 14%;
+  inline-size: 0.5em;
+}
+
+.fxh-doodle--spark2 {
+  inset-block-end: 0.18em;
+  inset-inline-end: 1%;
+  inline-size: 0.24em;
+}
+
+/* ---- foot -------------------------------------------------------------------- */
+.fxh-foot {
+  display: grid;
+  gap: clamp(0.9rem, 2svh, 1.4rem) clamp(1.5rem, 4vw, 4rem);
+  grid-template-columns: minmax(0, 1.2fr) auto;
+  align-items: end;
+}
+
+.fxh-lead {
+  max-inline-size: 34rem;
+  color: var(--fx-ink-2);
+}
+
+.fxh-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fx-space-3);
+}
+
+.fxh-services {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+  padding-block-start: 0.9rem;
+  border-block-start: var(--fx-border);
+  color: var(--fx-ink-3);
+}
+
+.fxh-scroll {
+  position: absolute;
+  inset-inline-end: var(--fx-gutter);
+  inset-block-start: 0.2rem;
+  display: none;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--fx-ink-3);
+  writing-mode: vertical-rl;
+}
+
+.fxh-scroll i {
+  display: block;
+  inline-size: 1px;
+  block-size: 3.2rem;
+  background: currentColor;
+  transform-origin: top;
+  animation: fxh-scroll 2s var(--fx-ease-in-out) infinite;
+}
+
+@keyframes fxh-scroll {
+  0% {
+    transform: scaleY(0);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+    opacity: 0;
+  }
+}
+
+@media (min-width: 1100px) {
+  .fxh-scroll {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 760px) {
+  .fxh {
+    align-items: end;
+  }
+  .fxh-foot {
+    grid-template-columns: 1fr;
+  }
+  .fxh-services {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fxh-dot,
+  .fxh-scroll i {
+    animation: none;
+  }
+}
+
+/* ---- phones ----------------------------------------------------------------
+   Width, not height, is the constraint, so the headline can't grow. The cast
+   is recomposed instead: the bot takes the empty space above the headline,
+   the window and blocks stay in their rows, and anything that would widen a
+   row (the loop arrow, the zig) is dropped. */
+@media (max-width: 760px) {
+  .fxh {
+    align-items: center;
+    padding-block-end: 4.9rem; /* clears the assistant button */
+  }
+  .fxh-stage {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.6rem;
+  }
+  .fxh-row {
+    min-width: 0;
+  }
+  /* Row 2 stops being a containing block so the bot can anchor to the headline. */
+  .fxh-row--bot {
+    position: static;
+    will-change: auto; /* will-change:transform would make it a containing block again */
+  }
+  .fxh-doodle--loop,
+  .fxh-doodle--zig,
+  .fxh-doodle--spark1 {
+    display: none;
+  }
+  .fxh-char--bot {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-end: calc(100% + 2.6rem);
+    height: 1.4em;
+    margin: 0;
+  }
+  .fxh-doodle--ast {
+    inset-block-start: auto;
+    inset-block-end: calc(100% + 3.6rem);
+    inset-inline-end: 34%;
+  }
+  .fxh-char--blocks {
+    margin-inline-start: 0.3em;
+    height: 0.9em;
+  }
+  .fxh-doodle--spark2 {
+    inset-inline-end: 6%;
+  }
+  .fxh-ctas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .fxh-ctas .fx-btn {
+    justify-content: space-between;
+    padding-inline: 1.05em;
+    font-size: 0.9rem;
+  }
+  .fxh-eyebrow-extra {
+    display: none;
+  }
+}
