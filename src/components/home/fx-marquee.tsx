@@ -2,13 +2,13 @@
 
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useMotion } from "@/lib/gsap";
-import { SITE } from "@/lib/site";
 import "./fx-marquee.css";
 
-const WORDS = SITE.philosophy.replace(/\.$/, "").split(/\.\s*/); // Build smarter / Launch faster / Grow further
+const WORDS = ["Build smarter", "Automate better", "Create what’s next", "Software without limits"];
+const LABEL = WORDS.join(". ") + ".";
 
 /**
- * Blue band carrying the FRX philosophy.
+ * Blue band carrying the FRX statements.
  *
  * The belt is always moving, and scrolling drives it: velocity speeds it up,
  * scroll direction reverses it, and the whole band skews with the push — so the
@@ -74,7 +74,7 @@ export function FxMarquee() {
   );
 
   return (
-    <section ref={root} id="after-hero" className="fxm" aria-label={SITE.philosophy}>
+    <section ref={root} id="after-hero" className="fxm" aria-label={LABEL}>
       <div className="fxm-band">
         <div className="fxm-belt" aria-hidden="true">
           <div className="fxm-unit">{unit}</div>
@@ -82,7 +82,7 @@ export function FxMarquee() {
           <div className="fxm-unit">{unit}</div>
           <div className="fxm-unit">{unit}</div>
         </div>
-        <p className="sr-only">{SITE.philosophy}</p>
+        <p className="sr-only">{LABEL}</p>
       </div>
     </section>
   );

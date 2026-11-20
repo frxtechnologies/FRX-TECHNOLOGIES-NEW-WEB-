@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { gsap, useMotion } from "@/lib/gsap";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { useIntro } from "@/components/providers/intro-provider";
-import { SERVICES } from "@/lib/services";
+import type { HeroContent } from "@/lib/content/types";
 import {
   Asterisk,
   BlockStack,
@@ -17,29 +17,41 @@ import {
   WindowBuddy,
   Zig,
 } from "@/components/art/characters";
+import { PanelChart, PanelCode, PanelToggles } from "@/components/art/scenes";
 import "./fx-hero.css";
+import "./fx-hero-extra.css";
 
 if (typeof window !== "undefined") gsap.registerPlugin(DrawSVGPlugin);
+
+export type HeroProps = {
+  content: Pick<HeroContent, "supportingHeadline" | "description">;
+  /** Resolved public URLs of uploaded artwork. A set value replaces the SVG character. */
+  images: { window: string | null; bot: string | null; blocks: string | null };
+};
+
+/** An uploaded image fills an art slot; otherwise the built-in illustration is used. */
+function Slot({ src, fallback }: { src: string | null; fallback: React.ReactNode }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return src ? <img src={src} alt="" className="fxh-art fxh-float" /> : <>{fallback}</>;
+}
 
 /**
  * The homepage hero.
  *
- * A three-row statement — BUILD. AUTOMATE. SCALE. — set in Bricolage at the
- * largest size the viewport can hold without cropping (min of the type token,
- * the viewport height and the viewport width). Original characters share the
- * rows with the words; hand-drawn blue doodles are stroke-drawn on entry.
+ * BUILD. AUTOMATE. SCALE. set in Bricolage at the largest size the viewport can
+ * hold (min of the type token, viewport height and viewport width), sharing the
+ * rows with original characters, floating interface panels and hand-drawn
+ * doodles. Artwork is replaceable: each character is an "asset slot" that an
+ * uploaded image (admin → Homepage) overrides.
  *
  * Life, in layers (each on its own element so transforms never fight):
  *   entry   .fxh-char          scale-in after the loader clears
  *   pointer .fxh-par           depth parallax toward the cursor
- *   idle    svg.fxh-float      slow bob; arm waves, cog turns, antenna pings
+ *   idle    .fxh-float         slow bob; arm waves, cog turns, antenna pings
  *   gaze    .fxa-pupil         eyes follow the pointer
  *   scroll  .fxh-row           rows drift apart in opposite directions
- *
- * Fine pointers get gaze + parallax; touch devices get a slow idle glance
- * instead. Reduced motion places everything in its final state.
  */
-export function FxHero() {
+export function FxHero({ content, images }: HeroProps) {
   const root = useRef<HTMLElement>(null);
   const { ready } = useIntro();
 
@@ -58,7 +70,7 @@ export function FxHero() {
           .fromTo(
             q(".fxh-char"),
             { scale: 0, rotate: -12, transformOrigin: "50% 100%" },
-            { scale: 1, rotate: 0, duration: 1, ease: "back.out(1.7)", stagger: 0.14 },
+            { scale: 1, rotate: 0, duration: 1, ease: "back.out(1.7)", stagger: 0.12 },
             0.38,
           )
           .fromTo(
@@ -87,9 +99,8 @@ export function FxHero() {
         if (!el) return;
         const q = <T extends Element>(s: string) => gsap.utils.toArray<T>(el.querySelectorAll(s));
 
-        // idle
-        q(".fxh-float").forEach((svg, i) => {
-          gsap.to(svg, {
+        q(".fxh-float").forEach((node, i) => {
+          gsap.to(node, {
             y: i % 2 ? -10 : -14,
             rotate: i % 2 ? 1.4 : -1.6,
             duration: 2.2 + i * 0.35,
@@ -99,6 +110,7 @@ export function FxHero() {
             transformOrigin: "50% 100%",
           });
         });
+
         // SVG groups rotate about the SVG origin unless told otherwise, so every
         // pivot is stated explicitly (data-origin, in the artwork's own units).
         const origin = (n: Element) => (n as HTMLElement).dataset.origin;
@@ -116,7 +128,6 @@ export function FxHero() {
           gsap.to(p, { scale: 1.35, svgOrigin: origin(p), duration: 0.7, ease: "sine.inOut", repeat: -1, yoyo: true }),
         );
 
-        // blink — staggered, irregular
         q(".fxa-eye").forEach((eye, i) => {
           const blink = () =>
             gsap
@@ -126,7 +137,6 @@ export function FxHero() {
           blink();
         });
 
-        // gaze + depth
         const pupils = q<SVGElement>(".fxa-pupil");
         const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
         const gx = pupils.map((p) => gsap.quickTo(p, "x", { duration: 0.35, ease: "power3.out" }));
@@ -142,13 +152,12 @@ export function FxHero() {
             const dx = cx - (r.left + r.width / 2);
             const dy = cy - (r.top + r.height / 2);
             const d = Math.hypot(dx, dy) || 1;
-            const reach = Math.min(d / 260, 1) * 6; // SVG units
+            const reach = Math.min(d / 260, 1) * 6;
             gx[i](Math.round((dx / d) * reach * 10) / 10);
             gy[i](Math.round((dy / d) * reach * 10) / 10);
           });
         };
 
-        let glance: gsap.core.Tween | undefined;
         if (fine) {
           const onMove = (e: PointerEvent) => {
             look(e.clientX, e.clientY);
@@ -166,7 +175,7 @@ export function FxHero() {
 
         // touch: no pointer to follow — a slow idle glance instead
         const t = { a: 0 };
-        glance = gsap.to(t, {
+        const glance = gsap.to(t, {
           a: Math.PI * 2,
           duration: 7,
           ease: "none",
@@ -178,27 +187,26 @@ export function FxHero() {
             });
           },
         });
-        return () => glance?.kill();
+        return () => glance.kill();
       },
     },
     root,
   );
 
-  /* ---- scroll: rows drift apart, characters trail, the stage lifts away ---- */
+  /* ---- scroll: rows drift apart, the stage lifts away ----------------------- */
   useMotion(
     {
       aboveMobile: () => {
         const el = root.current;
         if (!el) return;
         gsap
-          .timeline({
-            scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.7 },
-          })
+          .timeline({ scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: 0.7 } })
           .to(
             ".fxh-row",
             { x: (_i, t: HTMLElement) => Number(t.dataset.dir) * window.innerWidth * 0.16, ease: "none" },
             0,
           )
+          .to(".fxh-panels", { yPercent: -18, ease: "none" }, 0)
           .to(".fxh-stage", { yPercent: -10, ease: "none" }, 0)
           .to(".fxh-foot", { opacity: 0, y: -40, ease: "none" }, 0)
           .to(".fxh-scroll", { opacity: 0, ease: "none" }, 0);
@@ -212,7 +220,7 @@ export function FxHero() {
       <div className="fxh-stage fx-container">
         <p className="fxh-eyebrow fx-label" data-hide>
           <span className="fxh-dot" aria-hidden="true" />
-          FRX Technologies<span className="fxh-eyebrow-extra"> · digital systems</span>
+          FRX Technologies<span className="fxh-eyebrow-extra"> · software &amp; technology</span>
         </p>
 
         <h1 id="fxh-title" className="fxh-title fx-mega fx-up">
@@ -230,7 +238,7 @@ export function FxHero() {
             </span>
             <span className="fxh-char fxh-char--window" data-hide>
               <span className="fxh-par" data-depth="1.2">
-                <WindowBuddy className="fxh-art fxh-float" />
+                <Slot src={images.window} fallback={<WindowBuddy className="fxh-art fxh-float" />} />
               </span>
             </span>
             <Sparkle className="fxh-doodle fxh-doodle--spark1" />
@@ -248,7 +256,7 @@ export function FxHero() {
             <LoopArrow className="fxh-doodle fxh-doodle--loop" />
             <span className="fxh-char fxh-char--bot" data-hide>
               <span className="fxh-par" data-depth="0.8">
-                <BotBuddy className="fxh-art fxh-float" />
+                <Slot src={images.bot} fallback={<BotBuddy className="fxh-art fxh-float" />} />
               </span>
             </span>
             <Asterisk className="fxh-doodle fxh-doodle--ast" />
@@ -266,7 +274,7 @@ export function FxHero() {
             </span>
             <span className="fxh-char fxh-char--blocks" data-hide>
               <span className="fxh-par" data-depth="1.5">
-                <BlockStack className="fxh-art fxh-float" />
+                <Slot src={images.blocks} fallback={<BlockStack className="fxh-art fxh-float" />} />
               </span>
             </span>
             <Zig className="fxh-doodle fxh-doodle--zig" />
@@ -274,11 +282,30 @@ export function FxHero() {
           </span>
         </h1>
 
+        {/* Floating interface panels (desktop only — they need the empty right side). */}
+        <div className="fxh-panels" aria-hidden="true">
+          <span className="fxh-char fxh-panel fxh-panel--code" data-hide>
+            <span className="fxh-par" data-depth="2">
+              <PanelCode className="fxh-art fxh-float" />
+            </span>
+          </span>
+          <span className="fxh-char fxh-panel fxh-panel--chart" data-hide>
+            <span className="fxh-par" data-depth="1.6">
+              <PanelChart className="fxh-art fxh-float" />
+            </span>
+          </span>
+          <span className="fxh-char fxh-panel fxh-panel--toggles" data-hide>
+            <span className="fxh-par" data-depth="1">
+              <PanelToggles className="fxh-art fxh-float" />
+            </span>
+          </span>
+        </div>
+
         <div className="fxh-foot">
-          <p className="fxh-lead fx-lead">
-            Websites, AI automation and custom software — built around how your business
-            actually works.
-          </p>
+          <div className="fxh-copy">
+            <h2 className="fxh-sub fx-h2 fx-up">{content.supportingHeadline}</h2>
+            <p className="fxh-lead fx-lead">{content.description}</p>
+          </div>
 
           <div className="fxh-ctas">
             <Link href="/contact" className="fx-btn fx-hover-shift">
@@ -288,16 +315,6 @@ export function FxHero() {
               What we do <span className="fx-shift" aria-hidden="true">→</span>
             </Link>
           </div>
-
-          <ul className="fxh-services" aria-label="Services">
-            {SERVICES.map((s) => (
-              <li key={s.slug}>
-                <Link href={`/services/${s.slug}`} className="fx-label fx-link">
-                  {s.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <a href="#after-hero" className="fxh-scroll fx-label" aria-label="Scroll to content">

@@ -1,0 +1,656 @@
+/* Inner pages: intro (fxp), About (fxab), Services index (fxsv), service detail (fxsd), Work extras. */
+
+/* ---- intro ------------------------------------------------------------------ */
+.fxp {
+  position: relative;
+  background: var(--fx-bg);
+  padding-block: calc(var(--nav-h, 4.5rem) + clamp(2.5rem, 7vw, 6rem)) clamp(2.5rem, 6vw, 5rem);
+  overflow-x: clip;
+}
+.fxp-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+}
+.fxp-wrap:not(:has(.fxp-art)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.fxp-copy {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.6rem);
+  justify-items: start;
+}
+.fxp-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--fx-ink-2);
+}
+.fxp-title {
+  font-size: clamp(3.2rem, 1rem + 9.6vw, 10.5rem);
+  line-height: 0.86;
+  max-inline-size: 14ch;
+  text-wrap: balance;
+}
+.fxp-lead {
+  max-inline-size: 36rem;
+  color: var(--fx-ink-2);
+}
+.fxp-art {
+  position: relative;
+  min-block-size: clamp(14rem, 30vw, 28rem);
+}
+.fxp-a {
+  position: absolute;
+  overflow: visible;
+  height: auto;
+}
+.fxp-a--laptop {
+  inset-inline-start: 0;
+  inset-block-end: 0;
+  inline-size: 78%;
+}
+.fxp-a--bot {
+  inset-inline-end: 0;
+  inset-block-start: 4%;
+  inline-size: 34%;
+}
+.fxp-a--win {
+  inset-inline-start: 6%;
+  inset-block-end: 4%;
+  inline-size: 70%;
+}
+.fxp-a--panel1 {
+  inset-inline-start: 4%;
+  inset-block-start: 0;
+  inline-size: 34%;
+}
+.fxp-a--panel2 {
+  inset-inline-end: 0;
+  inset-block-end: 6%;
+  inline-size: 30%;
+}
+.fxp-a--spark {
+  inset-inline-end: 34%;
+  inset-block-start: 0;
+  inline-size: 3rem;
+}
+.fxp-a--squig {
+  inset-inline-start: 0;
+  inset-block-end: -1rem;
+  inline-size: 60%;
+  block-size: 1.4rem;
+}
+@media (max-width: 900px) {
+  .fxp-wrap {
+    grid-template-columns: 1fr;
+  }
+  .fxp-art {
+    min-block-size: 16rem;
+  }
+}
+
+/* ---- About ---------------------------------------------------------------------- */
+.fxab {
+  position: relative;
+  background: var(--fx-bg);
+}
+.fxab-path {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.fxab > section {
+  position: relative;
+}
+.fxab-story {
+  display: grid;
+  gap: 2rem;
+  padding-block: clamp(3rem, 8vw, 8rem);
+}
+.fxab-kicker {
+  color: var(--fx-accent-text);
+}
+.fxab-story-body {
+  display: grid;
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+  max-inline-size: 60rem;
+}
+.fxab-big {
+  font-size: clamp(1.9rem, 1rem + 3.6vw, 4.4rem);
+  line-height: 1.04;
+  font-weight: 700;
+}
+.fxab-statement {
+  padding-block: clamp(4rem, 10vw, 10rem);
+}
+.fxab-statement-text {
+  font-size: clamp(2.6rem, 1rem + 6.6vw, 8rem);
+  line-height: 0.92;
+  max-inline-size: 18ch;
+}
+.fxab-rules {
+  padding-block: clamp(3rem, 8vw, 8rem);
+}
+.fxab-rules-head {
+  display: grid;
+  gap: 1rem;
+  margin-block-end: clamp(2rem, 5vw, 4rem);
+}
+.fxab-rules-head .fx-d1 {
+  font-size: clamp(3rem, 1rem + 9vw, 10rem);
+  line-height: 0.86;
+}
+.fxab-rules-list {
+  display: grid;
+  border-block-start: var(--fx-rule);
+}
+.fxab-rule {
+  display: grid;
+  grid-template-columns: clamp(5rem, 14vw, 12rem) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  align-items: center;
+  padding-block: clamp(1.2rem, 3vw, 2.6rem);
+  border-block-end: var(--fx-border);
+  background: var(--fx-bg);
+}
+.fxab-rule-n {
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: clamp(4.5rem, 2rem + 9vw, 10rem);
+  line-height: 0.8;
+  color: var(--fx-ink);
+}
+.fxab-rule h3 {
+  font-size: clamp(1.8rem, 1rem + 3vw, 3.8rem);
+}
+.fxab-rule .fx-body {
+  color: var(--fx-ink-2);
+  max-inline-size: 38rem;
+  margin-block-start: 0.5rem;
+}
+.fxab-diff {
+  padding-block: clamp(3rem, 8vw, 8rem);
+}
+.fxab-diff-head {
+  position: relative;
+  margin-block-end: clamp(2rem, 5vw, 4rem);
+}
+.fxab-diff-head .fx-d1 {
+  font-size: clamp(3rem, 1rem + 8.4vw, 9rem);
+  line-height: 0.86;
+  max-inline-size: 13ch;
+}
+.fxab-ast {
+  position: absolute;
+  inset-inline-end: 2%;
+  inset-block-start: 0;
+  inline-size: clamp(2.4rem, 5vw, 5rem);
+  overflow: visible;
+}
+.fxab-diff-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+}
+.fxab-diff-card {
+  --p-bg: #dce7fc;
+  --p-ink: #0a0a0c;
+  --p-ink-2: #34445f;
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+  padding: clamp(1.4rem, 3vw, 2.6rem);
+  border-radius: var(--fx-radius-4);
+  background: var(--p-bg);
+  color: var(--p-ink);
+  --fx-ink: var(--p-ink);
+  --fx-ink-2: var(--p-ink-2);
+}
+.fxab-diff-card[data-tone="paper"] {
+  --p-bg: #ffffff;
+  --p-ink-2: #4f4e49;
+  border: var(--fx-border);
+}
+.fxab-diff-card[data-tone="ink"] {
+  --p-bg: #08090c;
+  --p-ink: #f4f2ed;
+  --p-ink-2: #b7b6b0;
+  --fxa-ink: #f4f2ed;
+  --fxa-paper: #1a1d25;
+}
+.fxab-diff-card[data-tone="blue"] {
+  --p-bg: #045cec;
+  --p-ink: #ffffff;
+  --p-ink-2: #e3ecff;
+  --fxa-ink: #08090c;
+  --fxa-paper: #f4f2ed;
+}
+.fxab-diff-art {
+  display: grid;
+  place-items: center;
+  min-block-size: 11rem;
+}
+.fxab-art {
+  block-size: 10.5rem;
+  inline-size: auto;
+  max-inline-size: 100%;
+  overflow: visible;
+}
+.fxab-diff-card .fx-body {
+  color: var(--p-ink-2);
+}
+.fxab-cta {
+  padding-block: var(--fx-section-y);
+  background: var(--fx-accent-tint);
+}
+.fxab-cta .fx-container {
+  display: grid;
+  gap: 1.4rem;
+  justify-items: start;
+}
+.fxab-cta .fx-d1 {
+  font-size: clamp(3rem, 1rem + 9.4vw, 10.5rem);
+  line-height: 0.86;
+  max-inline-size: 13ch;
+}
+@media (max-width: 800px) {
+  .fxab-diff-grid {
+    grid-template-columns: 1fr;
+  }
+  .fxab-rule {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+  .fxab-path {
+    opacity: 0.35;
+  }
+}
+
+/* ---- Services index ------------------------------------------------------------------- */
+.fxsv-row {
+  --p-bg: #dce7fc;
+  --p-ink: #0a0a0c;
+  --p-ink-2: #34445f;
+  background: var(--p-bg);
+  color: var(--p-ink);
+  --fx-ink: var(--p-ink);
+  --fx-ink-2: var(--p-ink-2);
+  --fx-bg: var(--p-bg);
+  padding-block: clamp(3rem, 7vw, 7rem);
+  overflow-x: clip;
+}
+.fxsv-row[data-tone="paper"] {
+  --p-bg: #ffffff;
+  --p-ink-2: #4f4e49;
+}
+.fxsv-row[data-tone="ink"] {
+  --p-bg: #08090c;
+  --p-ink: #f4f2ed;
+  --p-ink-2: #b7b6b0;
+  --fxa-ink: #f4f2ed;
+  --fxa-paper: #1a1d25;
+  --fx-accent-text: #5aa2ff;
+}
+.fxsv-row[data-tone="blue"] {
+  --p-bg: #045cec;
+  --p-ink: #ffffff;
+  --p-ink-2: #e3ecff;
+  --fxa-ink: #08090c;
+  --fxa-paper: #f4f2ed;
+}
+.fxsv-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(1.5rem, 4vw, 5rem);
+  align-items: center;
+}
+.fxsv-row:nth-child(even) .fxsv-copy {
+  order: 2;
+}
+.fxsv-copy {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+.fxsv-copy .fx-d2 {
+  font-size: clamp(2.6rem, 1rem + 6vw, 7rem);
+  line-height: 0.88;
+}
+.fxsv-idx {
+  opacity: 0.7;
+}
+.fxsv-sum {
+  color: var(--p-ink-2);
+  max-inline-size: 34rem;
+}
+.fxsv-caps {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--p-ink-2);
+}
+.fxsv-caps li {
+  padding-inline-start: 1rem;
+  position: relative;
+}
+.fxsv-caps li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.65em;
+  inline-size: 0.5rem;
+  block-size: 2px;
+  background: currentColor;
+}
+.fxsv-row .fx-btn--ink {
+  --fx-btn-bg: var(--p-ink);
+  --fx-btn-ink: var(--p-bg);
+}
+.fxsv-art {
+  display: grid;
+  place-items: center;
+}
+.fxsv-svg {
+  block-size: clamp(14rem, 30vw, 26rem);
+  inline-size: auto;
+  max-inline-size: 100%;
+  overflow: visible;
+}
+.fxsv-process {
+  padding-block: var(--fx-section-y);
+  background: var(--fx-bg);
+}
+.fxsv-process .fx-d1 {
+  font-size: clamp(3rem, 1rem + 8.4vw, 9rem);
+  line-height: 0.86;
+  margin-block-end: clamp(2rem, 4vw, 3.5rem);
+}
+.fxsv-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 3vw, 3rem);
+  border-block-start: var(--fx-rule);
+  padding-block-start: 1.5rem;
+}
+.fxsv-steps li {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+.fxsv-step-n {
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: clamp(3rem, 1rem + 5vw, 5.5rem);
+  line-height: 0.85;
+  color: var(--fx-ink);
+}
+.fxsv-steps .fx-body {
+  color: var(--fx-ink-2);
+}
+@media (max-width: 900px) {
+  .fxsv-in {
+    grid-template-columns: 1fr;
+  }
+  .fxsv-row:nth-child(even) .fxsv-copy {
+    order: 0;
+  }
+  .fxsv-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Service detail ----------------------------------------------------------------------- */
+.fxsd-crumbs {
+  padding-block-start: calc(var(--nav-h, 4.5rem) + 1.5rem);
+  color: var(--fx-ink-3);
+}
+.fxsd-crumbs a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.fxsd-crumbs + .fxp {
+  padding-block-start: clamp(1.5rem, 3vw, 2.5rem);
+}
+.fxsd-tag {
+  color: var(--fx-accent-text);
+}
+.fxsd-hero-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-block-size: clamp(14rem, 30vw, 26rem);
+}
+.fxsd-svg {
+  block-size: clamp(13rem, 28vw, 24rem);
+  inline-size: auto;
+  max-inline-size: 100%;
+  overflow: visible;
+}
+.fxsd-block {
+  padding-block: clamp(3rem, 7vw, 7rem);
+  background: var(--fx-bg);
+  overflow-x: clip;
+}
+.fxsd-block--tint {
+  background: var(--fx-accent-tint);
+}
+.fxsd-block--ink {
+  --fx-bg: var(--fx-invert-bg);
+  --fx-ink: var(--fx-invert-ink);
+  --fx-ink-2: color-mix(in srgb, var(--fx-invert-ink) 72%, transparent);
+  --fx-line: color-mix(in srgb, var(--fx-invert-ink) 22%, transparent);
+  --fx-accent-text: #5aa2ff;
+  background: var(--fx-invert-bg);
+  color: var(--fx-invert-ink);
+}
+.fxsd-two {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 5rem);
+  align-items: start;
+}
+.fxsd-two > :first-child {
+  position: relative;
+}
+.fxsd-block h2.fx-d3 {
+  font-size: clamp(2.2rem, 1rem + 4.4vw, 5rem);
+  line-height: 0.9;
+}
+.fxsd-block h2.fx-d2 {
+  font-size: clamp(2.6rem, 1rem + 6vw, 7rem);
+  line-height: 0.88;
+}
+.fxsd-list {
+  display: grid;
+  gap: 1rem;
+}
+.fxsd-list li {
+  padding-block-end: 1rem;
+  border-block-end: var(--fx-border);
+  color: var(--fx-ink-2);
+}
+.fxsd-uses {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  margin-block-start: clamp(1.5rem, 4vw, 3rem);
+}
+.fxsd-uses li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: clamp(1.2rem, 2.4vw, 2rem);
+  border-radius: var(--fx-radius-3);
+  background: var(--fx-surface);
+  border: var(--fx-border);
+}
+.fxsd-use-n,
+.fxsd-step-n {
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  font-size: 3.2rem;
+  line-height: 0.85;
+  color: var(--fx-ink);
+}
+.fxsd-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 3rem);
+  margin-block-start: clamp(1.5rem, 4vw, 3rem);
+  border-block-start: var(--fx-rule);
+  padding-block-start: 1.5rem;
+}
+.fxsd-steps li {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+.fxsd-step-n {
+  font-size: 1rem;
+  font-family: var(--fx-font-body);
+  color: var(--fx-accent-text);
+}
+.fxsd-steps .fx-body {
+  color: var(--fx-ink-2);
+}
+.fxsd-ast {
+  inline-size: clamp(3rem, 6vw, 5rem);
+  overflow: visible;
+  margin-block-start: 1.5rem;
+}
+.fxsd-ast path {
+  stroke: #5aa2ff;
+}
+.fxsd-caps {
+  display: grid;
+  gap: 0.7rem;
+}
+.fxsd-caps li {
+  padding-block-end: 0.7rem;
+  border-block-end: 1px solid var(--fx-line);
+}
+.fxsd-tech {
+  display: grid;
+  gap: 0.8rem;
+  margin-block-start: 2rem;
+}
+.fxsd-tech ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.fxsd-tech li {
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--fx-line);
+  border-radius: var(--fx-radius-2);
+}
+.fxsd-related {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.4vw, 2rem);
+  margin-block-start: clamp(1.5rem, 4vw, 3rem);
+}
+.fxsd-rel {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  padding: clamp(1.2rem, 2.6vw, 2.2rem);
+  border-radius: var(--fx-radius-4);
+  background: var(--fx-bg-2);
+  color: inherit;
+  transition:
+    transform var(--fx-dur-base) var(--fx-ease-out),
+    background-color var(--fx-dur-base) var(--fx-ease-out);
+}
+.fxsd-rel:hover {
+  transform: translateY(-6px);
+  background: var(--fx-accent-tint);
+}
+.fxsd-rel-art {
+  block-size: 8rem;
+  inline-size: auto;
+  max-inline-size: 70%;
+  overflow: visible;
+  margin-block-end: 0.6rem;
+}
+@media (max-width: 900px) {
+  .fxsd-two,
+  .fxsd-uses,
+  .fxsd-related {
+    grid-template-columns: 1fr;
+  }
+  .fxsd-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Work extras ---------------------------------------------------------------------------- */
+.fxw--page {
+  padding-block-start: clamp(1rem, 3vw, 2rem);
+}
+.fxw-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: clamp(1.5rem, 4vw, 3rem);
+}
+.fxw-chip {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--fx-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fx-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--fx-dur-fast),
+    color var(--fx-dur-fast);
+}
+.fxw-chip[aria-pressed="true"],
+.fxw-chip:hover {
+  background: var(--fx-ink);
+  color: var(--fx-bg);
+}
+.fxw-thumbs {
+  display: flex;
+  gap: 0.4rem;
+  margin-block-start: 0.8rem;
+}
+.fxw-thumb {
+  border-radius: var(--fx-radius-2);
+  object-fit: cover;
+  inline-size: 4.5rem;
+  block-size: 3.4rem;
+}
+.fxw--page .fxw-card {
+  animation: fxw-in 0.7s var(--fx-ease-out) both;
+}
+@keyframes fxw-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+.fxw-media {
+  overflow: hidden;
+}
+
+/* contact page: the section already carries the blue ground */
+.fxc-top .fxc {
+  padding-block-start: calc(var(--nav-h, 4.5rem) + clamp(3rem, 7vw, 6rem));
+}
+.fxc-next {
+  background: var(--fx-bg);
+}
+.fxc-next .fx-container {
+  gap: 2rem;
+}

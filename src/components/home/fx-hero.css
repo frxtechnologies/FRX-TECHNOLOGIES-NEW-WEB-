@@ -1,7 +1,7 @@
 /* Homepage hero. Prefix .fxh-. Unlayered so it outranks legacy rules. */
 
 .fxh {
-  --fxh-size: min(var(--fx-fs-mega), 22.5svh, 24vw);
+  --fxh-size: min(var(--fx-fs-mega), 20.5svh, 23.5vw);
   position: relative;
   min-height: 100svh;
   display: grid;

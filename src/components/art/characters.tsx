@@ -17,8 +17,8 @@ import type { CSSProperties } from "react";
  */
 
 /** Characters keep their own outline/paper colours so a panel can re-bind text colours without erasing a face. */
-const INK = "var(--fxa-ink, var(--fx-ink))";
-const PAPER = "var(--fxa-paper, var(--fx-surface))";
+export const INK = "var(--fxa-ink, var(--fx-ink))";
+export const PAPER = "var(--fxa-paper, var(--fx-surface))";
 
 export function FxArtDefs() {
   return (
@@ -56,7 +56,7 @@ function cogPath(cx: number, cy: number, ro: number, ri: number, teeth: number) 
   return "M" + pts.join("L") + "Z";
 }
 
-type ArtProps = { className?: string; style?: CSSProperties };
+export type ArtProps = { className?: string; style?: CSSProperties };
 
 /** BUILD — a browser window that has come to life. */
 export function WindowBuddy({ className, style }: ArtProps) {

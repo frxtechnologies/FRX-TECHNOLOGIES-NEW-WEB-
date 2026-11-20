@@ -1,164 +1,120 @@
 import Link from "next/link";
-
-import { SERVICES, BUILD_CATEGORIES } from "@/lib/services";
-import { TECH_CATEGORIES } from "@/lib/technologies";
-import { PageHero } from "@/components/shared/page-hero";
-import { ContactCta } from "@/components/shared/contact-cta";
-import { Reveal, RevealLines } from "@/components/ui/reveal";
-import { ArrowIcon } from "@/components/ui/icons";
+import { pageMetadata } from "@/lib/metadata";
+import { PROCESS, SERVICE_LABEL } from "@/lib/services";
+import { getServices } from "@/lib/content/server";
+import { PageIntro } from "@/components/sections/page-intro";
+import { ServiceArtView } from "@/components/art/registry";
+import { ServicesArtLife } from "@/components/sections/services-art-life";
 import { JsonLd } from "@/components/shared/json-ld";
 import { SITE } from "@/lib/site";
-import { pageMetadata } from "@/lib/metadata";
+import { Sparkle, Squiggle } from "@/components/art/characters";
 
 export const metadata = pageMetadata({
   title: "Services",
   description:
-    "Digital products, intelligent automation and custom systems designed around the way your business actually works.",
+    "Custom software, AI automation, web and mobile applications, business systems, AI assistants, UI/UX and analytics from FRX Technologies.",
   path: "/services",
 });
 
-const serviceSchema = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  itemListElement: SERVICES.map((s, i) => ({
-    "@type": "ListItem",
-    position: i + 1,
-    item: {
-      "@type": "Service",
-      name: s.title,
-      description: s.summary,
-      url: `${SITE.url}/services/${s.slug}`,
-      provider: { "@type": "Organization", name: SITE.name },
-    },
-  })),
-};
+const TONES = ["tint", "paper", "ink", "blue"] as const;
 
-/**
- * The services index. Reads as an exploration of capability rather than a
- * repeat of the homepage: each service gets a full band with its own capability
- * list, so the page has depth a row list wouldn't give it.
- */
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const services = await getServices();
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: services.map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: SERVICE_LABEL[s.slug],
+      url: `${SITE.url}/services/${s.slug}`,
+    })),
+  };
+
   return (
     <>
-      <JsonLd data={serviceSchema} />
-
-      <PageHero
+      <PageIntro
         eyebrow="Services"
-        index={`${SERVICES.length} disciplines`}
-        lines={["What we build."]}
-        body="Digital products, intelligent automation and custom systems designed around the way your business actually works."
+        title="What we build"
+        lead="Custom software, intelligent automation and digital products — nine ways we help businesses move forward."
+        art={
+          <>
+            <Sparkle className="fxp-a fxp-a--spark" />
+            <Squiggle className="fxp-a fxp-a--squig" />
+          </>
+        }
       />
 
-      <div>
-        {SERVICES.map((service, i) => (
-          <section
-            key={service.slug}
-            className="service-band"
-            data-alt={i % 2 === 1}
-            aria-labelledby={`svc-${service.slug}`}
-          >
-            <div className="container grid gap-[clamp(2rem,5vw,4.5rem)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-              <div className="flex flex-col gap-6">
-                <p className="t-index text-step-xs text-[var(--accent-text)]">
-                  {service.index}
-                </p>
-
-                <RevealLines
-                  as="h2"
-                  className="t-h3 max-w-[14ch]"
-                  lines={[service.title]}
-                />
-
-                <Reveal delay={0.08}>
-                  <p className="max-w-[46ch] text-step-md leading-relaxed text-[var(--text-muted)]">
-                    {service.summary}
+      <ServicesArtLife>
+        <section className="fxsv" aria-label="All services">
+          {services.map((s, i) => (
+            <article key={s.slug} className="fxsv-row" data-tone={TONES[i % TONES.length]} id={s.slug}>
+              <div className="fx-container fxsv-in">
+                <div className="fxsv-copy">
+                  <p className="fx-label fxsv-idx">{s.index}</p>
+                  <h2 className="fx-d2 fx-up" data-fx="reveal-lines">
+                    {SERVICE_LABEL[s.slug]}
+                  </h2>
+                  <p className="fx-h3 fxsv-tag" data-fx="fade-up">
+                    {s.tagline}
                   </p>
-                </Reveal>
-
-                <Reveal delay={0.14}>
-                  <Link href={`/services/${service.slug}`} className="service-band-link">
-                    <span>Explore {service.name}</span>
-                    <ArrowIcon className="h-3.5 w-3.5" />
+                  <p className="fx-body fxsv-sum" data-fx="fade-up">
+                    {s.summary}
+                  </p>
+                  <ul className="fxsv-caps" aria-label={`${s.name} capabilities`}>
+                    {s.capabilities.slice(0, 4).map((c) => (
+                      <li key={c} className="fx-small">
+                        {c}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href={`/services/${s.slug}`} className="fx-btn fx-btn--ink fx-hover-shift">
+                    Explore {s.name} <span className="fx-shift" aria-hidden="true">→</span>
                   </Link>
-                </Reveal>
+                </div>
+                <div className="fxsv-art" aria-hidden="true" data-fx="fade-up">
+                  <ServiceArtView art={s.art} className="fxsv-svg fxa-bob" />
+                </div>
               </div>
+            </article>
+          ))}
+        </section>
+      </ServicesArtLife>
 
-              <Reveal className="flex flex-col gap-5" delay={0.1}>
-                <p className="t-eyebrow">Includes</p>
-                <ul className="flex flex-col">
-                  {service.capabilities.map((c) => (
-                    <li key={c} className="service-band-item">
-                      <span className="service-band-dot" aria-hidden="true" />
-                      {c}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            </div>
-          </section>
-        ))}
-      </div>
-
-      {/* Capability categories — what these services get used to create. */}
-      <section className="section">
-        <div className="container">
-          <div className="mb-[clamp(2.5rem,5vw,4rem)] flex flex-col gap-6">
-            <p className="t-eyebrow">Applied</p>
-            <RevealLines
-              as="h2"
-              className="t-h2 max-w-[18ch]"
-              lines={["The systems these", "usually become."]}
-            />
-          </div>
-
-          <ul className="build-grid">
-            {BUILD_CATEGORIES.map((cat, i) => (
-              <Reveal as="li" key={cat.title} className="build-cell" delay={i * 0.04}>
-                <span className="t-index build-cell-index">
-                  {String(i + 1).padStart(2, "0")}
+      <section className="fxsv-process" aria-labelledby="fxsv-process-h">
+        <div className="fx-container">
+          <h2 id="fxsv-process-h" className="fx-d1 fx-up" data-fx="reveal-lines">
+            How a project runs
+          </h2>
+          <ol className="fxsv-steps">
+            {PROCESS.map((p) => (
+              <li key={p.index} data-fx="fade-up">
+                <span className="fxsv-step-n fx-outline fx-outline--sm" aria-hidden="true">
+                  {p.index}
                 </span>
-                <h3 className="build-cell-title">{cat.title}</h3>
-                <p className="build-cell-body">{cat.body}</p>
-              </Reveal>
+                <h3 className="fx-h3">{p.title}</h3>
+                <p className="fx-body">{p.body}</p>
+              </li>
             ))}
-          </ul>
+          </ol>
         </div>
       </section>
 
-      {/* Condensed stack. The animated version lives on the homepage; here it's
-          a reference table, because that's what someone on this page wants. */}
-      <section className="section bg-[var(--bg-elevated)]">
-        <div className="container">
-          <div className="mb-[clamp(2rem,4vw,3rem)] flex flex-col gap-5">
-            <p className="t-eyebrow">Stack</p>
-            <h2 className="t-h3 max-w-[20ch]">
-              Chosen per project, not per <span className="accent">habit</span>.
-            </h2>
-          </div>
-
-          <dl className="tech-table">
-            {TECH_CATEGORIES.map((cat) => (
-              <Reveal key={cat.key} className="tech-table-row">
-                <dt className="tech-table-label">{cat.label}</dt>
-                <dd className="tech-table-items">
-                  {cat.items.map((item) => (
-                    <span key={item} className="tech-chip">
-                      {item}
-                    </span>
-                  ))}
-                </dd>
-              </Reveal>
-            ))}
-          </dl>
+      <section className="fxab-cta" aria-labelledby="fxsv-cta-h">
+        <div className="fx-container">
+          <h2 id="fxsv-cta-h" className="fx-d1 fx-up" data-fx="reveal-lines">
+            Not sure which one you need?
+          </h2>
+          <p className="fx-lead" data-fx="fade-up">
+            Describe the problem. We will tell you what we would build.
+          </p>
+          <Link href="/contact" className="fx-btn fx-btn--ink fx-hover-shift">
+            Start a project <span className="fx-shift" aria-hidden="true">→</span>
+          </Link>
         </div>
       </section>
-
-      <ContactCta
-        eyebrow="Next step"
-        lines={["Which one of", "these is yours?"]}
-        body="Describe the problem rather than the solution — the right service usually falls out of the conversation."
-      />
+      <JsonLd data={schema} />
     </>
   );
 }
