@@ -1,5 +1,5 @@
 /* The large hero illustration ("layers"). Prefix .fxhub / .fxh-hub.
-   Stable composition: the only motion is a slow glow on the AI core (opacity), off for reduced motion. */
+   Stable composition: a slow float, a slow glow on the AI core, and (desktop pointer only) a soft tilt. Off for reduced motion. */
 
 /* ---- placement ---------------------------------------------------------------------------- */
 /* tablets and phones: it sits in the flow under the copy, centred, never larger than the screen */
@@ -34,7 +34,24 @@
   }
 }
 
-/* ---- life: one slow glow, nothing else ---------------------------------------------------- */
+/* ---- interaction wrapper (hub-stage.tsx tilts it toward the pointer on desktop) -------------- */
+.fxhub-stage {
+  display: block;
+  will-change: transform;
+}
+
+/* ---- life: a slow float and one slow glow ---------------------------------------------------- */
+.fxhub {
+  animation: fxhub-float 9s ease-in-out infinite alternate;
+}
+@keyframes fxhub-float {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -7px, 0) rotate(0.4deg);
+  }
+}
 .fxhub-core {
   animation: fxhub-breathe 5s ease-in-out infinite;
 }
@@ -44,7 +61,11 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .fxhub,
   .fxhub-core {
     animation: none;
+  }
+  .fxhub-stage {
+    will-change: auto;
   }
 }

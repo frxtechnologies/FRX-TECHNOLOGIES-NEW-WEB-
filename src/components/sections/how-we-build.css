@@ -1,6 +1,7 @@
-/* HOW WE BUILD — a compact interactive stage. Prefix .fxhb-.
+/* HOW WE BUILD — a scroll-driven story on desktop (pinned, a line drawn across five stations), a compact
+   interactive stage everywhere else. Prefix .fxhb-.
    Palette: FRX blue, white, charcoal/navy, light grey. No yellow and no palette-accent token in this section.
-   No scroll animation, no pinning; the only motion is a one-shot draw-in of the chosen illustration. */
+   Nothing loops; the motion is the scrubbed line, state transitions, and a one-shot draw-in per illustration. */
 
 .fxhb {
   --hwb-navy: #0b1226;
@@ -66,7 +67,8 @@
   position: relative;
   min-inline-size: 0;
 }
-.fxhb-rail {
+.fxhb-rail,
+.fxhb-track {
   display: none;
 }
 .fxhb-tabs {
@@ -156,6 +158,29 @@
   block-size: 3px;
   background: linear-gradient(90deg, transparent, var(--hwb-blue), transparent);
 }
+.fxhb-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(28px, 0, 0);
+  transition:
+    opacity 0.35s var(--fx-ease-out),
+    transform 0.5s var(--fx-ease-out),
+    visibility 0s linear 0.35s;
+}
+.fxhb-layer[data-state="before"] {
+  transform: translate3d(-28px, 0, 0);
+}
+.fxhb-layer[data-state="on"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.45s var(--fx-ease-out) 0.08s,
+    transform 0.6s var(--fx-ease-out) 0.08s,
+    visibility 0s;
+}
 .fxhb-svg {
   position: absolute;
   inset: 4% 4%;
@@ -163,15 +188,42 @@
   block-size: 92%;
   overflow: visible;
 }
+.fxhb-panels {
+  display: grid;
+  min-inline-size: 0;
+}
 .fxhb-panel {
+  grid-area: 1 / 1;
   display: grid;
   align-content: start;
   justify-items: start;
   gap: 0.7rem;
   padding: clamp(1rem, 2.6vw, 1.8rem);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity 0.3s var(--fx-ease-out),
+    transform 0.4s var(--fx-ease-out),
+    visibility 0s linear 0.3s;
 }
-.fxhb-panel[hidden] {
-  display: none;
+.fxhb-panel[data-state="before"] {
+  transform: translate3d(0, -12px, 0);
+}
+.fxhb-panel[data-state="on"] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity 0.4s var(--fx-ease-out) 0.12s,
+    transform 0.5s var(--fx-ease-out) 0.12s,
+    visibility 0s;
+}
+.fxhb-kicker {
+  color: var(--fx-blue);
+  font: 700 0.76rem/1 var(--fx-font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 .fxhb-title {
   font-family: var(--fx-font-display);
@@ -208,18 +260,15 @@
   color: #fff;
 }
 
-/* ---- the entrance of an illustration (one-shot; remounted per stage) ---------------------- */
+/* ---- the entrance of an illustration (one-shot; replays whenever its stage becomes the active one) ---- */
 @media (prefers-reduced-motion: no-preference) {
-  .fxhb-pop {
+  .fxhb-layer[data-state="on"] .fxhb-pop {
     animation: fxhb-pop 0.6s var(--fx-ease-out) backwards;
     animation-delay: var(--d, 0s);
   }
-  .fxhb-draw {
+  .fxhb-layer[data-state="on"] .fxhb-draw {
     animation: fxhb-draw 1s ease-out backwards;
     animation-delay: var(--d, 0s);
-  }
-  .fxhb-panel:not([hidden]) {
-    animation: fxhb-fade 0.45s var(--fx-ease-out) both;
   }
 }
 @keyframes fxhb-pop {
@@ -231,12 +280,6 @@
 @keyframes fxhb-draw {
   from {
     stroke-dashoffset: 1;
-  }
-}
-@keyframes fxhb-fade {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
   }
 }
 
@@ -317,7 +360,9 @@
 @media (prefers-reduced-motion: reduce) {
   .fxhb-rail i,
   .fxhb-tab,
-  .fxhb-next {
+  .fxhb-next,
+  .fxhb-layer,
+  .fxhb-panel {
     transition: none;
   }
 }
@@ -326,4 +371,168 @@
 :root[data-theme="dark"] .fxhb-card {
   background: #0e1526;
   border-color: color-mix(in srgb, #8fb4ff 22%, transparent);
+}
+
+/* =============================================================================================
+   STORY MODE — set by script on desktop. The section is pinned (by ScrollTrigger) and fills the screen:
+   a heading, a horizontal line with five stations, and the stage (illustration + text) beneath it.
+   ============================================================================================= */
+.fxhb[data-mode="story"] {
+  min-block-size: 100vh;
+  min-block-size: 100svh;
+  display: flex;
+  align-items: center;
+  padding-block: 5.2rem 1.6rem;
+}
+.fxhb[data-mode="story"] .fxhb-pin {
+  inline-size: 100%;
+}
+.fxhb[data-mode="story"] .fxhb-head {
+  margin-block-end: clamp(0.8rem, 2.2vh, 1.6rem);
+}
+.fxhb[data-mode="story"] .fxhb-h {
+  font-size: clamp(2.6rem, 1rem + 4vw, 4.6rem);
+}
+.fxhb[data-mode="story"] .fxhb-stage {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1rem, 3vh, 2rem);
+}
+.fxhb[data-mode="story"] .fxhb-nav {
+  display: block;
+  position: relative;
+}
+.fxhb[data-mode="story"] .fxhb-rail {
+  display: none;
+}
+/* the line: inset so that it passes through the centre of the first and last station */
+.fxhb[data-mode="story"] .fxhb-track {
+  display: block;
+  position: absolute;
+  inset-inline: calc(50% / var(--n));
+  inset-block-start: 2px;
+  block-size: 40px;
+  pointer-events: none;
+}
+.fxhb-track svg {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow: visible;
+}
+.fxhb-base,
+.fxhb-fill {
+  fill: none;
+  stroke-linecap: round;
+}
+.fxhb-base {
+  stroke: var(--fx-line-strong);
+  stroke-width: 4px;
+}
+.fxhb-fill {
+  stroke: var(--fx-blue);
+  stroke-width: 5px;
+}
+.fxhb-dot {
+  position: absolute;
+  inset-block-start: 13px;
+  inset-inline-start: 0;
+  inline-size: 14px;
+  block-size: 14px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--fx-blue);
+  box-shadow: 0 0 0 6px rgb(47 123 240 / 0.2);
+  will-change: transform, left;
+}
+.fxhb[data-mode="story"] .fxhb-tabs {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+.fxhb[data-mode="story"] .fxhb-tab {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.7rem;
+  inline-size: auto;
+  min-block-size: 0;
+  padding: 0 0.5rem 0.2rem;
+  border: 0;
+  border-radius: var(--fx-radius-3, 8px);
+  background: transparent;
+  color: var(--fx-ink-3);
+  box-shadow: none;
+  text-align: center;
+  scroll-snap-align: none;
+}
+.fxhb[data-mode="story"] .fxhb-tab:hover {
+  background: transparent;
+  color: var(--fx-ink);
+}
+.fxhb[data-mode="story"] .fxhb-tab[data-on="true"] {
+  background: transparent;
+  color: var(--fx-ink);
+  box-shadow: none;
+}
+.fxhb[data-mode="story"] .fxhb-n {
+  display: grid;
+  place-items: center;
+  position: relative;
+  z-index: 1;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 50%;
+  border: 2.5px solid var(--fx-line-strong);
+  background: var(--hwb-bg);
+  color: var(--fx-ink-2);
+  font-size: 0.9rem;
+  font-weight: 800;
+  transition:
+    background-color 0.3s var(--fx-ease-out),
+    border-color 0.3s var(--fx-ease-out),
+    color 0.3s var(--fx-ease-out),
+    transform 0.35s var(--fx-ease-out),
+    box-shadow 0.35s var(--fx-ease-out);
+}
+.fxhb[data-mode="story"] .fxhb-tab[data-done="true"] .fxhb-n {
+  background: var(--fx-blue);
+  border-color: var(--fx-blue);
+  color: #fff;
+}
+.fxhb[data-mode="story"] .fxhb-tab[data-on="true"] .fxhb-n {
+  background: var(--hwb-navy);
+  border-color: var(--fx-blue);
+  color: #fff;
+  transform: scale(1.14);
+  box-shadow: 0 0 0 6px rgb(47 123 240 / 0.22);
+}
+:root[data-theme="dark"] .fxhb[data-mode="story"] .fxhb-tab[data-on="true"] .fxhb-n {
+  background: #fff;
+  color: var(--hwb-navy);
+}
+.fxhb[data-mode="story"] .fxhb-t {
+  flex: none;
+  font-size: 0.98rem;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.fxhb[data-mode="story"] .fxhb-card {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+}
+.fxhb[data-mode="story"] .fxhb-art {
+  min-block-size: clamp(15rem, 40vh, 26rem);
+}
+.fxhb[data-mode="story"] .fxhb-panel {
+  align-content: center;
+}
+.fxhb[data-mode="story"] .fxhb-next {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxhb-n {
+    transition: none;
+  }
 }

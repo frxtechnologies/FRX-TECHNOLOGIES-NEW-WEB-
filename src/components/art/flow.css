@@ -1,0 +1,33 @@
+/* The small supporting homepage illustration (art/flow.tsx). Prefix .fxflow.
+   Motion: a dotted flow along two short lines and a slow glow on the core. Nothing else. */
+.fxflow {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+.fxflow-core {
+  animation: fxflow-breathe 5.5s ease-in-out infinite;
+}
+.fxflow-run {
+  animation: fxflow-run 2.2s linear infinite;
+}
+.fxflow-run:nth-of-type(2) {
+  animation-delay: -1.1s;
+}
+@keyframes fxflow-breathe {
+  50% {
+    opacity: 0.45;
+  }
+}
+@keyframes fxflow-run {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxflow-core,
+  .fxflow-run {
+    animation: none;
+  }
+}

@@ -38,6 +38,8 @@ function Beam({ x, y1, y2 }: { x: number; y1: number; y2: number }) {
   );
 }
 
+// The only motion beyond the slow core glow is interaction: see home/hub-stage.tsx (a gentle tilt toward the
+// pointer on desktop, and the product window and the chip drifting a touch more than the platforms, for depth).
 export function FxHub({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 640 520" className={`fxhub ${className}`} role="presentation" focusable="false" aria-hidden="true">
@@ -128,11 +130,13 @@ export function FxHub({ className = "" }: { className?: string }) {
       </g>
       {/* the core: a glowing ring, a raised chip, and the FRX mark */}
       <ellipse className="fxhub-core" cx="320" cy="292" rx="76" ry="38" fill="url(#hub-core)" />
-      <ellipse cx="320" cy="292" rx="52" ry="26" fill="none" stroke="#fff" strokeOpacity="0.9" strokeWidth="3" />
-      <path d="M320 268l34 17v18l-34 17-34-17v-18z" fill="#eaf4ff" stroke={INK} strokeWidth="3" strokeLinejoin="round" />
-      <path d="M286 285l34 17 34-17M320 302v18" fill="none" stroke={INK} strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
-      <path d="M320 268l34 17-34 17-34-17z" fill="#fff" stroke={INK} strokeWidth="3" strokeLinejoin="round" />
-      <path d="M309 280l22 10M331 280l-22 10" stroke="#045cec" strokeWidth="4.5" strokeLinecap="round" />
+      <g className="fxhub-chip">
+        <ellipse cx="320" cy="292" rx="52" ry="26" fill="none" stroke="#fff" strokeOpacity="0.9" strokeWidth="3" />
+        <path d="M320 268l34 17v18l-34 17-34-17v-18z" fill="#eaf4ff" stroke={INK} strokeWidth="3" strokeLinejoin="round" />
+        <path d="M286 285l34 17 34-17M320 302v18" fill="none" stroke={INK} strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+        <path d="M320 268l34 17-34 17-34-17z" fill="#fff" stroke={INK} strokeWidth="3" strokeLinejoin="round" />
+        <path d="M309 280l22 10M331 280l-22 10" stroke="#045cec" strokeWidth="4.5" strokeLinecap="round" />
+      </g>
 
       {/* beams: intelligence ← interface */}
       <Beam x={198} y1={222} y2={292} />
@@ -143,7 +147,7 @@ export function FxHub({ className = "" }: { className?: string }) {
       <ellipse cx="320" cy="216" rx="116" ry="56" fill={INK} opacity="0.22" filter="url(#hub-blur-s)" />
       <Slab cx={320} cy={206} hw={122} hh={61} t={16} top="url(#hub-top-1)" left="#1456d2" right="#2f7bf0" />
       {/* a product window standing on the top tier */}
-      <g>
+      <g className="fxhub-win">
         <rect x="262" y="104" width="124" height="94" rx="13" fill="#fff" stroke={INK} strokeWidth="3.5" />
         <path d="M262 117a13 13 0 0 1 13-13h98a13 13 0 0 1 13 13v13H262z" fill="#045cec" stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
         <circle cx="278" cy="117" r="3.5" fill="#fff" />

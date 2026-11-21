@@ -213,6 +213,16 @@ const ROLE_FIX: Record<string, Record<string, string>> = {
   "Raaef Usman": { "Co-Founder": "Co-Founder & Director", "Co-founder": "Co-Founder & Director", CEO: "Co-Founder & Director", CTO: "Co-Founder & Director", "Co-Founder & CTO": "Co-Founder & Director" },
 };
 
+/**
+ * Transparent-background versions of founder photographs. Keyed by the stored original's file name, so it only
+ * applies while that exact original is the one in the admin: the original in storage is never modified or
+ * deleted, and if the owner uploads a different photo the override simply stops applying. The originals are
+ * backed up in design-assets/founders/.
+ */
+const FOUNDER_CUTOUTS: Record<string, string> = {
+  "d2c87602-c7f8-46f6-ab68-80ed553711ef-1795204764665.jpg": "/images/founders/raaef-usman-cutout.webp",
+};
+
 export const getFounders = cache(async (): Promise<PublicFounder[]> => {
   const fallback: PublicFounder[] = FOUNDERS.map((f) => ({
     name: f.name,
@@ -224,6 +234,6 @@ export const getFounders = cache(async (): Promise<PublicFounder[]> => {
   return rows.map((r) => ({
     name: r.name,
     role: ROLE_FIX[r.name]?.[r.role] ?? r.role,
-    imageUrl: mediaUrl(r.image_path, "founders"),
+    imageUrl: (r.image_path && FOUNDER_CUTOUTS[r.image_path]) || mediaUrl(r.image_path, "founders"),
   }));
 });

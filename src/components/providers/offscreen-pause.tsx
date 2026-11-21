@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 
 /**
@@ -20,6 +21,8 @@ import { gsap } from "@/lib/gsap";
  * Reduced motion: nothing animates there anyway, so nothing is observed.
  */
 export function OffscreenPause() {
+  // the layout persists across client-side navigations, so the sections are re-collected for every route
+  const pathname = usePathname();
   useEffect(() => {
     if (!("IntersectionObserver" in window)) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -70,7 +73,7 @@ export function OffscreenPause() {
         paused.get(s)?.forEach((t) => t.resume());
       });
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

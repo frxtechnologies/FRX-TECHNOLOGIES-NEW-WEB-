@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ScrollWords } from "@/components/motion/scroll-words";
 import { Squiggle } from "@/components/art/characters";
+import { FxFlow } from "@/components/art/flow";
 
 /**
  * "A bit about us" — a large editorial paragraph that turns from neutral to FRX
@@ -25,10 +26,16 @@ export function AboutPreview({ text }: { text: string }) {
 
         <ScrollWords as="p" className="fxa-text fx-h1" text={text} />
 
-        <div className="fxa-cta" data-fx="fade-up">
-          <Link href="/about" className="fx-btn fx-btn--ink fx-hover-shift fxa-btn">
-            View full about us <span className="fx-shift" aria-hidden="true">→</span>
-          </Link>
+        <div className="fxa-foot">
+          <div className="fxa-cta" data-fx="fade-up">
+            <Link href="/about" className="fx-btn fx-btn--ink fx-hover-shift fxa-btn">
+              View full about us <span className="fx-shift" aria-hidden="true">→</span>
+            </Link>
+          </div>
+          {/* the small supporting illustration: requests in, an intelligent core, a clear result out */}
+          <div className="fxa-flowwrap" aria-hidden="true">
+            <FxFlow />
+          </div>
         </div>
       </div>
     </section>

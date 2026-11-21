@@ -61,7 +61,15 @@ export function SmoothScroll() {
     };
     window.addEventListener("frx:navigate", onNavigate);
 
+    // Scenes (e.g. the pinned "How we build" story) ask the scroller to go to a position.
+    const onScrollTo = (e: Event) => {
+      const top = (e as CustomEvent<number>).detail;
+      if (typeof top === "number") lenis.scrollTo(top, { duration: 1.1 });
+    };
+    window.addEventListener("frx:scrollto", onScrollTo);
+
     return () => {
+      window.removeEventListener("frx:scrollto", onScrollTo);
       window.removeEventListener("pointerdown", onPress, { capture: true });
       document.removeEventListener("click", onClick);
       window.removeEventListener("frx:navigate", onNavigate);
