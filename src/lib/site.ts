@@ -1,7 +1,8 @@
 export const SITE = {
   name: "FRX Technologies",
   shortName: "FRX",
-  url: "https://frxtechnologies.com",
+  // The canonical host. Vercel redirects the bare domain to www, so www is the address search engines should index.
+  url: "https://www.frxtechnologies.com",
   title: "FRX Technologies | AI, Software & Digital Experiences",
   description:
     "FRX Technologies is a software and technology company building custom software, AI automation, web experiences and digital products.",
