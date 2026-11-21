@@ -17,7 +17,7 @@ import type { ReactNode } from "react";
 export const metadata = pageMetadata({
   title: "About",
   description:
-    "FRX Technologies is a software and technology company founded in 2026 by Feroze Mohiuddin and Raaef Usman, building custom software, AI automation, web experiences and digital products.",
+    "Meet FRX Technologies, a software and technology company founded in 2026 by Feroze Mohiuddin and Raaef Usman: custom software, AI automation and digital products.",
   path: "/about",
 });
 

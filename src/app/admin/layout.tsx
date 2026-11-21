@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import "./admin.css";
 import "./admin-ext.css";
+
+/** The admin area is private: never indexed or followed (robots.txt also disallows /admin). */
+export const metadata: Metadata = {
+  title: { absolute: "Admin | FRX Technologies" },
+  robots: { index: false, follow: false, nocache: true },
+};
 
 /**
  * Loads the admin-only stylesheet and nothing else. Auth is not checked here

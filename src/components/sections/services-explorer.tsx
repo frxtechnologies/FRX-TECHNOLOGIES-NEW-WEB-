@@ -51,8 +51,11 @@ export function ServicesExplorer({ services }: { services: ExplorerService[] }) 
 
   const onKey = (e: KeyboardEvent) => {
     const k = e.key;
-    if (k === "ArrowDown" || k === "ArrowRight") choose(active + 1, true);
-    else if (k === "ArrowUp" || k === "ArrowLeft") choose(active - 1, true);
+    // move relative to the tab that has focus (falls back to the selected one)
+    const at = tabs.current.indexOf(document.activeElement as HTMLButtonElement);
+    const from = at >= 0 ? at : active;
+    if (k === "ArrowDown" || k === "ArrowRight") choose(from + 1, true);
+    else if (k === "ArrowUp" || k === "ArrowLeft") choose(from - 1, true);
     else if (k === "Home") choose(0, true);
     else if (k === "End") choose(services.length - 1, true);
     else return;

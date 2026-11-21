@@ -440,6 +440,20 @@
   object-fit: cover;
   object-position: center top;
 }
+/* transparent cut-out portraits: no box, the person stands on the panel in front of the giant initials */
+.fxf-photo[data-cutout="true"] {
+  inset: 7% 3% 0 3%;
+  border-radius: 0;
+}
+.fxf-photo[data-cutout="true"] .fxf-photo-in {
+  background: transparent;
+  place-items: end center;
+}
+.fxf-photo[data-cutout="true"] .fxf-img {
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 16px 18px rgb(0 0 0 / 0.3));
+}
 .fxf-mono {
   font-family: var(--fx-font-display);
   font-weight: 800;
@@ -1170,6 +1184,8 @@
   justify-content: space-between;
   gap: 0.5rem 2rem;
   padding-block-start: 1.2rem;
+  /* the floating WhatsApp (bottom-left) and Ask FRX (bottom-right) buttons park here at the very bottom of the page */
+  padding-block-end: calc(3.4rem + max(1rem, env(safe-area-inset-bottom)) + 0.6rem);
   border-block-start: 1px solid var(--fx-line);
 }
 @media (max-width: 1000px) {

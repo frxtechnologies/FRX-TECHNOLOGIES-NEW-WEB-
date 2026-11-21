@@ -147,11 +147,13 @@
     overflow: visible;
   }
   .fxt-belt {
+    display: block;
     inline-size: auto;
     animation: none;
     will-change: auto;
   }
   .fxt-lane {
+    flex: initial;
     flex-wrap: wrap;
     justify-content: center;
     gap: 1.4rem 2rem;

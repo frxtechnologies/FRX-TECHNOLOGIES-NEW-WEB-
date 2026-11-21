@@ -45,9 +45,21 @@ export function ThemeProvider({ config, children }: { config: ThemeConfig; child
     if (p && (PALETTE_IDS as string[]).includes(p)) setPaletteState(p as Palette);
   }, []);
 
-  /** Colours cross-fade for the duration of the swap only (never transforms). */
+  /**
+   * Colours cross-fade for the duration of the swap only (never transforms).
+   * Where the View Transitions API exists the browser fades between two snapshots of the page, which costs
+   * almost nothing however tall the page is. Elsewhere we fall back to transitioning colours on every element
+   * for half a second (heavier, but only ever on a theme change). Reduced motion: an instant swap.
+   */
   const swap = useCallback((apply: () => void) => {
     const root = document.documentElement;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return apply();
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+    if (typeof doc.startViewTransition === "function") {
+      doc.startViewTransition(apply);
+      return;
+    }
     root.classList.add("theme-transition");
     apply();
     window.setTimeout(() => root.classList.remove("theme-transition"), 500);

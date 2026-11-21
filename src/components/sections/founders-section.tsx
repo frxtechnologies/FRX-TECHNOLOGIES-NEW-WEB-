@@ -2,6 +2,12 @@ import Image from "next/image";
 import type { PublicFounder } from "@/lib/content/types";
 import { Squiggle } from "@/components/art/characters";
 
+/** PNG / WebP portraits are treated as transparent cut-outs; JPEGs stay framed photos. */
+const isCutout = (url?: string | null) => {
+  const path = (url ?? "").split("?")[0].toLowerCase();
+  return path.endsWith(".png") || path.endsWith(".webp");
+};
+
 const initials = (n: string) =>
   n
     .split(/\s+/)
@@ -34,7 +40,8 @@ export function FoundersSection({ founders, compact = false }: { founders: Publi
                 <span className="fxf-ghost fx-outline fx-outline--lg" aria-hidden="true">
                   {initials(f.name)}
                 </span>
-                <div className="fxf-photo" data-fx="image-reveal">
+                {/* a PNG/WebP is a transparent cut-out: the person stands straight on the panel; a JPEG stays a framed photo */}
+                <div className="fxf-photo" data-fx="image-reveal" data-cutout={isCutout(f.imageUrl)}>
                   <div className="fxf-photo-in">
                     {f.imageUrl ? (
                       <Image

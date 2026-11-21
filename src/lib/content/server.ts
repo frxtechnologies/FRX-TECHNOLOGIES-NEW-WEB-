@@ -98,17 +98,34 @@ export type ProjectView = Omit<ProjectRow, "cover_path" | "gallery"> & {
   images: string[];
 };
 
+/**
+ * Does this public storage object exist? A project whose cover was replaced or deleted would otherwise make
+ * every visitor's browser request a missing file (a 400 in the console) before falling back. Checked once per
+ * page regeneration and cached; if the check itself fails we assume the image is fine and let the browser decide.
+ */
+const imageExists = cache(async (url: string): Promise<boolean> => {
+  try {
+    const r = await fetch(url, { method: "HEAD", signal: AbortSignal.timeout(4000), next: { revalidate: 300 } });
+    return r.status < 400;
+  } catch {
+    return true;
+  }
+});
+
 export const getProjects = cache(async (): Promise<ProjectView[]> => {
   const rows = (await list<ProjectRow>("projects")) ?? [];
-  return rows
-    .filter((p) => p.published)
-    .map((p) => {
+  const published = rows.filter((p) => p.published);
+  return Promise.all(
+    published.map(async (p) => {
       const cover = mediaUrl(p.cover_path);
       const gallery = (Array.isArray(p.gallery) ? p.gallery : [])
         .map((g) => mediaUrl(g))
         .filter((g): g is string => !!g);
-      return { ...p, cover, gallery, images: [...new Set([cover, ...gallery].filter((u): u is string => !!u))] };
-    });
+      const wanted = [...new Set([cover, ...gallery].filter((u): u is string => !!u))];
+      const ok = await Promise.all(wanted.map((u) => (u.startsWith("/") ? Promise.resolve(true) : imageExists(u))));
+      return { ...p, cover, gallery, images: wanted.filter((_, i) => ok[i]) };
+    }),
+  );
 });
 
 export type TechnologyView = Omit<TechnologyRow, "logo_path"> & { logo: string | null };
