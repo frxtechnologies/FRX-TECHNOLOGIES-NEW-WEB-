@@ -64,6 +64,8 @@ export const metadata: Metadata = {
     images: ["/brand/og.jpg"],
   },
   robots: { index: true, follow: true },
+  // Google Search Console ownership (meta-tag method). A public token, not a secret; the HTML-file method is in public/.
+  verification: { google: "-HSyrShMivG-CAK73HYYscSufUeUvtQeDlmSnGLIWho" },
 };
 
 export const viewport: Viewport = {

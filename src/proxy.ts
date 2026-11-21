@@ -74,6 +74,6 @@ export const config = {
      * session refresh is cheap but there's no reason to pay it for a font
      * file. Admin gating only needs /admin anyway.
      */
-    "/((?!_next/static|_next/image|favicon.ico|icons/|brand/|images/).*)",
+    "/((?!_next/static|_next/image|favicon.ico|icons/|brand/|images/|googledb[a-z0-9]+\.html).*)",
   ],
 };
