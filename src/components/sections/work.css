@@ -1,0 +1,257 @@
+/* SELECTED WORK + /work: one even card grid. Prefix .fxw-.
+   Every card is the same size; the image sits in a fixed-ratio box and is never cropped or enlarged. */
+
+.fxw {
+  background: var(--fx-bg-2);
+}
+.fxw--page {
+  padding-block-start: clamp(1rem, 3vw, 2rem);
+}
+.fxw-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-block-end: clamp(1.5rem, 4vw, 3rem);
+}
+.fxw-h {
+  font-size: clamp(3rem, 1rem + 9vw, 9rem);
+  line-height: 0.84;
+}
+.fxw-count {
+  margin-block-start: 0.9rem;
+  color: var(--fx-ink-3);
+}
+
+/* 3 columns on a laptop, 4 on a wide screen, 2 on a tablet, 1 on a phone — from one rule. */
+.fxw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: clamp(1rem, 2vw, 1.6rem);
+  align-items: stretch;
+}
+
+/* ---- the card ---------------------------------------------------------------------------- */
+.fxw-card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-inline-size: 0;
+  border: 1px solid var(--fx-line);
+  border-radius: var(--fx-radius-4, 12px);
+  background: var(--fx-surface);
+  color: inherit;
+  overflow: clip;
+  box-shadow: var(--fx-shadow-sm);
+  transition:
+    transform 0.45s var(--fx-ease-spring),
+    box-shadow 0.35s var(--fx-ease-out),
+    border-color 0.25s var(--fx-ease-out);
+}
+.fxw-card--static {
+  cursor: default;
+}
+.fxw-card:focus-visible {
+  outline: 3px solid var(--fx-sub);
+  outline-offset: 3px;
+}
+
+/* the image box: fixed ratio, so every card is identical whatever was uploaded */
+.fxw-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--fx-bg-3, var(--fx-bg-2));
+}
+/* blurred, dimmed copy of the same picture: fills the letterbox bars in any theme */
+.fxw-back {
+  object-fit: cover;
+  filter: blur(26px) saturate(1.15);
+  transform: scale(1.35);
+  opacity: 0.55;
+}
+/* the picture itself: the WHOLE image, centred; scale-down = fit inside, but never enlarge past real size */
+.fxw-fg {
+  object-fit: scale-down;
+  object-position: center;
+  transition: transform 0.7s var(--fx-ease-out);
+}
+/* branded fallback when a project has no loadable image */
+.fxw-poster {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+  background: linear-gradient(150deg, var(--fx-blue-deep), var(--fx-blue) 55%, var(--fx-blue-bright));
+  color: #fff;
+  text-align: center;
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  text-transform: uppercase;
+  font-size: clamp(1.6rem, 1rem + 1.6vw, 2.4rem);
+  line-height: 0.92;
+  overflow-wrap: anywhere;
+}
+
+.fxw-no,
+.fxw-arrow {
+  position: absolute;
+  z-index: 2;
+  background: var(--fx-surface);
+  color: var(--fx-ink);
+  box-shadow: 0 1px 2px rgb(10 10 12 / 0.12);
+}
+.fxw-no {
+  inset-block-start: 0.7rem;
+  inset-inline-start: 0.7rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  font: 700 0.7rem/1 var(--fx-font-body);
+  letter-spacing: 0.06em;
+}
+.fxw-arrow {
+  inset-block-start: 0.7rem;
+  inset-inline-end: 0.7rem;
+  display: grid;
+  place-items: center;
+  inline-size: 2.2rem;
+  block-size: 2.2rem;
+  border-radius: 50%;
+  transition:
+    background-color 0.25s var(--fx-ease-out),
+    color 0.25s var(--fx-ease-out),
+    transform 0.45s var(--fx-ease-spring);
+}
+
+/* ---- the text ---------------------------------------------------------------------------- */
+.fxw-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.32rem;
+  min-inline-size: 0;
+  padding: 1rem 1.1rem 1.1rem;
+}
+.fxw-cat {
+  color: var(--fx-ink-3);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.fxw-title {
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  text-transform: uppercase;
+  font-size: clamp(1.45rem, 1.15rem + 0.7vw, 1.85rem);
+  line-height: 0.95;
+  letter-spacing: -0.004em;
+  overflow-wrap: anywhere;
+}
+.fxw-desc {
+  color: var(--fx-ink-2);
+  font-size: 0.93rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.fxw-go {
+  margin-block-start: auto;
+  padding-block-start: 0.7rem;
+  color: var(--fx-ink);
+  font: 700 0.86rem/1 var(--fx-font-body);
+}
+.fxw-go i {
+  display: inline-block;
+  font-style: normal;
+  transition: transform 0.35s var(--fx-ease-spring);
+}
+
+/* ---- hover / focus: lift, restrained zoom, arrow ----------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+  a.fxw-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--fx-blue);
+    box-shadow: var(--fx-shadow-lg);
+  }
+  a.fxw-card:hover .fxw-fg {
+    transform: scale(1.04);
+  }
+  a.fxw-card:hover .fxw-arrow {
+    background: var(--fx-blue);
+    color: #fff;
+    transform: rotate(45deg);
+  }
+  a.fxw-card:hover .fxw-go i {
+    transform: translateX(5px);
+  }
+}
+a.fxw-card:focus-visible .fxw-arrow {
+  background: var(--fx-blue);
+  color: #fff;
+}
+
+/* ---- entrance: when the grid scrolls into view (one-shot, not scroll-scrubbed) ---------- */
+.fxw-grid[data-armed]:not([data-in]) .fxw-card {
+  opacity: 0;
+}
+.fxw-grid[data-in] .fxw-card {
+  animation: fxw-in 0.7s var(--fx-ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+@keyframes fxw-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxw-grid .fxw-card {
+    animation: none !important;
+    opacity: 1 !important;
+    transition: none;
+  }
+  .fxw-fg,
+  .fxw-arrow,
+  .fxw-go i {
+    transition: none;
+  }
+}
+
+/* ---- /work filter ------------------------------------------------------------------------ */
+.fxw-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: clamp(1.2rem, 3vw, 2rem);
+}
+.fxw-chip {
+  min-block-size: 2.5rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid var(--fx-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fx-ink);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color var(--fx-dur-fast),
+    color var(--fx-dur-fast);
+}
+.fxw-chip[aria-pressed="true"],
+.fxw-chip:hover {
+  background: var(--fx-ink);
+  color: var(--fx-bg);
+}
+.fxw-live {
+  margin-block-start: 1.4rem;
+  color: var(--fx-ink-3);
+}

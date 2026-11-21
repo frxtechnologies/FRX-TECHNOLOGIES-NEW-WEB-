@@ -591,59 +591,6 @@
   }
 }
 
-/* ---- Work extras ---------------------------------------------------------------------------- */
-.fxw--page {
-  padding-block-start: clamp(1rem, 3vw, 2rem);
-}
-.fxw-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-block-end: clamp(1.5rem, 4vw, 3rem);
-}
-.fxw-chip {
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--fx-line-strong);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--fx-ink);
-  font: inherit;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    background-color var(--fx-dur-fast),
-    color var(--fx-dur-fast);
-}
-.fxw-chip[aria-pressed="true"],
-.fxw-chip:hover {
-  background: var(--fx-ink);
-  color: var(--fx-bg);
-}
-.fxw-thumbs {
-  display: flex;
-  gap: 0.4rem;
-  margin-block-start: 0.8rem;
-}
-.fxw-thumb {
-  border-radius: var(--fx-radius-2);
-  object-fit: cover;
-  inline-size: 4.5rem;
-  block-size: 3.4rem;
-}
-.fxw--page .fxw-card {
-  animation: fxw-in 0.7s var(--fx-ease-out) both;
-}
-@keyframes fxw-in {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-}
-.fxw-media {
-  overflow: hidden;
-}
-
 /* contact page: the section already carries the blue ground */
 .fxc-top .fxc {
   padding-block-start: calc(var(--nav-h, 4.5rem) + clamp(3rem, 7vw, 6rem));

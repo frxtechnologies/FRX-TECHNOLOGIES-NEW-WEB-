@@ -49,36 +49,33 @@ function MiniBot() {
   );
 }
 
+/** The WhatsApp glyph (Simple Icons, CC0): the familiar speech bubble with a handset. */
+const WA_PATH =
+  "M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z";
+
 /**
- * Floating WhatsApp control — the number is editable in admin → Contact & social.
+ * Floating WhatsApp contact button — the number is editable in admin → Contact & social.
  *
- * Desktop: hovering (or focusing) the button opens an invitation card: a small robot
- * leans out and waves, the telephone handset rings (shaking, with ring arcs), and a
- * clear line invites the visitor to message FRX. Clicking the button opens WhatsApp.
+ * It sits in the BOTTOM-LEFT corner (Ask FRX owns the bottom-right), so the two never meet.
  *
- * Touch: there is no hover, so the FIRST tap opens the same card and the card's
- * "Open WhatsApp" link (or a second tap on the button) goes through. Nothing
- * depends on hover.
+ * Nothing happens on hover or focus. The button only does something when the visitor CLICKS or TAPS it:
+ * it opens a small card where a robot leans out and waves, the button emits rings, and a clear
+ * "Open WhatsApp" call-to-action appears. Clicking the button again, pressing Escape or clicking
+ * elsewhere closes it. Mouse, touch and keyboard all behave the same, so nothing relies on hover.
  *
- * Sound is OFF by default and nothing ever plays on load. A visible "Ring sound"
- * switch inside the card turns it on — that tap is the explicit user interaction
- * browsers require — and the choice is remembered. With sound on, opening the card
- * plays one short synthesised ring; with it off (or if audio is unavailable) the
- * interaction is identical, just silent.
- *
- * Position: part of the bottom-right dock, directly above Ask FRX, so the two
- * controls cannot overlap; it steps aside while the assistant is open.
+ * Sound is OFF by default and nothing ever plays on load, on hover or on its own. A visible "Ring sound"
+ * switch inside the card turns it on — that tap is the explicit user interaction browsers require — and
+ * the choice is remembered. With sound on, opening the card plays one short synthesised ring.
  */
 export function WhatsAppButton({ number }: { number: string }) {
-  const digits = number.replace(/\D/g, "");
+  const digits = number.replace(/D/g, "");
   const [open, setOpen] = useState(false);
   const [sound, setSound] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
+  const fab = useRef<HTMLButtonElement>(null);
   const audio = useRef<AudioContext | null>(null);
-  const touchOnly = useRef(false);
 
   useEffect(() => {
-    touchOnly.current = window.matchMedia("(hover: none)").matches;
     try {
       setSound(localStorage.getItem(SOUND_KEY) === "1");
     } catch {
@@ -89,7 +86,11 @@ export function WhatsAppButton({ number }: { number: string }) {
   useEffect(() => {
     if (!open) return;
     const away = (e: PointerEvent) => !wrap.current?.contains(e.target as Node) && setOpen(false);
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const esc = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      fab.current?.focus();
+    };
     document.addEventListener("pointerdown", away);
     document.addEventListener("keydown", esc);
     return () => {
@@ -110,10 +111,10 @@ export function WhatsAppButton({ number }: { number: string }) {
     }
   };
 
-  const show = () => {
-    if (open) return;
-    setOpen(true);
-    if (sound) ring();
+  const toggle = () => {
+    const next = !open;
+    setOpen(next);
+    if (next && sound) ring(); // only ever as a direct result of the visitor's click/tap
   };
 
   const toggleSound = () => {
@@ -131,14 +132,8 @@ export function WhatsAppButton({ number }: { number: string }) {
   const href = `https://wa.me/${digits}`;
 
   return (
-    <div
-      ref={wrap}
-      className="fxwa"
-      data-open={open}
-      onMouseEnter={() => !touchOnly.current && show()}
-      onMouseLeave={() => !touchOnly.current && setOpen(false)}
-    >
-      <div className="fxwa-card" role="region" aria-label="Contact FRX on WhatsApp" aria-hidden={!open}>
+    <div ref={wrap} className="fxwa" data-open={open}>
+      <div id="fxwa-card" className="fxwa-card" role="region" aria-label="Contact FRX on WhatsApp" aria-hidden={!open}>
         <MiniBot />
         <div className="fxwa-copy">
           <p className="fxwa-hi">Got a project in mind?</p>
@@ -162,36 +157,21 @@ export function WhatsAppButton({ number }: { number: string }) {
         </div>
       </div>
 
-      <a
+      <button
+        ref={fab}
+        type="button"
         className="fxwa-fab"
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Chat with FRX Technologies on WhatsApp (opens in a new tab)"
-        onFocus={show}
-        onClick={(e) => {
-          // On touch the first tap reveals the card; the second goes through to WhatsApp.
-          if (touchOnly.current && !open) {
-            e.preventDefault();
-            show();
-          }
-        }}
+        aria-expanded={open}
+        aria-controls="fxwa-card"
+        aria-label={open ? "Close WhatsApp contact options" : "Contact FRX on WhatsApp"}
+        onClick={toggle}
       >
         <span className="fxwa-ring" aria-hidden="true" />
         <span className="fxwa-ring fxwa-ring--b" aria-hidden="true" />
-        <svg viewBox="0 0 32 32" className="fxwa-phone" aria-hidden="true">
-          <g className="fxwa-handset">
-            <path
-              d="M8.5 4.5 12 4l2.4 5.6-2.6 1.9a14.5 14.5 0 0 0 6.7 6.7l1.9-2.6L26 17.5l-.5 3.5a3 3 0 0 1-3 2.6A18.5 18.5 0 0 1 5.9 7.5a3 3 0 0 1 2.6-3z"
-              fill="currentColor"
-            />
-          </g>
-          <g className="fxwa-waves" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M19 6.5a7 7 0 0 1 6.5 6.5" />
-            <path d="M19 2.2a11.3 11.3 0 0 1 10.8 10.8" />
-          </g>
+        <svg viewBox="0 0 24 24" className="fxwa-icon" aria-hidden="true" focusable="false">
+          <path d={WA_PATH} fill="currentColor" />
         </svg>
-      </a>
+      </button>
     </div>
   );
 }

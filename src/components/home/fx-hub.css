@@ -1,0 +1,118 @@
+/* The large hero illustration ("systems hub"). Prefix .fxhub / .fxh-hub.
+   Motion: transform + dash-offset only; all of it is off for reduced-motion visitors. */
+
+/* ---- placement ---------------------------------------------------------------------------- */
+/* tablets and phones: it sits in the flow under the copy, centred, never larger than the screen */
+.fxh-hub {
+  position: relative;
+  display: block;
+  align-self: auto;
+  inline-size: min(27rem, 92%);
+  margin: 0.4rem auto 0;
+  pointer-events: none;
+}
+.fxh-hub .fxh-par {
+  height: auto;
+}
+.fxhub {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: visible;
+}
+
+/* desktop: the lower-right of the hero, in the space the headline leaves free.
+   Width is also capped so its left edge can never reach the copy column (40rem + gutter). */
+@media (min-width: 1100px) {
+  .fxh-hub {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    inline-size: min(40rem, 37vw, 60svh, calc(100vw - 2 * var(--fx-gutter, 3rem) - 41rem));
+    margin: 0;
+    z-index: 1;
+  }
+}
+
+/* ---- life --------------------------------------------------------------------------------- */
+.fxhub-float {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fxhub-float 5.2s ease-in-out infinite;
+}
+.fxhub-float--a { animation-duration: 5.6s; }
+.fxhub-float--b { animation-duration: 6.4s; animation-delay: -1.8s; }
+.fxhub-float--c { animation-duration: 5.9s; animation-delay: -3.1s; }
+.fxhub-float--d { animation-duration: 6.8s; animation-delay: -0.9s; }
+.fxhub-float--e { animation-duration: 6.1s; animation-delay: -2.4s; }
+.fxhub-float--core { animation-duration: 4.4s; animation-delay: -1.2s; }
+@keyframes fxhub-float {
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+/* data packets travelling along the connector lines */
+.fxhub-flow {
+  stroke-dasharray: 0.1 14;
+  animation: fxhub-flow 1.5s linear infinite;
+}
+@keyframes fxhub-flow {
+  to {
+    stroke-dashoffset: -14.1;
+  }
+}
+
+.fxhub-dots circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fxhub-dot 1.3s ease-in-out infinite;
+}
+.fxhub-dots circle:nth-child(2) { animation-delay: 0.18s; }
+.fxhub-dots circle:nth-child(3) { animation-delay: 0.36s; }
+@keyframes fxhub-dot {
+  0%,
+  70%,
+  100% {
+    transform: scale(0.7);
+    opacity: 0.45;
+  }
+  35% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+.fxhub-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: fxhub-bar 3.4s ease-in-out infinite;
+}
+.fxhub-bar--2 { animation-delay: -0.8s; }
+.fxhub-bar--3 { animation-delay: -1.6s; }
+@keyframes fxhub-bar {
+  50% {
+    transform: scaleY(0.72);
+  }
+}
+
+.fxhub-gear {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fxhub-spin 16s linear infinite;
+}
+@keyframes fxhub-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fxhub-float,
+  .fxhub-flow,
+  .fxhub-dots circle,
+  .fxhub-bar,
+  .fxhub-gear {
+    animation: none;
+  }
+}

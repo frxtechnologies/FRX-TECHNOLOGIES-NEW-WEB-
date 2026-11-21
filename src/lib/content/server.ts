@@ -74,22 +74,41 @@ export const getSettings = cache(async (): Promise<Settings> => {
   return merged;
 });
 
+/**
+ * Logos go through /api/logo, which removes a flat background and trims the margin on the fly (the
+ * stored original is never modified). SVGs and anything outside the technologies/affiliations
+ * folders are already clean and are used directly. `v` is bumped when the cleaner changes.
+ */
+const LOGO_PIPELINE = "2";
+function logoUrl(path: string | null | undefined): string | null {
+  if (!path) return null;
+  if (path.startsWith("http") || path.startsWith("/") || path.toLowerCase().endsWith(".svg")) return mediaUrl(path);
+  if (!path.startsWith("technologies/") && !path.startsWith("affiliations/")) return mediaUrl(path);
+  return `/api/logo?p=${encodeURIComponent(path)}&v=${LOGO_PIPELINE}`;
+}
+
 export type ProjectView = Omit<ProjectRow, "cover_path" | "gallery"> & {
   cover: string | null;
   gallery: string[];
+  /**
+   * This project's OWN images in display order: the cover first, then its gallery (no duplicates).
+   * The card tries them in order if one fails to load, so a missing cover falls back to the
+   * project's own screenshot — never to another project's image.
+   */
+  images: string[];
 };
 
 export const getProjects = cache(async (): Promise<ProjectView[]> => {
   const rows = (await list<ProjectRow>("projects")) ?? [];
   return rows
     .filter((p) => p.published)
-    .map((p) => ({
-      ...p,
-      cover: mediaUrl(p.cover_path),
-      gallery: (Array.isArray(p.gallery) ? p.gallery : [])
+    .map((p) => {
+      const cover = mediaUrl(p.cover_path);
+      const gallery = (Array.isArray(p.gallery) ? p.gallery : [])
         .map((g) => mediaUrl(g))
-        .filter((g): g is string => !!g),
-    }));
+        .filter((g): g is string => !!g);
+      return { ...p, cover, gallery, images: [...new Set([cover, ...gallery].filter((u): u is string => !!u))] };
+    });
 });
 
 export type TechnologyView = Omit<TechnologyRow, "logo_path"> & { logo: string | null };
@@ -109,7 +128,7 @@ export const getTechnologies = cache(async (): Promise<TechnologyView[]> => {
       logo: null,
     }));
   }
-  return rows.filter((t) => t.published).map((t) => ({ ...t, logo: mediaUrl(t.logo_path) }));
+  return rows.filter((t) => t.published).map((t) => ({ ...t, logo: logoUrl(t.logo_path) }));
 });
 
 export const getFaqs = cache(async (): Promise<Pick<FaqRow, "question" | "answer">[]> => {
@@ -135,7 +154,7 @@ export type AffiliationView = Omit<AffiliationRow, "logo_path"> & { logo: string
 
 export const getAffiliations = cache(async (): Promise<AffiliationView[]> => {
   const rows = (await list<AffiliationRow>("affiliations")) ?? [];
-  return rows.filter((a) => a.published).map((a) => ({ ...a, logo: mediaUrl(a.logo_path) }));
+  return rows.filter((a) => a.published).map((a) => ({ ...a, logo: logoUrl(a.logo_path) }));
 });
 
 /** Code defaults for each service, overridden field by field by any stored row. */

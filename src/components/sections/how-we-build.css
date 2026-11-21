@@ -1,0 +1,178 @@
+/* HOW WE BUILD — the homepage scroll story. Prefix .fxhb-.
+   Default = a plain, fully visible vertical timeline (phones, tablets, reduced motion).
+   The drawn line / slide-in motion is added by GSAP on desktop only; nothing is pinned. */
+
+.fxhb {
+  position: relative;
+  background: var(--fx-bg-2);
+  color: var(--fx-ink);
+  padding-block: var(--fx-section-y);
+  overflow-x: clip;
+}
+.fxhb-head {
+  display: grid;
+  gap: 0.9rem;
+  margin-block-end: clamp(2rem, 5vw, 4rem);
+}
+.fxhb-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--fx-ink-2);
+}
+.fxhb-h {
+  font-size: clamp(2.8rem, 0.8rem + 8vw, 8.4rem);
+  line-height: 0.86;
+}
+
+/* ---- small screens: left rail, node, card ------------------------------------------------- */
+.fxhb-steps {
+  position: relative;
+  display: grid;
+  gap: clamp(1.4rem, 4vw, 2.2rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fxhb-line {
+  display: none;
+}
+.fxhb-steps::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.6rem;
+  inset-inline-start: 1.15rem;
+  inline-size: 3px;
+  border-radius: 2px;
+  background: linear-gradient(var(--fx-blue), var(--fx-sub));
+  opacity: 0.55;
+}
+.fxhb-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+.fxhb-big {
+  display: none;
+}
+.fxhb-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+  border: 2.5px solid var(--fx-ink);
+  border-radius: 50%;
+  background: var(--fx-sub);
+  color: var(--fx-sub-ink);
+  font: 800 0.95rem/1 var(--fx-font-display);
+  box-shadow: 3px 3px 0 var(--fx-blue);
+}
+.fxhb-card {
+  padding: 1rem 1.15rem 1.15rem;
+  border: 1px solid var(--fx-line);
+  border-radius: var(--fx-radius-4, 12px);
+  background: var(--fx-surface);
+  box-shadow: var(--fx-shadow-sm);
+}
+.fxhb-title {
+  font-family: var(--fx-font-display);
+  font-weight: 800;
+  font-stretch: 75%;
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.1rem);
+  line-height: 0.95;
+}
+.fxhb-body {
+  margin-block-start: 0.55rem;
+  color: var(--fx-ink-2);
+  font-size: 1rem;
+  line-height: 1.58;
+  max-inline-size: 36rem;
+}
+
+/* ---- desktop: a centred spine, cards alternating, giant numbers behind --------------------- */
+@media (min-width: 1024px) {
+  .fxhb-steps {
+    gap: clamp(2.2rem, 5vw, 4rem);
+  }
+  .fxhb-steps::before {
+    display: none;
+  }
+  .fxhb-line {
+    display: block;
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 50%;
+    inline-size: 40px;
+    block-size: 100%;
+    transform: translateX(-50%);
+    overflow: visible;
+    pointer-events: none;
+  }
+  .fxhb-step {
+    grid-template-columns: minmax(0, 1fr) 5rem minmax(0, 1fr);
+    gap: 0;
+    align-items: center;
+    min-block-size: 11rem;
+  }
+  .fxhb-node {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
+    inline-size: 3.2rem;
+    block-size: 3.2rem;
+    font-size: 1.15rem;
+  }
+  .fxhb-card {
+    max-inline-size: 31rem;
+  }
+  .fxhb-big {
+    display: block;
+    z-index: 0;
+    font-family: var(--fx-font-display);
+    font-weight: 800;
+    font-stretch: 75%;
+    font-size: clamp(7rem, 14vw, 14rem);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 2px color-mix(in srgb, var(--fx-ink) 22%, transparent);
+    opacity: 1;
+    user-select: none;
+    pointer-events: none;
+    grid-row: 1;
+  }
+  .fxhb-step[data-side="l"] .fxhb-card {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    text-align: end;
+  }
+  .fxhb-step[data-side="l"] .fxhb-body {
+    margin-inline-start: auto;
+  }
+  .fxhb-step[data-side="l"] .fxhb-big {
+    grid-column: 3;
+    justify-self: start;
+    margin-inline-start: 1.5rem;
+  }
+  .fxhb-step[data-side="r"] .fxhb-card {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: start;
+  }
+  .fxhb-step[data-side="r"] .fxhb-big {
+    grid-column: 1;
+    justify-self: end;
+    margin-inline-end: 1.5rem;
+  }
+  /* the cards and node sit above the line and the big numbers */
+  .fxhb-card,
+  .fxhb-node {
+    position: relative;
+    z-index: 2;
+  }
+}

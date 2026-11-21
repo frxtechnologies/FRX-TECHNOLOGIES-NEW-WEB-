@@ -1,96 +1,79 @@
 import type { AffiliationView, TechnologyView } from "@/lib/content/server";
-
-/** Short display marks for the typographic tiles. Real logos (admin upload) replace them. */
-const MARK: Record<string, string> = {
-  "Next.js": "N",
-  "Node.js": "No",
-  "Make.com": "Mk",
-  n8n: "n8n",
-  TypeScript: "TS",
-  JavaScript: "JS",
-  GSAP: "GS",
-  OpenAI: "AI",
-  "Tailwind CSS": "TW",
-  PostgreSQL: "PG",
-  MongoDB: "Mg",
-  Supabase: "Sb",
-  Firebase: "Fb",
-  WordPress: "WP",
-  Shopify: "Sh",
-  Flutter: "Fl",
-  Python: "Py",
-  Gemini: "Gm",
-  React: "Re",
-};
-const mark = (name: string) =>
-  MARK[name] ?? name.replace(/[^A-Za-z0-9]/g, "").slice(0, 2).replace(/^./, (c) => c.toUpperCase());
-
-const TONES = ["paper", "ink", "tint", "blue"] as const;
+import { TechMark } from "./tech-mark";
+import "./technologies.css";
 
 /**
- * Tools & technologies — a two-row wall of large tiles that travels sideways as
- * the page scrolls (pinned, desktop), and is a native swipe rail on phones and
- * tablets. Driven by the shared `horizontal` convention (design-system/motion).
+ * Technologies we work with daily: one continuous, self-moving line of logos.
  *
- * Every entry is editable in admin → Technologies; uploading a logo replaces the
- * typographic mark. A genuine affiliations strip appears below, but only when
- * the owner has published at least one — nothing is shown by default.
+ * It is pure CSS: a belt of two identical lanes slides left by exactly one lane (-50%) and loops, so there
+ * is no seam, no jump and no JavaScript — and nothing is tied to the page scroll (no ScrollTrigger, no
+ * pin), so scrolling is never held up. Pauses on hover/focus; with reduced motion it becomes a static,
+ * wrapped grid. The list repeats enough times that each lane is wider than any screen.
+ *
+ * Every entry is managed in admin → Technologies; the logo is cleaned automatically (see /api/logo), and a
+ * monogram is shown when there is no logo. Affiliations appear below ONLY when the owner has published some.
  */
 export function Technologies({
   items,
   affiliations = [],
-  heading = "Tools & technologies",
+  heading = "Technologies we work with daily",
 }: {
   items: TechnologyView[];
   affiliations?: AffiliationView[];
   heading?: string;
 }) {
   if (!items.length) return null;
-  // The wrapper is React-owned and never touched by ScrollTrigger: pinning moves the
-  // <section> into a .pin-spacer INSIDE this wrapper, so React can still remove the
-  // wrapper cleanly when the route changes (otherwise: removeChild NotFoundError).
+
+  // enough repeats that a single lane is always wider than a wide desktop (about 14 items ≈ one 1920px screen)
+  const copies = Math.max(1, Math.ceil(26 / items.length));
+  const lane = (hidden: boolean) =>
+    Array.from({ length: copies }).flatMap((_, c) =>
+      items.map((t) => {
+        const inner = (
+          <>
+            <span className="fxt-plate">
+              <TechMark logo={t.logo} name={t.name} />
+            </span>
+            <span className="fxt-text">
+              <span className="fxt-name">{t.name}</span>
+              {t.category ? <span className="fxt-cat">{t.category}</span> : null}
+            </span>
+          </>
+        );
+        return (
+          <li key={`${c}-${t.id}`} className="fxt-item">
+            {t.url && !hidden ? (
+              <a href={t.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.name} (opens in a new tab)`}>
+                {inner}
+              </a>
+            ) : (
+              <div>{inner}</div>
+            )}
+          </li>
+        );
+      }),
+    );
+
   return (
-    <div className="fxt-host">
-    <section className="fxt" id="technologies" data-fx="horizontal" aria-labelledby="fxt-title">
+    <section className="fxt" id="technologies" aria-labelledby="fxt-title">
       <div className="fx-container fxt-head">
+        <p className="fx-label fxt-eyebrow">Tools &amp; technologies</p>
         <h2 id="fxt-title" className="fxt-h fx-d1 fx-up" data-fx="reveal-lines">
           {heading}
         </h2>
-        <p className="fx-lead fxt-lead" data-fx="fade-up">
-          What we build with. Chosen for each project — not by habit.
-        </p>
       </div>
 
-      <ul className="fxt-track" data-fx-track aria-label="Technologies">
-        {items.map((t, i) => {
-          const tone = TONES[i % TONES.length];
-          const inner = (
-            <>
-              <span className="fxt-mark" aria-hidden="true">
-                {t.logo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={t.logo} alt="" loading="lazy" />
-                ) : (
-                  <span className="fxt-mono">{mark(t.name)}</span>
-                )}
-              </span>
-              <span className="fxt-name fx-h3">{t.name}</span>
-              {t.category ? <span className="fxt-cat fx-label">{t.category}</span> : null}
-            </>
-          );
-          return (
-            <li key={t.id} className="fxt-tile" data-tone={tone}>
-              {t.url ? (
-                <a href={t.url} target="_blank" rel="noopener noreferrer" aria-label={`${t.name} (opens in a new tab)`}>
-                  {inner}
-                </a>
-              ) : (
-                <div>{inner}</div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      <div className="fxt-marquee" style={{ "--fxt-n": items.length * copies } as React.CSSProperties}>
+        <div className="fxt-belt">
+          <ul className="fxt-lane" aria-label="Technologies">
+            {lane(false)}
+          </ul>
+          {/* the second lane is only the seamless loop: invisible to assistive tech and not focusable */}
+          <ul className="fxt-lane fxt-lane--clone" aria-hidden="true" {...({ inert: true } as object)}>
+            {lane(true)}
+          </ul>
+        </div>
+      </div>
 
       {affiliations.length > 0 && (
         <div className="fx-container fxt-aff">
@@ -111,6 +94,5 @@ export function Technologies({
         </div>
       )}
     </section>
-    </div>
   );
 }

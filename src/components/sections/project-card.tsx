@@ -1,72 +1,53 @@
-import Image from "next/image";
+import type { CSSProperties } from "react";
 import type { ProjectView } from "@/lib/content/server";
+import { ProjectImage } from "./project-image";
+import "./work.css";
 
 /**
- * One portfolio card. The image wrapper carries `data-fx="image-reveal"` (the
- * frame wipes open while the picture counter-scales), the arrow nudges on
- * hover, and when the project has a URL the whole card opens it in a new tab —
- * the raw URL is never displayed. Projects without a cover show a typographic
- * poster instead of a broken image.
+ * One portfolio card. Every card is the same size: a fixed-ratio image box (the whole picture always
+ * fits inside it, see ProjectImage), then category, title, a two-line description and, when the
+ * project has a link, a "View project" affordance. The whole card opens the project in a new tab; the
+ * raw URL is never displayed. Projects without any loadable image get a branded title poster.
  */
-export function ProjectCard({
-  project,
-  index,
-  describe = false,
-  reveal = true,
-}: {
-  project: ProjectView;
-  index: number;
-  describe?: boolean;
-  /** false = no scroll-reveal wrapper (used by the filterable gallery, which re-renders cards). */
-  reveal?: boolean;
-}) {
+export function ProjectCard({ project, index }: { project: ProjectView; index: number }) {
   const body = (
     <>
-      <div className="fxw-media" {...(reveal ? { "data-fx": "image-reveal" } : {})}>
-        <div className="fxw-img">
-          {project.cover ? (
-            <Image
-              src={project.cover}
-              alt={`${project.title} — ${project.category || "project"} by FRX Technologies`}
-              fill
-              sizes="(max-width: 900px) 100vw, 50vw"
-              className="fxw-photo"
-            />
-          ) : (
-            <span className="fxw-poster fx-up" aria-hidden="true">
-              {project.title}
-            </span>
-          )}
-        </div>
+      <div className="fxw-media">
+        <ProjectImage
+          images={project.images}
+          alt={`${project.title}${project.category ? `, ${project.category}` : ""} — project by FRX Technologies`}
+          title={project.title}
+        />
+        <span className="fxw-no fx-tabular" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        {project.url ? (
+          <span className="fxw-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17 17 7M8 7h9v9" />
+            </svg>
+          </span>
+        ) : null}
       </div>
 
       <div className="fxw-meta">
-        <div className="fxw-titles">
-          {project.category ? <p className="fx-label fxw-cat">{project.category}</p> : null}
-          <h3 className="fxw-title fx-d3 fx-up">{project.title}</h3>
-          {describe && project.description ? <p className="fx-body fxw-desc">{project.description}</p> : null}
-          {describe && project.gallery.length > 0 ? (
-            <span className="fxw-thumbs" aria-hidden="true">
-              {project.gallery.slice(0, 3).map((g) => (
-                <Image key={g} src={g} alt="" width={72} height={54} className="fxw-thumb" />
-              ))}
-            </span>
-          ) : null}
-        </div>
+        {project.category ? <p className="fx-label fxw-cat">{project.category}</p> : null}
+        <h3 className="fxw-title">{project.title}</h3>
+        {project.description ? <p className="fxw-desc">{project.description}</p> : null}
         {project.url ? (
-          <span className="fxw-arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M7 17 17 7M8 7h9v9" />
-            </svg>
+          <span className="fxw-go" aria-hidden="true">
+            View project <i>→</i>
           </span>
         ) : null}
       </div>
     </>
   );
 
+  const style = { "--i": Math.min(index, 10) } as CSSProperties;
   return project.url ? (
     <a
       className="fxw-card"
+      style={style}
       href={project.url}
       target="_blank"
       rel="noopener noreferrer"
@@ -75,6 +56,8 @@ export function ProjectCard({
       {body}
     </a>
   ) : (
-    <article className="fxw-card fxw-card--static">{body}</article>
+    <article className="fxw-card fxw-card--static" style={style}>
+      {body}
+    </article>
   );
 }

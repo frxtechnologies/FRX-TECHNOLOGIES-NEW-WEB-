@@ -8,8 +8,10 @@ import { useIntro } from "@/components/providers/intro-provider";
 import type { HeroContent } from "@/lib/content/types";
 import { BlockStack, BotBuddy, LoopArrow, MarkerUnderline, Squiggle, WindowBuddy } from "@/components/art/characters";
 import { PanelChart, PanelCode, PanelToggles } from "@/components/art/scenes";
+import { FxHub } from "@/components/art/hub";
 import "./fx-hero.css";
 import "./fx-hero-extra.css";
+import "./fx-hub.css";
 
 if (typeof window !== "undefined") gsap.registerPlugin(DrawSVGPlugin);
 
@@ -348,6 +350,13 @@ export function FxHero({ content, images }: HeroProps) {
           </div>
 
         </div>
+
+        {/* The large systems illustration: lower-right on desktop, under the copy on smaller screens. */}
+        <span className="fxh-char fxh-hub" aria-hidden="true" data-hide>
+          <span className="fxh-par" data-depth="0.9">
+            <FxHub />
+          </span>
+        </span>
       </div>
     </section>
   );

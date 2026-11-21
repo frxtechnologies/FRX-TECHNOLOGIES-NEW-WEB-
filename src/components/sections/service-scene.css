@@ -1,0 +1,105 @@
+/* The service scene panel + its layers (background shapes, the character / uploaded image, and the
+   interface chips). Extracted UNCHANGED from the previous services section so every graphic looks exactly
+   the same; only the tone selector now sits on the panel itself (data-tone) instead of its old wrapper. */
+
+/* ---- the scene panel (all sizes) ----------------------------------------------- */
+.fxsp-scene {
+  --p-bg: var(--fx-panel-tint, #dce7fc);
+  --p-ink: #0a0a0c;
+  --fxa-ink: #0a0a0c;
+  --fxa-paper: #ffffff;
+  position: relative;
+  aspect-ratio: 5 / 4;
+  border-radius: var(--fx-radius-3);
+  background: var(--p-bg);
+  color: var(--p-ink);
+  overflow: clip;
+  isolation: isolate;
+  transition: background-color 0.6s var(--fx-ease-out);
+}
+.fxsp-scene[data-tone="ink"] {
+  --p-bg: #0b0d12;
+  --p-ink: #f4f2ed;
+  --fxa-ink: #f4f2ed;
+  --fxa-paper: #1a1d25;
+}
+.fxsp-scene[data-tone="blue"] {
+  --p-bg: #045cec;
+  --p-ink: #ffffff;
+  --fxa-ink: #08090c;
+  --fxa-paper: #f4f2ed;
+}
+.fxsp-scene[data-tone="paper"] {
+  --p-bg: #ffffff;
+  --p-ink: #0a0a0c;
+}
+.fxsp-scene-in {
+  position: absolute;
+  inset: 0;
+}
+.fxsp-l {
+  position: absolute;
+  display: block;
+}
+.fxsp-bg-grid {
+  inset: 0;
+  background-image: radial-gradient(currentColor 1.2px, transparent 1.5px);
+  background-size: 22px 22px;
+  opacity: 0.13;
+}
+.fxsp-bg-a {
+  inset-inline-start: 22%;
+  inset-block-start: 10%;
+  inline-size: 58%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--fx-sub);
+  opacity: 0.55;
+}
+.fxsp-bg-b {
+  inset-inline-end: 5%;
+  inset-block-end: 6%;
+  inline-size: 30%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid currentColor;
+  opacity: 0.22;
+}
+.fxsp-l--art {
+  inset: 12% 14% 8%;
+  display: grid;
+  place-items: center;
+}
+.fxsp-art,
+.fxsp-img {
+  block-size: 100%;
+  inline-size: auto;
+  max-inline-size: 100%;
+  object-fit: contain;
+  overflow: visible;
+}
+/* Sticker-style interface chips; the offset shadow carries the palette's secondary accent. */
+.fxsp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.8rem 0.4rem 0.4rem;
+  border: 2.5px solid #0a0a0c;
+  border-radius: 999px;
+  background: #fff;
+  color: #0a0a0c;
+  font: 700 0.78rem/1 var(--fx-font-body);
+  letter-spacing: 0;
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--fx-sub);
+}
+.fxsp-chip-ic {
+  display: grid;
+  place-items: center;
+  inline-size: 1.55rem;
+  block-size: 1.55rem;
+  border-radius: 50%;
+  background: var(--fx-blue);
+  color: #fff;
+}
+

@@ -106,13 +106,10 @@ function FounderEditor({
     }
     setUploading(true);
 
-    // Re-encoded as JPEG regardless of the source format — these are
-    // photographs, not the transparent brand artwork, so there's no
-    // transparency to preserve and JPEG runs a fraction of PNG's size for
-    // this kind of image.
-    const path = `${row.id}-${Date.now()}.jpg`;
     const previousPath = row.image_path;
 
+    // Photos are re-encoded as JPEG (a fraction of PNG's size), but a PNG/WebP is kept as PNG so a
+    // transparent cut-out portrait keeps its transparency instead of being flattened onto a colour.
     let upload: Blob;
     try {
       upload = await resizeImageForUpload(file);
@@ -121,13 +118,15 @@ function FounderEditor({
       setUploading(false);
       return;
     }
+    const isPng = upload.type === "image/png";
+    const path = `${row.id}-${Date.now()}.${isPng ? "png" : "jpg"}`;
 
     const { error: uploadErr } = await supabase.storage
       .from("founders")
       .upload(path, upload, {
         upsert: true,
         cacheControl: "3600",
-        contentType: "image/jpeg",
+        contentType: isPng ? "image/png" : "image/jpeg",
       });
 
     if (uploadErr) {

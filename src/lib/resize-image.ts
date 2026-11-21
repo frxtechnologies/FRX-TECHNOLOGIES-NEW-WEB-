@@ -35,8 +35,11 @@ export async function resizeImageForUpload(
   ctx.drawImage(bitmap, 0, 0, width, height);
   bitmap.close();
 
+  // PNG / WebP / GIF can carry transparency (logos, cut-out portraits). Re-encoding them as JPEG
+  // would flatten that transparency onto a solid colour, so they stay PNG; photos stay JPEG.
+  const keepAlpha = ["image/png", "image/webp", "image/gif"].includes(file.type);
   const blob = await new Promise<Blob | null>((resolve) =>
-    canvas.toBlob(resolve, "image/jpeg", quality),
+    canvas.toBlob(resolve, keepAlpha ? "image/png" : "image/jpeg", quality),
   );
 
   // If canvas encoding fails for any reason, upload the original rather than

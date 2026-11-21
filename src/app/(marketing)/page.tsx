@@ -4,7 +4,9 @@ import { FxHero } from "@/components/home/fx-hero";
 import { FxMarquee } from "@/components/home/fx-marquee";
 import { AboutPreview } from "@/components/sections/about-preview";
 import { SelectedWork } from "@/components/sections/selected-work";
-import { ServicesPinned } from "@/components/sections/services-pinned";
+import { ServicesExplorer } from "@/components/sections/services-explorer";
+import { HowWeBuild } from "@/components/sections/how-we-build";
+import { pairs } from "@/lib/content/parse";
 import { Technologies } from "@/components/sections/technologies";
 import { Testimonials, type TestimonialItem } from "@/components/sections/testimonials";
 import { ReelSection } from "@/components/sections/reel-section";
@@ -99,7 +101,8 @@ export default async function HomePage() {
       />
       <FxMarquee />
       {show("about") && <AboutPreview text={settings.about.preview} />}
-      {show("services") && <ServicesPinned services={services} />}
+      {show("services") && <ServicesExplorer services={services} />}
+      {show("story") && <HowWeBuild items={pairs(settings.about.values)} />}
       {show("technologies") && <Technologies items={techs} affiliations={affiliations} />}
       {show("testimonials") && <Testimonials items={quotes} />}
       {show("work") && <SelectedWork projects={projects} />}

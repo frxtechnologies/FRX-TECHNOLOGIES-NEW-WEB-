@@ -20,7 +20,7 @@ export async function uploadMedia(
 
   const isSvg = file.type === "image/svg+xml";
   const blob = isSvg ? file : await resizeImageForUpload(file, { maxDimension: opts.maxDimension ?? 1800, quality: 0.86 });
-  const ext = isSvg ? "svg" : blob.type === "image/jpeg" ? "jpg" : (file.name.split(".").pop() || "jpg").toLowerCase();
+  const ext = isSvg ? "svg" : blob.type === "image/png" ? "png" : blob.type === "image/jpeg" ? "jpg" : (file.name.split(".").pop() || "jpg").toLowerCase();
   const path = `${folder}/${crypto.randomUUID()}.${ext}`;
 
   const { error } = await supabase.storage.from("media").upload(path, blob, {

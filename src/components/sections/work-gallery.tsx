@@ -3,11 +3,12 @@
 import { useMemo, useState } from "react";
 import type { ProjectView } from "@/lib/content/server";
 import { ProjectCard } from "./project-card";
+import { RevealGrid } from "./reveal-grid";
 
 /**
- * The full portfolio: category filter chips over an asymmetric grid. Filtering
- * is instant and keyboard accessible (the chips are a pressed-state button
- * group). Only published projects are ever passed in.
+ * The full portfolio: category filter chips over the same even grid as the homepage. Filtering is
+ * instant and keyboard accessible (the chips are a pressed-state button group). Only published
+ * projects are ever passed in, and every one of them is shown under "All".
  */
 export function WorkGallery({ projects }: { projects: ProjectView[] }) {
   const cats = useMemo(() => {
@@ -28,11 +29,14 @@ export function WorkGallery({ projects }: { projects: ProjectView[] }) {
           ))}
         </div>
       )}
-      <div className="fxw-grid">
+      <RevealGrid className="fxw-grid">
         {shown.map((p, i) => (
-          <ProjectCard key={p.id} project={p} index={i} describe reveal={false} />
+          <ProjectCard key={p.id} project={p} index={i} />
         ))}
-      </div>
+      </RevealGrid>
+      <p className="fxw-live fx-label" aria-live="polite">
+        Showing {shown.length} of {projects.length} {projects.length === 1 ? "project" : "projects"}
+      </p>
     </div>
   );
 }

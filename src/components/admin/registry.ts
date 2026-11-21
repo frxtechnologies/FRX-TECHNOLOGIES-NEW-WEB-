@@ -170,7 +170,7 @@ export const SETTINGS_PAGES: Record<string, { title: string; intro: string; bloc
             name: "hidden",
             label: "Hide these sections",
             type: "multi",
-            options: ["about|A bit about us", "services|Services", "technologies|Technologies", "testimonials|Testimonials", "work|Selected work", "reel|Instagram reel", "faq|FAQ", "review|Leave a review", "contact|Contact"],
+            options: ["about|A bit about us", "services|Services", "story|How we build", "technologies|Technologies", "testimonials|Testimonials", "work|Selected work", "reel|Instagram reel", "faq|FAQ", "review|Leave a review", "contact|Contact"],
             hint: "Checked = hidden.",
           },
         ],
