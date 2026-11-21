@@ -28,7 +28,28 @@ export function ServicesExplorer({ services }: { services: ExplorerService[] }) 
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const panel = useRef<HTMLDivElement>(null);
   const first = useRef(true);
+  const root = useRef<HTMLElement>(null);
   useArtLife(panel, [active]); // life loops (bobbing, blinking…) only for the scene on screen
+
+  // the blue line draws itself once, the first time the section is on screen (one-shot, not scroll-scrubbed)
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      el.dataset.in = "";
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        el.dataset.in = "";
+        io.disconnect();
+      },
+      { threshold: 0.18 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // keep the chosen pill in view in the swipeable row (phones) — never scrolls the page itself
   useEffect(() => {
@@ -63,18 +84,23 @@ export function ServicesExplorer({ services }: { services: ExplorerService[] }) 
   };
 
   return (
-    <section className="fxse" id="services" aria-labelledby="fxse-title">
+    <section ref={root} className="fxse" id="services" aria-labelledby="fxse-title">
       <div className="fx-container">
         <header className="fxse-head">
           <p className="fx-label fxse-eyebrow">Services</p>
           <h2 id="fxse-title" className="fxse-h fx-d1 fx-up" data-fx="reveal-lines">
-            What we make possible.
+            What we make <span className="fxse-blue">possible.</span>
           </h2>
           <p className="fx-lead fxse-lead">Choose a service to see what it covers.</p>
+          {/* a blue line that draws itself beneath the heading and ends at the selector */}
+          <svg className="fxse-line" viewBox="0 0 1000 44" aria-hidden="true" focusable="false">
+            <path pathLength="1" d="M0 28C150 28 190 8 360 8S640 38 810 22 960 12 1000 22" />
+            <circle cx="1000" cy="22" r="7" />
+          </svg>
         </header>
 
         <div className="fxse-grid">
-          <div className="fxse-tabs" role="tablist" aria-label="Services" onKeyDown={onKey}>
+          <div className="fxse-tabs" role="tablist" aria-label="Services" onKeyDown={onKey} style={{ "--p": (active + 1) / services.length } as React.CSSProperties}>
             {services.map((s, i) => (
               <button
                 key={s.slug}
@@ -90,6 +116,8 @@ export function ServicesExplorer({ services }: { services: ExplorerService[] }) 
                 data-on={active === i}
                 className="fxse-tab"
                 onClick={() => choose(i)}
+                // a mouse press selects immediately (a click can be lost if the page is still gliding); touch uses click
+                onPointerDown={(e) => e.pointerType === "mouse" && choose(i)}
               >
                 <span className="fxse-n fx-tabular">{s.index}</span>
                 <span className="fxse-t">{SERVICE_LABEL[s.slug]}</span>

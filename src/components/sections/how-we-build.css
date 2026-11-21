@@ -1,178 +1,329 @@
-/* HOW WE BUILD — the homepage scroll story. Prefix .fxhb-.
-   Default = a plain, fully visible vertical timeline (phones, tablets, reduced motion).
-   The drawn line / slide-in motion is added by GSAP on desktop only; nothing is pinned. */
+/* HOW WE BUILD — a compact interactive stage. Prefix .fxhb-.
+   Palette: FRX blue, white, charcoal/navy, light grey. No yellow and no palette-accent token in this section.
+   No scroll animation, no pinning; the only motion is a one-shot draw-in of the chosen illustration. */
 
 .fxhb {
+  --hwb-navy: #0b1226;
+  --hwb-navy-2: #101b3a;
+  --hwb-blue: #2f7bf0;
+  /* a cool neutral ground for this section, whatever the theme's warm paper colour is */
+  --hwb-bg: #eef2f8;
   position: relative;
-  background: var(--fx-bg-2);
+  background: var(--hwb-bg);
   color: var(--fx-ink);
-  padding-block: var(--fx-section-y);
+  padding-block: clamp(3rem, 6vw, 5rem);
   overflow-x: clip;
 }
+:root[data-theme="dark"] .fxhb {
+  --hwb-bg: #0c1220;
+}
 .fxhb-head {
-  display: grid;
-  gap: 0.9rem;
-  margin-block-end: clamp(2rem, 5vw, 4rem);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-end: clamp(1.2rem, 3vw, 2rem);
 }
 .fxhb-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.8rem;
+  margin-block-end: 0.6rem;
   color: var(--fx-ink-2);
 }
+.fxhb-tick {
+  display: inline-block;
+  inline-size: 2.4rem;
+  block-size: 3px;
+  background: var(--fx-blue);
+}
 .fxhb-h {
-  font-size: clamp(2.8rem, 0.8rem + 8vw, 8.4rem);
+  font-size: clamp(2.8rem, 1rem + 6vw, 6.4rem);
   line-height: 0.86;
 }
+.fxhb-blue {
+  color: var(--fx-blue);
+}
+.fxhb-count {
+  color: var(--fx-ink-3);
+  font: 600 1rem/1 var(--fx-font-body);
+  letter-spacing: 0.08em;
+}
+.fxhb-count b {
+  color: var(--fx-ink);
+  font-size: 1.7em;
+  font-family: var(--fx-font-display);
+}
 
-/* ---- small screens: left rail, node, card ------------------------------------------------- */
-.fxhb-steps {
-  position: relative;
+.fxhb-stage {
   display: grid;
-  gap: clamp(1.4rem, 4vw, 2.2rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.fxhb-line {
-  display: none;
-}
-.fxhb-steps::before {
-  content: "";
-  position: absolute;
-  inset-block: 0.6rem;
-  inset-inline-start: 1.15rem;
-  inline-size: 3px;
-  border-radius: 2px;
-  background: linear-gradient(var(--fx-blue), var(--fx-sub));
-  opacity: 0.55;
-}
-.fxhb-step {
-  position: relative;
-  display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1fr);
   gap: 1rem;
-  align-items: start;
+  min-inline-size: 0;
 }
-.fxhb-big {
+
+/* ---- selector: a swipeable row of pills on small screens -------------------------------- */
+.fxhb-nav {
+  position: relative;
+  min-inline-size: 0;
+}
+.fxhb-rail {
   display: none;
 }
-.fxhb-node {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  inline-size: 2.4rem;
-  block-size: 2.4rem;
-  border: 2.5px solid var(--fx-ink);
-  border-radius: 50%;
-  background: var(--fx-sub);
-  color: var(--fx-sub-ink);
-  font: 800 0.95rem/1 var(--fx-font-display);
-  box-shadow: 3px 3px 0 var(--fx-blue);
+.fxhb-tabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  margin-inline: calc(var(--fx-gutter, 1.25rem) * -1);
+  padding: 0.3rem var(--fx-gutter, 1.25rem) 0.4rem;
 }
+.fxhb-tabs::-webkit-scrollbar {
+  display: none;
+}
+.fxhb-tab {
+  flex: none;
+  scroll-snap-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-block-size: 2.9rem;
+  padding: 0.55rem 1.05rem 0.55rem 0.8rem;
+  border: 1.5px solid var(--fx-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fx-ink);
+  font: 700 0.92rem/1.1 var(--fx-font-body);
+  white-space: nowrap;
+  text-align: start;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.25s var(--fx-ease-out),
+    color 0.25s var(--fx-ease-out),
+    border-color 0.25s var(--fx-ease-out);
+}
+.fxhb-n {
+  color: var(--fx-blue);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+}
+.fxhb-tab:hover {
+  border-color: var(--fx-ink);
+}
+.fxhb-tab[data-on="true"] {
+  background: var(--hwb-navy);
+  border-color: var(--hwb-navy);
+  color: #fff;
+}
+.fxhb-tab[data-on="true"] .fxhb-n {
+  color: #8fc2ff;
+}
+.fxhb-tab:focus-visible,
+.fxhb-next:focus-visible {
+  outline: 3px solid var(--fx-blue);
+  outline-offset: 2px;
+}
+
+/* ---- the card: blueprint panel + explanation --------------------------------------------- */
 .fxhb-card {
-  padding: 1rem 1.15rem 1.15rem;
+  display: grid;
+  gap: 0;
+  min-inline-size: 0;
   border: 1px solid var(--fx-line);
   border-radius: var(--fx-radius-4, 12px);
   background: var(--fx-surface);
   box-shadow: var(--fx-shadow-sm);
+  overflow: clip;
+}
+.fxhb-art {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background:
+    linear-gradient(rgb(143 194 255 / 0.08) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgb(143 194 255 / 0.08) 1px, transparent 1px) 0 0 / 28px 28px,
+    radial-gradient(120% 90% at 20% 0%, var(--hwb-navy-2), var(--hwb-navy));
+  border-block-end: 1px solid var(--fx-line);
+}
+.fxhb-art::after {
+  /* a blue light edge along the top of the panel */
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 3px;
+  background: linear-gradient(90deg, transparent, var(--hwb-blue), transparent);
+}
+.fxhb-svg {
+  position: absolute;
+  inset: 4% 4%;
+  inline-size: 92%;
+  block-size: 92%;
+  overflow: visible;
+}
+.fxhb-panel {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 0.7rem;
+  padding: clamp(1rem, 2.6vw, 1.8rem);
+}
+.fxhb-panel[hidden] {
+  display: none;
 }
 .fxhb-title {
   font-family: var(--fx-font-display);
   font-weight: 800;
   font-stretch: 75%;
   text-transform: uppercase;
-  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.1rem);
-  line-height: 0.95;
+  font-size: clamp(1.8rem, 1.1rem + 2.4vw, 3rem);
+  line-height: 0.92;
+  text-wrap: balance;
 }
 .fxhb-body {
-  margin-block-start: 0.55rem;
   color: var(--fx-ink-2);
-  font-size: 1rem;
-  line-height: 1.58;
-  max-inline-size: 36rem;
+  font-size: clamp(1rem, 0.95rem + 0.25vw, 1.12rem);
+  line-height: 1.6;
+  max-inline-size: 38rem;
+}
+.fxhb-next {
+  margin-block-start: 0.2rem;
+  padding: 0.7rem 1.1rem;
+  border: 1.5px solid var(--fx-ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--fx-ink);
+  font: 700 0.9rem/1 var(--fx-font-body);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background-color 0.25s var(--fx-ease-out),
+    color 0.25s var(--fx-ease-out);
+}
+.fxhb-next:hover {
+  background: var(--hwb-navy);
+  border-color: var(--hwb-navy);
+  color: #fff;
 }
 
-/* ---- desktop: a centred spine, cards alternating, giant numbers behind --------------------- */
+/* ---- the entrance of an illustration (one-shot; remounted per stage) ---------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .fxhb-pop {
+    animation: fxhb-pop 0.6s var(--fx-ease-out) backwards;
+    animation-delay: var(--d, 0s);
+  }
+  .fxhb-draw {
+    animation: fxhb-draw 1s ease-out backwards;
+    animation-delay: var(--d, 0s);
+  }
+  .fxhb-panel:not([hidden]) {
+    animation: fxhb-fade 0.45s var(--fx-ease-out) both;
+  }
+}
+@keyframes fxhb-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes fxhb-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes fxhb-fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ---- desktop: a vertical selector with a blue progress rail, beside the card -------------- */
 @media (min-width: 1024px) {
-  .fxhb-steps {
-    gap: clamp(2.2rem, 5vw, 4rem);
+  .fxhb-stage {
+    grid-template-columns: minmax(16rem, 21rem) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: stretch;
   }
-  .fxhb-steps::before {
-    display: none;
+  .fxhb-nav {
+    display: grid;
+    grid-template-columns: 4px minmax(0, 1fr);
+    gap: 1rem;
+    align-content: center;
   }
-  .fxhb-line {
+  .fxhb-rail {
     display: block;
+    position: relative;
+    border-radius: 2px;
+    background: var(--fx-line);
+  }
+  .fxhb-rail i {
     position: absolute;
-    inset-block: 0;
-    inset-inline-start: 50%;
-    inline-size: 40px;
-    block-size: 100%;
-    transform: translateX(-50%);
+    inset: 0;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--fx-blue), #8fc2ff);
+    transform-origin: top;
+    transform: scaleY(var(--p, 0.2));
+    transition: transform 0.55s var(--fx-ease-out);
+  }
+  .fxhb-tabs {
+    flex-direction: column;
     overflow: visible;
-    pointer-events: none;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
   }
-  .fxhb-step {
-    grid-template-columns: minmax(0, 1fr) 5rem minmax(0, 1fr);
-    gap: 0;
-    align-items: center;
-    min-block-size: 11rem;
+  .fxhb-tab {
+    justify-content: flex-start;
+    inline-size: 100%;
+    min-block-size: 3.6rem;
+    padding: 0.8rem 1.1rem;
+    border: 1px solid transparent;
+    border-radius: var(--fx-radius-3, 8px);
+    font-size: 1.04rem;
+    white-space: normal;
+    text-wrap: balance;
   }
-  .fxhb-node {
-    grid-column: 2;
-    grid-row: 1;
-    justify-self: center;
-    inline-size: 3.2rem;
-    block-size: 3.2rem;
-    font-size: 1.15rem;
+  .fxhb-t {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+  .fxhb-tab:hover {
+    background: rgb(47 123 240 / 0.08);
+    border-color: rgb(47 123 240 / 0.28);
+  }
+  .fxhb-tab[data-done="true"] .fxhb-n {
+    color: var(--fx-ink-3);
+  }
+  .fxhb-tab[data-on="true"] {
+    box-shadow: 0 14px 30px -18px rgb(4 40 110 / 0.7);
   }
   .fxhb-card {
-    max-inline-size: 31rem;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: stretch;
   }
-  .fxhb-big {
-    display: block;
-    z-index: 0;
-    font-family: var(--fx-font-display);
-    font-weight: 800;
-    font-stretch: 75%;
-    font-size: clamp(7rem, 14vw, 14rem);
-    line-height: 0.8;
-    color: transparent;
-    -webkit-text-stroke: 2px color-mix(in srgb, var(--fx-ink) 22%, transparent);
-    opacity: 1;
-    user-select: none;
-    pointer-events: none;
-    grid-row: 1;
+  .fxhb-art {
+    aspect-ratio: auto;
+    min-block-size: 22rem;
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--fx-line);
   }
-  .fxhb-step[data-side="l"] .fxhb-card {
-    grid-column: 1;
-    grid-row: 1;
-    justify-self: end;
-    text-align: end;
+  .fxhb-panel {
+    align-content: center;
   }
-  .fxhb-step[data-side="l"] .fxhb-body {
-    margin-inline-start: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxhb-rail i,
+  .fxhb-tab,
+  .fxhb-next {
+    transition: none;
   }
-  .fxhb-step[data-side="l"] .fxhb-big {
-    grid-column: 3;
-    justify-self: start;
-    margin-inline-start: 1.5rem;
-  }
-  .fxhb-step[data-side="r"] .fxhb-card {
-    grid-column: 3;
-    grid-row: 1;
-    justify-self: start;
-  }
-  .fxhb-step[data-side="r"] .fxhb-big {
-    grid-column: 1;
-    justify-self: end;
-    margin-inline-end: 1.5rem;
-  }
-  /* the cards and node sit above the line and the big numbers */
-  .fxhb-card,
-  .fxhb-node {
-    position: relative;
-    z-index: 2;
-  }
+}
+
+/* dark mode: a cool navy panel (the palette surface can be a warm brown, which this section must not show) */
+:root[data-theme="dark"] .fxhb-card {
+  background: #0e1526;
+  border-color: color-mix(in srgb, #8fb4ff 22%, transparent);
 }

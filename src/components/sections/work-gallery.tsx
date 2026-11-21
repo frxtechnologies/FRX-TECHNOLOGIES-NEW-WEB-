@@ -29,7 +29,7 @@ export function WorkGallery({ projects }: { projects: ProjectView[] }) {
           ))}
         </div>
       )}
-      <RevealGrid className="fxw-grid">
+      <RevealGrid className="fxw-grid" revealKey={cat}>
         {shown.map((p, i) => (
           <ProjectCard key={p.id} project={p} index={i} />
         ))}

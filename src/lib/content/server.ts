@@ -90,6 +90,8 @@ function logoUrl(path: string | null | undefined): string | null {
 export type ProjectView = Omit<ProjectRow, "cover_path" | "gallery"> & {
   cover: string | null;
   gallery: string[];
+  /** True when this project's cover is shown with its flat background removed (see Settings.media.cutoutProjects). */
+  cutout: boolean;
   /**
    * This project's OWN images in display order: the cover first, then its gallery (no duplicates).
    * The card tries them in order if one fails to load, so a missing cover falls back to the
@@ -115,6 +117,12 @@ const imageExists = cache(async (url: string): Promise<boolean> => {
 export const getProjects = cache(async (): Promise<ProjectView[]> => {
   const rows = (await list<ProjectRow>("projects")) ?? [];
   const published = rows.filter((p) => p.published);
+  const cut = new Set(
+    (await getSettings()).media.cutoutProjects
+      .split(/\r?\n/)
+      .map((x) => x.trim().toLowerCase())
+      .filter(Boolean),
+  );
   return Promise.all(
     published.map(async (p) => {
       const cover = mediaUrl(p.cover_path);
@@ -123,7 +131,11 @@ export const getProjects = cache(async (): Promise<ProjectView[]> => {
         .filter((g): g is string => !!g);
       const wanted = [...new Set([cover, ...gallery].filter((u): u is string => !!u))];
       const ok = await Promise.all(wanted.map((u) => (u.startsWith("/") ? Promise.resolve(true) : imageExists(u))));
-      return { ...p, cover, gallery, images: wanted.filter((_, i) => ok[i]) };
+      const have = wanted.filter((_, i) => ok[i]);
+      // a flagged cover is served through /api/cutout first; if that ever fails, the original follows it
+      const isCut = cut.has(p.title.trim().toLowerCase()) && !!p.cover_path && have[0] === cover && p.cover_path.startsWith("projects/");
+      const images = isCut ? [`/api/cutout?p=${encodeURIComponent(p.cover_path as string)}`, ...have] : have;
+      return { ...p, cover, gallery, cutout: isCut, images };
     }),
   );
 });

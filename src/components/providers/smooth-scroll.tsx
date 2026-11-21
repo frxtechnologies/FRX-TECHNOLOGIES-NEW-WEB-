@@ -31,6 +31,16 @@ export function SmoothScroll() {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
+    // A press must land on what the visitor aimed at. While the page is still easing after a wheel
+    // flick, a control can slide 40px+ out from under the pointer between mouse-down and mouse-up, and
+    // the browser then drops the click ("sometimes buttons don't respond"). So a mouse/pen press halts
+    // the glide on the spot. Touch is left alone: the browser already stops a fling on touch.
+    const onPress = (e: PointerEvent) => {
+      if (e.pointerType === "touch" || !lenis.isScrolling) return;
+      lenis.scrollTo(lenis.animatedScroll, { immediate: true, force: true });
+    };
+    window.addEventListener("pointerdown", onPress, { capture: true, passive: true });
+
     // Keep in-page anchors and the skip link working.
     const onClick = (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement)?.closest?.('a[href^="#"]');
@@ -52,6 +62,7 @@ export function SmoothScroll() {
     window.addEventListener("frx:navigate", onNavigate);
 
     return () => {
+      window.removeEventListener("pointerdown", onPress, { capture: true });
       document.removeEventListener("click", onClick);
       window.removeEventListener("frx:navigate", onNavigate);
       gsap.ticker.remove(tick);

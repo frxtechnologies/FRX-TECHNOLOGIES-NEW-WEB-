@@ -1,127 +1,120 @@
 "use client";
 
-import { useRef } from "react";
-import { gsap, useMotion } from "@/lib/gsap";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
+import { useRef, useState, type KeyboardEvent } from "react";
+import { STAGE_ART } from "./how-we-build-art";
 import "./how-we-build.css";
-
-if (typeof window !== "undefined") gsap.registerPlugin(DrawSVGPlugin);
 
 export type Principle = { title: string; body: string };
 
 /**
- * "How we build." — the homepage's scroll story. It borrows the About page's language (a hand-drawn
- * line that is drawn by the reader's scroll, with a dot riding its tip) and adapts it to a short,
- * unpinned timeline of FRX's own principles (the same text as the About page, editable in admin).
+ * "How we build." — one compact, interactive stage instead of a long timeline.
  *
- * DESKTOP: a wobbling spine is drawn as you scroll past; each principle's node pops and its card slides
- * in from its side, over a giant outlined number that drifts at its own pace (three layers: line,
- * cards, numbers). Nothing is pinned and the page is never lengthened: it is ordinary scrolling.
+ * The visitor picks a principle from a numbered selector (a vertical list with a blue progress rail on
+ * desktop, a swipeable row of pills on phones) and sees a purpose-drawn illustration for it on a navy
+ * blueprint panel, with its explanation underneath. The picture draws itself in each time. The whole
+ * section is roughly one screen tall, uses no scroll animation or pinning, and never loops anything.
  *
- * PHONES / TABLETS / reduced motion: a plain vertical timeline, fully visible, no scroll animation.
+ * The principles are the same editable text as the About page (admin → Pages → About). The five
+ * illustrations map to the five default principles; with more or fewer, they cycle. The text of every
+ * principle is in the page for search engines (inactive panels are only `hidden`); only the active
+ * illustration is rendered. Strictly blue / white / navy: no yellow or palette-accent colour here.
  */
 export function HowWeBuild({ items }: { items: Principle[] }) {
-  const root = useRef<HTMLElement>(null);
-
-  useMotion(
-    {
-      desktop: () => {
-        const el = root.current;
-        if (!el) return;
-        const list = el.querySelector<HTMLElement>(".fxhb-steps");
-        const path = el.querySelector<SVGPathElement>(".fxhb-line path");
-        const dot = el.querySelector<SVGCircleElement>(".fxhb-line circle");
-        if (!list || !path) return;
-
-        // the line, drawn by the reader (scrubbed), with a dot riding its tip
-        gsap.fromTo(
-          path,
-          { drawSVG: "0%" },
-          {
-            drawSVG: "100%",
-            ease: "none",
-            scrollTrigger: {
-              trigger: list,
-              start: "top 65%",
-              end: "bottom 65%",
-              scrub: 0.5,
-              onUpdate: (self) => {
-                if (!dot) return;
-                const len = path.getTotalLength();
-                const pt = path.getPointAtLength(len * self.progress);
-                dot.setAttribute("cx", String(pt.x));
-                dot.setAttribute("cy", String(pt.y));
-              },
-            },
-          },
-        );
-
-        el.querySelectorAll<HTMLElement>(".fxhb-step").forEach((step, i) => {
-          const card = step.querySelector<HTMLElement>(".fxhb-card");
-          const node = step.querySelector<HTMLElement>(".fxhb-node");
-          const big = step.querySelector<HTMLElement>(".fxhb-big");
-          const dir = i % 2 ? 1 : -1;
-
-          // card + node arrive together once, when the step is comfortably in view
-          gsap.set(card, { autoAlpha: 0, x: 46 * dir, y: 14 });
-          gsap.set(node, { scale: 0.4, autoAlpha: 0 });
-          gsap
-            .timeline({ scrollTrigger: { trigger: step, start: "top 80%", toggleActions: "play none none none" } })
-            .to(node, { scale: 1, autoAlpha: 1, duration: 0.55, ease: "back.out(2.2)" }, 0)
-            .to(card, { autoAlpha: 1, x: 0, y: 0, duration: 0.8, ease: "power3.out" }, 0.08);
-
-          // the giant number drifts against the scroll (transform-only, scrubbed)
-          if (big) gsap.fromTo(big, { yPercent: 16 }, { yPercent: -16, ease: "none", scrollTrigger: { trigger: step, start: "top bottom", end: "bottom top", scrub: 0.6 } });
-        });
-      },
-    },
-    root,
-    [items.length],
-  );
-
+  const [active, setActive] = useState(0);
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   if (!items.length) return null;
 
+  const choose = (i: number, focus = false) => {
+    const n = (i + items.length) % items.length;
+    setActive(n);
+    if (focus) tabs.current[n]?.focus();
+    // keep the chosen pill in view in the swipeable row (never scrolls the page itself)
+    const row = tabs.current[n]?.parentElement;
+    const tab = tabs.current[n];
+    if (row && tab && row.scrollWidth > row.clientWidth) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      row.scrollTo({ left: tab.offsetLeft - (row.clientWidth - tab.offsetWidth) / 2, behavior: reduce ? "auto" : "smooth" });
+    }
+  };
+  const onKey = (e: KeyboardEvent) => {
+    const at = tabs.current.indexOf(document.activeElement as HTMLButtonElement);
+    const from = at >= 0 ? at : active;
+    const k = e.key;
+    if (k === "ArrowDown" || k === "ArrowRight") choose(from + 1, true);
+    else if (k === "ArrowUp" || k === "ArrowLeft") choose(from - 1, true);
+    else if (k === "Home") choose(0, true);
+    else if (k === "End") choose(items.length - 1, true);
+    else return;
+    e.preventDefault();
+  };
+
+  const Art = STAGE_ART[active % STAGE_ART.length];
+  const pad = (n: number) => String(n).padStart(2, "0");
+
   return (
-    <section ref={root} className="fxhb" data-glow id="how-we-build" aria-labelledby="fxhb-title">
+    <section className="fxhb" id="how-we-build" aria-labelledby="fxhb-title">
       <div className="fx-container">
         <header className="fxhb-head">
-          <p className="fx-label fxhb-eyebrow">
-            <span className="fxa-tick" aria-hidden="true" />
-            Our principles
+          <div>
+            <p className="fx-label fxhb-eyebrow">
+              <span className="fxhb-tick" aria-hidden="true" />
+              Our principles
+            </p>
+            <h2 id="fxhb-title" className="fxhb-h fx-d1 fx-up" data-fx="reveal-lines">
+              How we <span className="fxhb-blue">build.</span>
+            </h2>
+          </div>
+          <p className="fxhb-count fx-tabular" aria-hidden="true">
+            <b>{pad(active + 1)}</b> / {pad(items.length)}
           </p>
-          <h2 id="fxhb-title" className="fxhb-h fx-d1 fx-up" data-fx="reveal-lines">
-            How we build.
-          </h2>
         </header>
 
-        <ol className="fxhb-steps">
-          <svg className="fxhb-line" viewBox="0 0 40 1000" preserveAspectRatio="none" aria-hidden="true">
-            <path
-              d="M20 0C6 90 34 170 20 260S6 430 20 520 34 690 20 780 6 910 20 1000"
-              fill="none"
-              stroke="var(--fx-blue)"
-              strokeWidth="6"
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-            />
-            <circle r="8" cx="20" cy="0" fill="var(--fx-sub)" stroke="var(--fx-ink)" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
-          </svg>
+        <div className="fxhb-stage">
+          <div className="fxhb-nav" role="tablist" aria-label="How we build">
+            <span className="fxhb-rail" aria-hidden="true">
+              <i style={{ "--p": (active + 1) / items.length } as React.CSSProperties} />
+            </span>
+            <div className="fxhb-tabs" onKeyDown={onKey}>
+              {items.map((p, i) => (
+                <button
+                  key={p.title}
+                  ref={(el) => {
+                    tabs.current[i] = el;
+                  }}
+                  type="button"
+                  role="tab"
+                  id={`fxhb-tab-${i}`}
+                  aria-selected={active === i}
+                  aria-controls={`fxhb-panel-${i}`}
+                  tabIndex={active === i ? 0 : -1}
+                  data-on={active === i}
+                  data-done={i < active}
+                  className="fxhb-tab"
+                  onClick={() => choose(i)}
+                  onPointerDown={(e) => e.pointerType === "mouse" && choose(i)}
+                >
+                  <span className="fxhb-n fx-tabular">{pad(i + 1)}</span>
+                  <span className="fxhb-t">{p.title}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
-          {items.map((p, i) => (
-            <li key={p.title} className="fxhb-step" data-side={i % 2 ? "r" : "l"}>
-              <span className="fxhb-big" aria-hidden="true">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="fxhb-node fx-tabular" aria-hidden="true">
-                {i + 1}
-              </span>
-              <div className="fxhb-card">
+          <div className="fxhb-card">
+            <div className="fxhb-art" aria-hidden={false}>
+              <Art key={active} />
+            </div>
+            {items.map((p, i) => (
+              <div key={p.title} role="tabpanel" id={`fxhb-panel-${i}`} aria-labelledby={`fxhb-tab-${i}`} hidden={active !== i} className="fxhb-panel">
                 <h3 className="fxhb-title">{p.title}</h3>
                 {p.body ? <p className="fxhb-body">{p.body}</p> : null}
+                <button type="button" className="fxhb-next" onClick={() => choose(i + 1)}>
+                  {i === items.length - 1 ? "Start over" : "Next principle"} <span aria-hidden="true">→</span>
+                </button>
               </div>
-            </li>
-          ))}
-        </ol>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

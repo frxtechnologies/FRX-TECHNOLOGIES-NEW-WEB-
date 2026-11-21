@@ -1,5 +1,6 @@
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { MotionReady } from "@/components/providers/motion-ready";
+import { OffscreenPause } from "@/components/providers/offscreen-pause";
 import { Navbar } from "@/components/chrome/navbar";
 import { FxFooter } from "@/components/chrome/fx-footer";
 import { WhatsAppButton } from "@/components/chrome/whatsapp-button";
@@ -38,6 +39,7 @@ export default async function MarketingLayout({ children }: LayoutProps<"/">) {
       <MotionReady />
       <GlowField />
       <SmoothScroll />
+      <OffscreenPause />
       <FrxLoader />
       <PageTransition />
       <CustomCursor />

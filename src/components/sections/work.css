@@ -76,7 +76,7 @@
 .fxw-fg {
   object-fit: scale-down;
   object-position: center;
-  transition: transform 0.7s var(--fx-ease-out);
+  will-change: transform; /* its hover drift is driven by GSAP (see reveal-grid.tsx) */
 }
 /* branded fallback when a project has no loadable image */
 .fxw-poster {
@@ -143,6 +143,10 @@
   overflow: hidden;
 }
 .fxw-title {
+  /* a blue underline that sweeps in under the title on hover */
+  background: linear-gradient(var(--fx-blue), var(--fx-blue)) 0 100% / 0 3px no-repeat;
+  padding-block-end: 0.12em;
+  transition: background-size 0.5s var(--fx-ease-out);
   font-family: var(--fx-font-display);
   font-weight: 800;
   font-stretch: 75%;
@@ -180,8 +184,8 @@
     border-color: var(--fx-blue);
     box-shadow: var(--fx-shadow-lg);
   }
-  a.fxw-card:hover .fxw-fg {
-    transform: scale(1.04);
+  a.fxw-card:hover .fxw-title {
+    background-size: 100% 3px;
   }
   a.fxw-card:hover .fxw-arrow {
     background: var(--fx-blue);
@@ -197,19 +201,9 @@ a.fxw-card:focus-visible .fxw-arrow {
   color: #fff;
 }
 
-/* ---- entrance: when the grid scrolls into view (one-shot, not scroll-scrubbed) ---------- */
+/* ---- entrance: held (invisible) only between "armed" and the moment GSAP plays it (see reveal-grid.tsx) ---- */
 .fxw-grid[data-armed]:not([data-in]) .fxw-card {
   opacity: 0;
-}
-.fxw-grid[data-in] .fxw-card {
-  animation: fxw-in 0.7s var(--fx-ease-out) backwards;
-  animation-delay: calc(var(--i, 0) * 70ms);
-}
-@keyframes fxw-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.985);
-  }
 }
 @media (prefers-reduced-motion: reduce) {
   .fxw-grid .fxw-card {
@@ -254,4 +248,18 @@ a.fxw-card:focus-visible .fxw-arrow {
 .fxw-live {
   margin-block-start: 1.4rem;
   color: var(--fx-ink-3);
+}
+
+/* ---- cut-out covers: an isolated logo / graphic stands on a soft blue stage instead of a photo-like backdrop ---- */
+.fxw-card[data-cut] .fxw-media {
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--fx-blue) 16%, var(--fx-surface)), color-mix(in srgb, var(--fx-blue) 4%, var(--fx-surface)));
+}
+.fxw-card[data-cut] .fxw-back {
+  opacity: 0.28;
+}
+.fxw-card[data-cut] .fxw-fg {
+  box-sizing: border-box;
+  padding: 7%;
+  filter: drop-shadow(0 12px 16px rgb(4 40 110 / 0.28));
 }

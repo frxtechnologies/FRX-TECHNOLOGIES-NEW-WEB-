@@ -1384,10 +1384,12 @@
 .fxo-word:nth-child(2) {
   color: var(--fx-blue-bright);
 }
+/* SCALE shares BUILD's white (no yellow here); only its full stop picks up the FRX blue, tying the three words together */
 .fxo-word:nth-child(3) .fxo-l {
-  color: transparent;
-  -webkit-text-stroke: 0;
-  color: var(--fx-sub);
+  color: #f4f2ed;
+}
+.fxo-word:nth-child(3) .fxo-l:last-child {
+  color: var(--fx-blue-bright);
 }
 .fxo-logoRow {
   display: flex;
@@ -1414,4 +1416,107 @@
    the darkened "text on a light ground" variant. */
 .fxo {
   --fx-sub-text: var(--fx-sub);
+}
+
+/* ---- the "watch the reel" cue: sits BELOW the phone frame so it never covers the video ------------------ */
+.fxreel-stage {
+  margin-block-end: 4.4rem; /* room for the cue, reserved up front so nothing shifts when it appears */
+}
+.fxreel-cue {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* clicks go straight through to Instagram's player */
+  z-index: 3;
+}
+/* a thin blue outline that gently breathes around the frame (transform + opacity only) */
+.fxreel-cue-ring {
+  position: absolute;
+  inset: -0.55rem;
+  border: 2px solid var(--fx-blue);
+  border-radius: 2.7rem;
+  opacity: 0;
+  animation: fxreel-ring 3s ease-out infinite;
+}
+.fxreel-cue-pill {
+  position: absolute;
+  inset-block-end: -3.9rem;
+  inset-inline-start: 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.1rem 0.55rem 0.55rem;
+  border-radius: 999px;
+  background: var(--fx-blue);
+  color: #fff;
+  font: 700 0.92rem/1 var(--fx-font-body);
+  white-space: nowrap;
+  box-shadow: 0 12px 26px -10px rgb(4 92 236 / 0.75);
+  transform: translateX(-50%);
+  animation: fxreel-bob 3.2s ease-in-out infinite;
+}
+.fxreel-cue-pill i {
+  position: relative;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  border-radius: 50%;
+  background: #fff;
+}
+.fxreel-cue-pill i::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-35%, -50%);
+  border-inline-start: 0.62rem solid var(--fx-blue);
+  border-block: 0.4rem solid transparent;
+}
+/* a hand-drawn arrow from the pill up toward the frame */
+.fxreel-cue-arrow {
+  position: absolute;
+  inset-block-end: -3.6rem;
+  inset-inline-start: calc(50% + 5.6rem);
+  inline-size: 2.6rem;
+  block-size: auto;
+  overflow: visible;
+  fill: none;
+  stroke: var(--fx-blue);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@keyframes fxreel-ring {
+  0% {
+    opacity: 0.65;
+    transform: scale(0.985);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+@keyframes fxreel-bob {
+  50% {
+    transform: translateX(-50%) translateY(-5px);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .fxreel-stage:hover .fxreel-cue-ring {
+    animation-play-state: paused;
+    opacity: 0.85;
+    transform: scale(1.025);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxreel-cue-ring {
+    animation: none;
+    opacity: 0.4;
+  }
+  .fxreel-cue-pill {
+    animation: none;
+  }
+}
+@media (max-width: 860px) {
+  .fxreel-stage {
+    margin-block-end: 4.6rem;
+  }
 }

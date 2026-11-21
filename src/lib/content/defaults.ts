@@ -21,6 +21,8 @@ export const DEFAULT_SETTINGS: Settings = {
     reelUrl: "https://www.instagram.com/reel/DfwXDBzOfos/",
     reelHeading: "See us in motion.",
     reelText: "A short reel from the FRX Technologies Instagram.",
+    // isolated logos on a plain background; screenshots, posters and gradient photos must NOT be listed
+    cutoutProjects: ["Enerxo", "Event Style & Decor", "Flowly"].join("\n"),
   },
   contact: {
     email: "frx.technologies@gmail.com",

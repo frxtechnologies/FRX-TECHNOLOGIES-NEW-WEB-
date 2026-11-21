@@ -24,11 +24,13 @@ export function Technologies({
 }) {
   if (!items.length) return null;
 
-  // enough repeats that a single lane is always wider than a wide desktop (about 14 items ≈ one 1920px screen)
-  const copies = Math.max(1, Math.ceil(26 / items.length));
-  const lane = (hidden: boolean) =>
+  // two rows, dealt alternately so both stay balanced as technologies are added
+  const rowA = items.filter((_, i) => i % 2 === 0);
+  const rowB = items.filter((_, i) => i % 2 === 1);
+
+  const lane = (list: TechnologyView[], copies: number, hidden: boolean) =>
     Array.from({ length: copies }).flatMap((_, c) =>
-      items.map((t) => {
+      list.map((t) => {
         const inner = (
           <>
             <span className="fxt-plate">
@@ -54,6 +56,25 @@ export function Technologies({
       }),
     );
 
+  /** One self-moving row: two identical lanes (the second is only the seamless loop). */
+  const row = (list: TechnologyView[], dir: "left" | "right", label: string) => {
+    if (!list.length) return null;
+    // enough repeats that one lane is always wider than a wide desktop (about 8 tiles ≈ one 1920px screen)
+    const copies = Math.max(1, Math.ceil(12 / list.length));
+    return (
+      <div className="fxt-marquee" data-dir={dir} style={{ "--fxt-n": list.length * copies } as React.CSSProperties}>
+        <div className="fxt-belt">
+          <ul className="fxt-lane" aria-label={label}>
+            {lane(list, copies, false)}
+          </ul>
+          <ul className="fxt-lane fxt-lane--clone" aria-hidden="true" {...({ inert: true } as object)}>
+            {lane(list, copies, true)}
+          </ul>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className="fxt" id="technologies" aria-labelledby="fxt-title">
       <div className="fx-container fxt-head">
@@ -63,16 +84,9 @@ export function Technologies({
         </h2>
       </div>
 
-      <div className="fxt-marquee" style={{ "--fxt-n": items.length * copies } as React.CSSProperties}>
-        <div className="fxt-belt">
-          <ul className="fxt-lane" aria-label="Technologies">
-            {lane(false)}
-          </ul>
-          {/* the second lane is only the seamless loop: invisible to assistive tech and not focusable */}
-          <ul className="fxt-lane fxt-lane--clone" aria-hidden="true" {...({ inert: true } as object)}>
-            {lane(true)}
-          </ul>
-        </div>
+      <div className="fxt-rows">
+        {row(rowA, "left", "Technologies, first row")}
+        {row(rowB, "right", "Technologies, second row")}
       </div>
 
       {affiliations.length > 0 && (

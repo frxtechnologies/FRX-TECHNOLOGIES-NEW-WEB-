@@ -3,10 +3,25 @@
 
 .fxse {
   position: relative;
-  background: var(--fx-bg);
+  /* not a flat white page: a soft FRX-blue wash that deepens toward the panel, over a faint blueprint grid */
+  background: linear-gradient(180deg, var(--fx-bg) 0%, color-mix(in srgb, var(--fx-blue) 8%, var(--fx-bg)) 100%);
   color: var(--fx-ink);
   padding-block: var(--fx-section-y);
   overflow-x: clip;
+  isolation: isolate;
+}
+.fxse::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(4 92 236 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(4 92 236 / 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
 }
 .fxse-head {
   display: grid;
@@ -14,7 +29,63 @@
   margin-block-end: clamp(1.5rem, 4vw, 3rem);
 }
 .fxse-eyebrow {
-  color: var(--fx-sub-text);
+  color: var(--fx-blue);
+}
+.fxse-blue {
+  color: var(--fx-blue);
+}
+
+/* the line that draws itself (one-shot, when the section first scrolls into view) */
+.fxse-line {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  max-block-size: 3.4rem;
+  margin-block-start: 0.4rem;
+  overflow: visible;
+}
+.fxse-line path {
+  fill: none;
+  stroke: var(--fx-blue);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.fxse-line circle {
+  fill: var(--fx-blue);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.fxse[data-in] .fxse-line path {
+  animation: fxse-draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.1s forwards;
+}
+.fxse[data-in] .fxse-line circle {
+  animation: fxse-dot 0.5s var(--fx-ease-spring) 1.5s forwards;
+}
+@keyframes fxse-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes fxse-dot {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxse-line path {
+    stroke-dashoffset: 0;
+  }
+  .fxse-line circle {
+    opacity: 1;
+  }
 }
 .fxse-h {
   font-size: clamp(2.8rem, 0.8rem + 8vw, 8.4rem);
@@ -61,6 +132,8 @@
   font: 700 0.92rem/1.1 var(--fx-font-body);
   white-space: nowrap;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition:
     background-color 0.25s var(--fx-ease-out),
     color 0.25s var(--fx-ease-out),
@@ -68,7 +141,7 @@
     transform 0.35s var(--fx-ease-spring);
 }
 .fxse-n {
-  color: var(--fx-sub-text);
+  color: var(--fx-blue);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
 }
@@ -84,7 +157,7 @@
   color: var(--fx-bg);
 }
 .fxse-tab[data-on="true"] .fxse-n {
-  color: var(--fx-sub);
+  color: #8fc2ff;
 }
 .fxse-tab:focus-visible {
   outline: 3px solid var(--fx-sub);
@@ -99,10 +172,11 @@
   display: grid;
   gap: clamp(1.1rem, 3vw, 2.2rem);
   padding: clamp(0.9rem, 2.2vw, 1.7rem);
-  border: 1px solid var(--fx-line);
+  border: 1px solid color-mix(in srgb, var(--fx-blue) 22%, var(--fx-line));
+  border-block-start: 4px solid var(--fx-blue);
   border-radius: var(--fx-radius-4, 12px);
-  background: var(--fx-surface);
-  box-shadow: var(--fx-shadow-sm);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--fx-blue) 5%, var(--fx-surface)), var(--fx-surface) 60%);
+  box-shadow: 0 26px 50px -32px rgb(4 60 160 / 0.45);
 }
 .fxse-panel[hidden] {
   display: none;
@@ -118,7 +192,7 @@
   min-inline-size: 0;
 }
 .fxse-kicker {
-  color: var(--fx-sub-text);
+  color: var(--fx-blue);
 }
 .fxse-title {
   font-family: var(--fx-font-display);
@@ -162,8 +236,8 @@
   inset-block-start: 0.38em;
   inline-size: 0.8rem;
   block-size: 0.45rem;
-  border-inline-start: 2.5px solid var(--fx-sub-text);
-  border-block-end: 2.5px solid var(--fx-sub-text);
+  border-inline-start: 2.5px solid var(--fx-blue);
+  border-block-end: 2.5px solid var(--fx-blue);
   transform: rotate(-45deg);
 }
 .fxse-foot {
@@ -223,6 +297,28 @@
     position: sticky;
     inset-block-start: calc(var(--nav-h-compact, 3.5rem) + 1.5rem);
   }
+  /* a blue progress stroke beside the list that grows to the chosen service */
+  .fxse-tabs::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -14px;
+    inline-size: 4px;
+    border-radius: 2px;
+    background: var(--fx-line);
+  }
+  .fxse-tabs::after {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: -14px;
+    inline-size: 4px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--fx-blue), #8fc2ff);
+    transform-origin: top;
+    transform: scaleY(var(--p, 0.1));
+    transition: transform 0.55s var(--fx-ease-out);
+  }
   .fxse-tab {
     position: relative;
     justify-content: flex-start;
@@ -264,7 +360,7 @@
     box-shadow: var(--fx-shadow-sm);
   }
   .fxse-tab[data-on="true"] .fxse-n {
-    color: var(--fx-sub-text);
+    color: var(--fx-blue);
   }
   .fxse-tab[data-on="true"] .fxse-arr {
     opacity: 1;

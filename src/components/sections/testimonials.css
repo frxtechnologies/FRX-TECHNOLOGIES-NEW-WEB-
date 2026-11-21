@@ -37,7 +37,7 @@
   color: var(--fx-ink);
   font-size: 1.3rem;
   cursor: pointer;
-  box-shadow: 3px 3px 0 var(--fx-sub);
+  box-shadow: 3px 3px 0 var(--fx-line-strong);
   transition:
     transform var(--fx-dur-base) var(--fx-ease-spring),
     background-color var(--fx-dur-fast);
@@ -106,7 +106,7 @@
   border-radius: var(--fx-radius-4);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  box-shadow: 8px 8px 0 var(--fx-sub);
+  box-shadow: 8px 8px 0 var(--fx-line-strong);
 }
 .fxq-front {
   background: var(--fx-surface);
@@ -127,15 +127,15 @@
 }
 .fxq-card[data-pos="1"] .fxq-front,
 .fxq-card[data-pos="2"] .fxq-front {
-  background: var(--fx-panel-tint);
+  background: var(--fx-bg-2);
 }
 .fxq-quote-mark {
   font: 800 6rem/0.6 var(--fx-font-display);
-  color: var(--fx-sub-text);
+  color: var(--fx-ink-3);
   block-size: 2.4rem;
 }
 .fxq-stars {
-  color: var(--fx-sub-text);
+  color: var(--fxq-orange, #f08a24);
   letter-spacing: 0.25em;
   font-size: 1.2rem;
 }
@@ -165,7 +165,7 @@
   border-radius: 50%;
   overflow: hidden;
   background: var(--fx-blue-deep);
-  box-shadow: 5px 5px 0 var(--fx-sub);
+  box-shadow: 5px 5px 0 var(--fx-line-strong);
   font: 800 2.6rem/1 var(--fx-font-display);
 }
 .fxq-avatar img {
@@ -216,11 +216,11 @@
   padding: 1.1rem 1.4rem;
   border-style: solid;
   border-color: var(--fx-ink);
-  box-shadow: 6px 6px 0 var(--fx-sub);
+  box-shadow: 6px 6px 0 var(--fx-line-strong);
 }
 .fxq-ghost--a b {
   font: 800 3.4rem/0.5 var(--fx-font-display);
-  color: var(--fx-sub-text);
+  color: var(--fx-ink-3);
   block-size: 1.6rem;
 }
 .fxq-ghost--a i {
@@ -254,4 +254,32 @@
   .fxq-flip {
     transition: none;
   }
+}
+
+/* ===== a very small, restrained orange: a supporting detail, never a new brand colour ===== */
+.fxq {
+  --fxq-orange: #f08a24;
+}
+/* a small bookmark tab on the front of each card */
+.fxq-front::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -2.5px;
+  inset-inline-start: clamp(1.4rem, 3vw, 2.6rem);
+  inline-size: 2.2rem;
+  block-size: 6px;
+  border-radius: 0 0 4px 4px;
+  background: var(--fxq-orange);
+}
+/* a tiny dot before the "Turn the card over" hint and on the turn-over cue */
+.fxq-hint::before,
+.fxq-front .fxq-turn::before {
+  content: "";
+  display: inline-block;
+  inline-size: 0.42rem;
+  block-size: 0.42rem;
+  margin-inline-end: 0.5rem;
+  border-radius: 50%;
+  background: var(--fxq-orange);
+  vertical-align: 0.12em;
 }

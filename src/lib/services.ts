@@ -13,6 +13,7 @@ export type ServiceSlug =
 export type ServiceArt =
   | "blocks"
   | "bot"
+  | "automation"
   | "window"
   | "phone"
   | "laptop"
@@ -54,7 +55,7 @@ export const SERVICES: Service[] = [
     summary:
       "Intelligent systems that automate repetitive processes, move information between platforms and trigger the next action without anyone remembering to do it.",
     scene: "automation",
-    art: "bot",
+    art: "automation",
     useCases: [
           "Route new enquiries to the right person and log them automatically.",
           "Keep two systems in sync without anyone re-typing data.",

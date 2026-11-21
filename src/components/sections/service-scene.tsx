@@ -12,9 +12,9 @@ const CHIPS: Record<ServiceSlug, { label: string; glyph: Glyph; x: number; y: nu
     { label: "Database", glyph: "db", x: 58, y: 78 },
   ],
   "ai-automation": [
-    { label: "Trigger", glyph: "bolt", x: 4, y: 16 },
-    { label: "Workflow", glyph: "flow", x: 64, y: 10 },
-    { label: "Done", glyph: "check", x: 52, y: 80 },
+    { label: "Trigger", glyph: "bolt", x: 2, y: 3 },
+    { label: "Workflow", glyph: "flow", x: 62, y: 3 },
+    { label: "Done", glyph: "check", x: 50, y: 86 },
   ],
   "web-development": [
     { label: "Responsive", glyph: "layers", x: 2, y: 14 },

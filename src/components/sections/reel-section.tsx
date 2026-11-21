@@ -41,7 +41,20 @@ export function ReelSection({
 }) {
   const host = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"idle" | "loading" | "ready" | "failed">("idle");
+  const [engaged, setEngaged] = useState(false); // the visitor has pressed play inside Instagram's own player
   const link = permalink(url);
+
+  // The player is a cross-origin iframe, so its clicks are invisible to us — but when the visitor presses
+  // inside it, the page loses focus to that iframe. That is our signal to retire the "watch the reel" cue.
+  useEffect(() => {
+    const onBlur = () =>
+      window.setTimeout(() => {
+        const a = document.activeElement;
+        if (a?.tagName === "IFRAME" && host.current?.contains(a)) setEngaged(true);
+      }, 0);
+    window.addEventListener("blur", onBlur);
+    return () => window.removeEventListener("blur", onBlur);
+  }, []);
 
   useEffect(() => {
     const el = host.current;
@@ -118,6 +131,20 @@ export function ReelSection({
         </div>
 
         <div className="fxreel-stage" data-state={state}>
+          {/* a cue below the frame (never over the video): invites the press; hidden once the reel is playing */}
+          {state === "ready" && !engaged && (
+            <div className="fxreel-cue" aria-hidden="true">
+              <span className="fxreel-cue-ring" />
+              <svg className="fxreel-cue-arrow" viewBox="0 0 80 64" focusable="false">
+                <path d="M62 60C74 40 70 18 40 6" />
+                <path d="M30 2l12 4-8 11" />
+              </svg>
+              <span className="fxreel-cue-pill">
+                <i />
+                Watch the reel
+              </span>
+            </div>
+          )}
           <div className="fxreel-frame" ref={host}>
             <blockquote
               className="instagram-media"

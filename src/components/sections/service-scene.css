@@ -103,3 +103,19 @@
   color: #fff;
 }
 
+
+/* data dots travelling along the AI Automation pipes (dash offset only; off for reduced motion) */
+.fxsp-scene .fxa-flow {
+  stroke-dasharray: 0.1 12;
+  animation: fxa-flow 1.6s linear infinite;
+}
+@keyframes fxa-flow {
+  to {
+    stroke-dashoffset: -12.1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fxsp-scene .fxa-flow {
+    animation: none;
+  }
+}

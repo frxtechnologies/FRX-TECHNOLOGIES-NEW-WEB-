@@ -218,3 +218,86 @@ export function PanelToggles({ className, style }: ArtProps) {
     </svg>
   );
 }
+
+/**
+ * AI AUTOMATION & INTEGRATION — an input → agent → output pipeline.
+ * Three everyday business apps (inbox, CRM table, chat) feed a chip-bodied AI agent through pipes; the agent
+ * (face, antenna, a slowly turning gear) hands finished, checked-off tasks out the other side. Same house
+ * style as the other service scenes: ink outlines, the shared blue gradients, tone-aware ink/paper, a face.
+ * Motion is minimal: data dots travel along the pipes (dash offset), the gear turns, the eyes track.
+ */
+export function AutomationBuddy({ className, style }: ArtProps) {
+  const pipe = (d: string, k: string) => (
+    <g key={k} fill="none" strokeLinecap="round">
+      <path d={d} stroke={INK} strokeWidth="11" />
+      <path d={d} stroke="url(#fxa-blue-lit)" strokeWidth="6" />
+      <path d={d} className="fxa-flow" stroke="#fff" strokeWidth="3" />
+    </g>
+  );
+  return (
+    <svg viewBox="0 0 340 260" className={className} style={style} role="img" aria-label="Illustration: apps feeding an AI agent that hands back finished tasks">
+      <ellipse cx="170" cy="250" rx="140" ry="8" fill={INK} opacity="0.16" />
+
+      {/* pipes first, so the tiles and the agent sit on top of their ends */}
+      {pipe("M74 66C96 66 98 104 124 108", "i1")}
+      {pipe("M74 130C100 130 104 128 124 128", "i2")}
+      {pipe("M74 194C96 194 98 152 124 148", "i3")}
+      {pipe("M216 108C242 104 242 66 268 66", "o1")}
+      {pipe("M216 128C240 128 244 130 268 130", "o2")}
+      {pipe("M216 148C242 152 244 194 268 194", "o3")}
+
+      {/* INPUT APPS */}
+      <g stroke={INK} strokeWidth="5" strokeLinejoin="round" strokeLinecap="round">
+        <rect x="16" y="38" width="58" height="56" rx="14" fill={PAPER} />
+        <path d="M28 56h34v22H28z" fill="url(#fxa-blue-lit)" />
+        <path d="M28 57l17 13 17-13" fill="none" />
+        <rect x="16" y="102" width="58" height="56" rx="14" fill={PAPER} />
+        <path d="M28 114h34v32H28z" fill="#fff" strokeWidth="3.5" />
+        <path d="M28 125h34M28 136h34M45 114v32" fill="none" strokeWidth="3.5" />
+        <rect x="16" y="166" width="58" height="56" rx="14" fill={PAPER} />
+        <path d="M27 180h36v22H49l-9 9v-9h-13z" fill="url(#fxa-blue)" />
+        <path d="M35 190h20" fill="none" stroke="#fff" strokeWidth="3.5" />
+      </g>
+
+      {/* THE AGENT: a chip body with pins, an antenna, a face and a gear */}
+      <g className="fxa-bob">
+        <g stroke={INK} strokeWidth="4" strokeLinecap="round">
+          {[86, 108, 130, 152, 174].map((y) => (
+            <path key={`l${y}`} d={`M114 ${y}h-9M226 ${y}h9`} />
+          ))}
+          {[142, 170, 198].map((x) => (
+            <path key={`t${x}`} d={`M${x} 62v-8M${x} 198v8`} />
+          ))}
+        </g>
+        <path d="M170 56V36" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+        <circle className="fxa-ping" data-origin="170 32" cx="170" cy="32" r="8" fill="url(#fxa-blue-lit)" stroke={INK} strokeWidth="4.5" />
+        <rect x="114" y="62" width="112" height="136" rx="24" fill="url(#fxa-blue)" stroke={INK} strokeWidth="5.5" />
+        <rect x="126" y="76" width="88" height="68" rx="16" fill={PAPER} stroke={INK} strokeWidth="4.5" />
+        <Face cx={170} cy={104} gap={36} r={11} smile={11} />
+        <g stroke={INK} strokeWidth="3.5" strokeLinecap="round">
+          <rect x="128" y="156" width="40" height="26" rx="8" fill="#fff" />
+          <path d="M136 169h24" fill="none" stroke="#045cec" strokeWidth="5" />
+          <circle cx="198" cy="169" r="14" fill="url(#fxa-blue-deep)" />
+        </g>
+        <g className="fxa-cog" data-origin="198 169">
+          <path d="M198 160v18M189 169h18M191.6 162.6l12.800 12.800M204.4 162.6l-12.800 12.800" stroke="#fff" strokeWidth="3" strokeLinecap="round" fill="none" />
+        </g>
+      </g>
+
+      {/* OUTPUT: finished tasks */}
+      <g stroke={INK} strokeWidth="5" strokeLinejoin="round" strokeLinecap="round">
+        <rect x="266" y="38" width="58" height="56" rx="14" fill={PAPER} />
+        <circle cx="284" cy="56" r="9" fill="url(#fxa-blue)" strokeWidth="3.5" />
+        <path d="M279.500 56l3.500 3.500 6-7" fill="none" stroke="#fff" strokeWidth="3.5" />
+        <path d="M298 52h14M298 62h10M278 78h34" fill="none" strokeWidth="3.5" opacity="0.55" />
+        <rect x="266" y="102" width="58" height="56" rx="14" fill={PAPER} />
+        <circle cx="284" cy="120" r="9" fill="url(#fxa-blue)" strokeWidth="3.5" />
+        <path d="M279.500 120l3.500 3.500 6-7" fill="none" stroke="#fff" strokeWidth="3.5" />
+        <path d="M298 116h14M298 126h10M278 142h34" fill="none" strokeWidth="3.5" opacity="0.55" />
+        <rect x="266" y="166" width="58" height="56" rx="14" fill={PAPER} />
+        <path d="M278 208V196M290 208V186M302 208V178M314 208V190" fill="none" stroke="url(#fxa-blue)" strokeWidth="7" />
+        <path d="M278 186l12-9 12-4 12-8" fill="none" strokeWidth="3.5" />
+      </g>
+    </svg>
+  );
+}

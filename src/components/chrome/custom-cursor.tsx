@@ -18,7 +18,8 @@ import { useEffect, useRef, useState } from "react";
  *  · hover state comes from `pointerover`, which fires only when the element
  *    under the pointer actually changes, and the scale is a CSS transition
  *
- * Net effect: one style write per frame while moving, and zero work while still.
+ * Net effect: one style write per frame while moving, and zero work while still. The dot is hidden whenever the
+ * pointer leaves the window, the window loses focus or the tab is hidden.
  */
 export function CustomCursor() {
   const [enabled, setEnabled] = useState(false);
@@ -49,28 +50,13 @@ export function CustomCursor() {
 
     document.body.classList.add("has-custom-cursor");
 
-    let x = -100;
-    let y = -100;
-    let frame = 0;
-    let dirty = false;
-
-    const render = () => {
-      frame = 0;
-      if (!dirty) return;
-      dirty = false;
-      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-    };
-
-    const schedule = () => {
-      dirty = true;
-      // Coalesce every move that lands within the same frame into one write.
-      if (!frame) frame = requestAnimationFrame(render);
-    };
-
+    // Chrome delivers pointermove once per frame, just before rendering, so writing the transform right here
+    // lands in that same frame. (An extra requestAnimationFrame hop would add a frame of delay for nothing.)
+    // The last coalesced sample is used, i.e. the newest position the browser has.
     const onMove = (e: PointerEvent) => {
-      x = e.clientX;
-      y = e.clientY;
-      schedule();
+      const list = e.getCoalescedEvents?.();
+      const last = list && list.length ? list[list.length - 1] : e;
+      el.style.transform = `translate3d(${last.clientX}px, ${last.clientY}px, 0)`;
       if (!el.dataset.visible) el.dataset.visible = "1";
     };
 
@@ -90,13 +76,14 @@ export function CustomCursor() {
     window.addEventListener("pointerover", onOver, { passive: true });
     document.addEventListener("pointerleave", hide);
     window.addEventListener("blur", hide);
+    document.addEventListener("visibilitychange", hide);
 
     return () => {
+      document.removeEventListener("visibilitychange", hide);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerover", onOver);
       document.removeEventListener("pointerleave", hide);
       window.removeEventListener("blur", hide);
-      if (frame) cancelAnimationFrame(frame);
       document.body.classList.remove("has-custom-cursor");
     };
   }, [enabled]);

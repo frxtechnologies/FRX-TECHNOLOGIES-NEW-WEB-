@@ -1,48 +1,75 @@
 /**
- * "The FRX systems hub" — the large hero illustration. Original artwork, pure SVG (no raster, so no
+ * The FRX "layers" illustration — the large hero graphic. Original artwork, pure SVG (no raster, so no
  * rectangular background and it stays sharp at any size).
  *
- * What it says: custom software, AI automation and connected business systems. A lit isometric platform
- * carries a glowing core cube marked with the FRX "X"; around it float a code window, an AI chat bubble
- * with a bot avatar, a live dashboard, a workflow, a database and a turning gear, joined to the core by
- * lines along which little data packets travel.
- *
- * Depth comes from three things: stacked slabs with a lit top and two shaded faces, a soft glow and
- * contact shadow under the platform, and each floating piece casting its own offset "sticker" shadow in
- * the palette's secondary accent (so it follows every theme). Motion is transform/dash-offset only, lives
- * in fx-hub.css and is switched off for reduced-motion visitors.
+ * The idea is the architecture of a product, not a diagram of buzzwords: three isometric tiers, each
+ * lit a little brighter than the one below —
+ *   · INFRASTRUCTURE (base)   data and servers, on an engineered grid
+ *   · INTELLIGENCE   (middle) the AI core, a ring of logic and circuit traces running to the edges
+ *   · INTERFACE      (top)    what people actually use: a product window and a live chart
+ * Thin light beams join the tiers at their corners. Nothing orbits and nothing revolves: the composition
+ * is stable, and its only motion is a very slow glow "breathing" on the AI core (opacity only, off for
+ * reduced motion). Theme-aware parts (the status dot) use the palette's accent token.
  */
 const INK = "#0a0a0c";
 
+/** One isometric slab: a lit top, two shaded sides. Returns the three faces as paths. */
+function Slab({ cx, cy, hw, hh, t, top, left, right }: { cx: number; cy: number; hw: number; hh: number; t: number; top: string; left: string; right: string }) {
+  const sw = { stroke: INK, strokeWidth: 3, strokeLinejoin: "round" } as const;
+  return (
+    <g>
+      <path d={`M${cx - hw} ${cy}L${cx} ${cy + hh}v${t}L${cx - hw} ${cy + t}z`} fill={left} {...sw} />
+      <path d={`M${cx} ${cy + hh}L${cx + hw} ${cy}v${t}L${cx} ${cy + hh + t}z`} fill={right} {...sw} />
+      <path d={`M${cx} ${cy - hh}L${cx + hw} ${cy}L${cx} ${cy + hh}L${cx - hw} ${cy}z`} fill={top} {...sw} />
+      {/* a crisp light rim along the two upper edges */}
+      <path d={`M${cx - hw + 3} ${cy - 1}L${cx - 1} ${cy - hh + 2}L${cx + hw - 3} ${cy - 1}`} fill="none" stroke="#fff" strokeOpacity="0.55" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </g>
+  );
+}
+
+/** A thin vertical light beam joining two tiers. */
+function Beam({ x, y1, y2 }: { x: number; y1: number; y2: number }) {
+  return (
+    <g>
+      <rect x={x - 3} y={y1} width="6" height={y2 - y1} rx="3" fill="url(#hub-beam)" />
+      <circle cx={x} cy={y1} r="5" fill="#fff" stroke="#2f7bf0" strokeWidth="2.5" />
+      <circle cx={x} cy={y2} r="5" fill="#fff" stroke="#2f7bf0" strokeWidth="2.5" />
+    </g>
+  );
+}
+
 export function FxHub({ className = "" }: { className?: string }) {
-  const sw = { stroke: INK, strokeWidth: 3, strokeLinejoin: "round", strokeLinecap: "round" } as const;
   return (
     <svg viewBox="0 0 640 520" className={`fxhub ${className}`} role="presentation" focusable="false" aria-hidden="true">
       <defs>
-        <radialGradient id="hub-glow" cx="320" cy="300" r="300" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#4aa3ff" stopOpacity="0.55" />
-          <stop offset="0.5" stopColor="#045cec" stopOpacity="0.18" />
+        <radialGradient id="hub-glow" cx="320" cy="270" r="300" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#4aa3ff" stopOpacity="0.5" />
+          <stop offset="0.55" stopColor="#045cec" stopOpacity="0.14" />
           <stop offset="1" stopColor="#045cec" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="hub-top" x1="70" y1="225" x2="570" y2="475" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#58a6ff" />
-          <stop offset="0.55" stopColor="#1b72f5" />
-          <stop offset="1" stopColor="#0a4fd0" />
+        <linearGradient id="hub-top-1" x1="200" y1="145" x2="440" y2="267" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#a8d1ff" />
+          <stop offset="1" stopColor="#4a97f8" />
         </linearGradient>
-        <linearGradient id="hub-core-top" x1="258" y1="238" x2="382" y2="300" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#ffffff" />
-          <stop offset="1" stopColor="#cfe3ff" />
+        <linearGradient id="hub-top-2" x1="140" y1="202" x2="500" y2="382" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#6fb0ff" />
+          <stop offset="1" stopColor="#1b66ec" />
         </linearGradient>
-        <linearGradient id="hub-core-l" x1="258" y1="269" x2="320" y2="362" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#e9f2ff" />
-          <stop offset="1" stopColor="#9cc4ff" />
+        <linearGradient id="hub-top-3" x1="80" y1="260" x2="560" y2="500" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#3f86f2" />
+          <stop offset="1" stopColor="#0b45b8" />
         </linearGradient>
-        <linearGradient id="hub-core-r" x1="320" y1="300" x2="382" y2="331" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#6fa8ff" />
-          <stop offset="1" stopColor="#2f7bf0" />
+        <linearGradient id="hub-beam" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fff" stopOpacity="0.95" />
+          <stop offset="1" stopColor="#7ab4ff" stopOpacity="0.55" />
         </linearGradient>
+        <radialGradient id="hub-core" cx="320" cy="292" r="64" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.95" />
+          <stop offset="0.45" stopColor="#bfe0ff" stopOpacity="0.6" />
+          <stop offset="1" stopColor="#4aa3ff" stopOpacity="0" />
+        </radialGradient>
         <filter id="hub-blur" x="-30%" y="-60%" width="160%" height="220%">
-          <feGaussianBlur stdDeviation="9" />
+          <feGaussianBlur stdDeviation="10" />
         </filter>
         <filter id="hub-blur-s" x="-30%" y="-60%" width="160%" height="220%">
           <feGaussianBlur stdDeviation="5" />
@@ -50,153 +77,91 @@ export function FxHub({ className = "" }: { className?: string }) {
       </defs>
 
       {/* atmosphere + contact shadow */}
-      <ellipse cx="320" cy="300" rx="310" ry="250" fill="url(#hub-glow)" />
-      <ellipse cx="322" cy="500" rx="236" ry="26" fill={INK} opacity="0.2" filter="url(#hub-blur)" />
+      <ellipse cx="320" cy="275" rx="310" ry="250" fill="url(#hub-glow)" />
+      <ellipse cx="322" cy="506" rx="236" ry="20" fill={INK} opacity="0.2" filter="url(#hub-blur)" />
 
-      {/* the platform: two shaded side faces and a lit top */}
-      <g className="fxhub-platform">
-        <path d="M70 350 320 475v34L70 384z" fill="#0338a3" {...sw} />
-        <path d="M320 475 570 350v34L320 509z" fill="#0a4fd0" {...sw} />
-        <path d="M320 225 570 350 320 475 70 350z" fill="url(#hub-top)" {...sw} />
-        {/* faint isometric grid on the lit face */}
-        <g stroke="#fff" strokeOpacity="0.2" strokeWidth="1.5" fill="none">
-          <path d="M120 325 370 450M170 300 420 425M220 275 470 400M270 250 520 375" />
-          <path d="M370 250 120 375M420 275 170 400M470 300 220 425M520 325 270 450" />
-        </g>
-        {/* a specular edge along the top-left rim */}
-        <path d="M74 346 318 228" stroke="#fff" strokeOpacity="0.55" strokeWidth="2.5" strokeLinecap="round" fill="none" />
-        {/* circuit traces running out of the core */}
-        <g fill="none" stroke="var(--fx-sub)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M320 350 260 380 200 380 160 360" opacity="0.9" />
-          <path d="M320 350 380 380 440 380 480 360" opacity="0.9" />
-          <path d="M320 350 360 330 430 330" opacity="0.9" />
-          <path d="M320 350 280 330 220 330" opacity="0.9" />
-        </g>
-        <g fill="var(--fx-sub)" stroke={INK} strokeWidth="2.4">
-          <circle cx="160" cy="360" r="5.5" />
-          <circle cx="480" cy="360" r="5.5" />
-          <circle cx="430" cy="330" r="5.5" />
-          <circle cx="220" cy="330" r="5.5" />
-        </g>
+      {/* ============ BASE TIER — infrastructure ============ */}
+      <Slab cx={320} cy={380} hw={240} hh={120} t={20} top="url(#hub-top-3)" left="#08317f" right="#0a3da0" />
+      <g stroke="#fff" strokeOpacity="0.16" strokeWidth="1.5" fill="none">
+        <path d="M110 350 380 485M170 320 440 455M230 290 500 425M290 270 560 405" />
+        <path d="M530 350 260 485M470 320 200 455M410 290 140 425M350 270 80 405" />
+      </g>
+      {/* servers: two small racks and a data store on the base tier */}
+      <g stroke={INK} strokeWidth="2.5" strokeLinejoin="round">
+        <path d="M118 398l24 12v22l-24-12z" fill="#0a3da0" />
+        <path d="M142 410l24-12v22l-24 12z" fill="#2f7bf0" />
+        <path d="M118 398l24-12 24 12-24 12z" fill="#9ccaff" />
+        <path d="M122 408l16 8M122 417l16 8" stroke="#fff" strokeOpacity="0.75" strokeLinecap="round" />
+        <path d="M474 398l24 12v22l-24-12z" fill="#0a3da0" />
+        <path d="M498 410l24-12v22l-24 12z" fill="#2f7bf0" />
+        <path d="M474 398l24-12 24 12-24 12z" fill="#9ccaff" />
+        <path d="M478 408l16 8M478 417l16 8" stroke="#fff" strokeOpacity="0.75" strokeLinecap="round" />
+        <path d="M296 452v14c0 6 10 11 24 11s24-5 24-11v-14" fill="#2f7bf0" />
+        <ellipse cx="320" cy="452" rx="24" ry="11" fill="#9ccaff" />
+        <path d="M296 462c0 6 10 11 24 11s24-5 24-11" fill="none" />
       </g>
 
-      {/* glow where the core sits on the platform */}
-      <ellipse cx="320" cy="352" rx="78" ry="38" fill="var(--fx-sub)" opacity="0.5" filter="url(#hub-blur-s)" />
+      {/* beams: base ← intelligence */}
+      <Beam x={140} y1={310} y2={380} />
+      <Beam x={500} y1={310} y2={380} />
+      <Beam x={320} y1={400} y2={470} />
 
-      {/* connectors: thin line + travelling packets */}
-      <g fill="none" strokeLinecap="round">
-        {[
-          "M125 172C170 200 220 240 262 262",
-          "M470 150C440 190 405 230 378 262",
-          "M470 254C440 272 410 286 386 294",
-          "M158 300C195 300 226 300 260 300",
-        ].map((d) => (
-          <g key={d}>
-            <path d={d} stroke={INK} strokeOpacity="0.28" strokeWidth="2" />
-            <path d={d} className="fxhub-flow" stroke="var(--fx-sub)" strokeWidth="5.5" />
-          </g>
-        ))}
+      {/* ============ MIDDLE TIER — the AI core ============ */}
+      <ellipse cx="320" cy="304" rx="170" ry="84" fill={INK} opacity="0.2" filter="url(#hub-blur-s)" />
+      <Slab cx={320} cy={292} hw={180} hh={90} t={18} top="url(#hub-top-2)" left="#0a3da0" right="#1456d2" />
+      <g stroke="#fff" strokeOpacity="0.18" strokeWidth="1.5" fill="none">
+        <path d="M176 270 392 378M212 252 428 360M248 234 464 342" />
+        <path d="M464 270 248 378M428 252 212 360M392 234 176 342" />
       </g>
+      {/* circuit traces running out of the core to the edges */}
+      <g fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.92">
+        <path d="M320 292 262 322 214 322 186 308" />
+        <path d="M320 292 378 322 426 322 454 308" />
+        <path d="M320 292 266 264 224 264" />
+        <path d="M320 292 374 264 416 264" />
+      </g>
+      <g fill="#fff" stroke={INK} strokeWidth="2.4">
+        <circle cx="186" cy="308" r="5" />
+        <circle cx="454" cy="308" r="5" />
+        <circle cx="224" cy="264" r="5" />
+        <circle cx="416" cy="264" r="5" />
+      </g>
+      {/* the core: a glowing ring, a raised chip, and the FRX mark */}
+      <ellipse className="fxhub-core" cx="320" cy="292" rx="76" ry="38" fill="url(#hub-core)" />
+      <ellipse cx="320" cy="292" rx="52" ry="26" fill="none" stroke="#fff" strokeOpacity="0.9" strokeWidth="3" />
+      <path d="M320 268l34 17v18l-34 17-34-17v-18z" fill="#eaf4ff" stroke={INK} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M286 285l34 17 34-17M320 302v18" fill="none" stroke={INK} strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" />
+      <path d="M320 268l34 17-34 17-34-17z" fill="#fff" stroke={INK} strokeWidth="3" strokeLinejoin="round" />
+      <path d="M309 280l22 10M331 280l-22 10" stroke="#045cec" strokeWidth="4.5" strokeLinecap="round" />
 
-      {/* the core cube */}
-      <g className="fxhub-core fxhub-float fxhub-float--core">
-        <path d="M258 269 320 300v62l-62-31z" fill="url(#hub-core-l)" {...sw} />
-        <path d="M320 300 382 269v62l-62 31z" fill="url(#hub-core-r)" {...sw} />
-        <path d="M320 238 382 269 320 300 258 269z" fill="url(#hub-core-top)" {...sw} />
-        {/* the FRX "X" on the left face */}
-        <g transform="matrix(1 .5 0 1 258 269)" fill="none" stroke={INK} strokeWidth="7" strokeLinecap="round">
-          <path d="M16 16 46 46M46 16 16 46" />
+      {/* beams: intelligence ← interface */}
+      <Beam x={198} y1={222} y2={292} />
+      <Beam x={442} y1={222} y2={292} />
+      <Beam x={320} y1={283} y2={353} />
+
+      {/* ============ TOP TIER — the interface ============ */}
+      <ellipse cx="320" cy="216" rx="116" ry="56" fill={INK} opacity="0.22" filter="url(#hub-blur-s)" />
+      <Slab cx={320} cy={206} hw={122} hh={61} t={16} top="url(#hub-top-1)" left="#1456d2" right="#2f7bf0" />
+      {/* a product window standing on the top tier */}
+      <g>
+        <rect x="262" y="104" width="124" height="94" rx="13" fill="#fff" stroke={INK} strokeWidth="3.5" />
+        <path d="M262 117a13 13 0 0 1 13-13h98a13 13 0 0 1 13 13v13H262z" fill="#045cec" stroke={INK} strokeWidth="3.5" strokeLinejoin="round" />
+        <circle cx="278" cy="117" r="3.5" fill="#fff" />
+        <circle cx="290" cy="117" r="3.5" fill="#fff" fillOpacity="0.8" />
+        <circle cx="302" cy="117" r="3.5" fill="#fff" fillOpacity="0.6" />
+        <g strokeLinecap="round" strokeWidth="5">
+          <path d="M276 146h40" stroke="#045cec" />
+          <path d="M322 146h40" stroke={INK} strokeOpacity="0.28" />
+          <path d="M276 160h58" stroke={INK} strokeOpacity="0.28" />
         </g>
-        {/* three interface lines on the right face */}
-        <g transform="matrix(1 -.5 0 1 320 300)" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" opacity="0.9">
-          <path d="M12 18h38M12 31h26M12 44h34" />
+        <g stroke={INK} strokeWidth="2.5" strokeLinejoin="round">
+          <rect x="342" y="162" width="11" height="22" rx="3" fill="#8fc2ff" />
+          <rect x="357" y="152" width="11" height="32" rx="3" fill="#2f7bf0" />
+          <rect x="372" y="142" width="11" height="42" rx="3" fill="#045cec" />
         </g>
-        {/* the power dot on the top face */}
-        <ellipse cx="320" cy="269" rx="15" ry="7.5" fill="var(--fx-sub)" stroke={INK} strokeWidth="2.6" />
-      </g>
-
-      {/* ---- floating pieces ---- */}
-      {/* code window */}
-      <g className="fxhub-float fxhub-float--a" transform="translate(52 100)">
-        <rect x="6" y="7" width="140" height="96" rx="13" fill="var(--fx-sub)" stroke={INK} strokeWidth="3" />
-        <rect x="0" y="0" width="140" height="96" rx="13" fill="#fff" {...sw} />
-        <path d="M0 26h140" stroke={INK} strokeWidth="3" />
-        <path d="M0 13Q0 0 13 0h114q13 0 13 13v13H0z" fill="#045cec" />
-        <path d="M0 26h140" stroke={INK} strokeWidth="3" />
-        <circle cx="16" cy="13" r="4" fill="#fff" />
-        <circle cx="30" cy="13" r="4" fill="#fff" />
-        <circle cx="44" cy="13" r="4" fill="#fff" />
-        <g strokeWidth="5" strokeLinecap="round" fill="none">
-          <path d="M16 44h34" stroke="#045cec" />
-          <path d="M58 44h40" stroke={INK} strokeOpacity="0.3" />
-          <path d="M28 59h46" stroke={INK} strokeOpacity="0.3" />
-          <path d="M82 59h30" stroke="#045cec" />
-          <path d="M16 74h24" stroke={INK} strokeOpacity="0.3" />
-          <path d="M48 74h44" stroke="var(--fx-sub)" />
-        </g>
-      </g>
-
-      {/* AI chat bubble with a bot avatar */}
-      <g className="fxhub-float fxhub-float--b" transform="translate(432 54)">
-        <path d="M8 9h150a22 22 0 0 1 22 22v36a22 22 0 0 1-22 22H62l-26 22V89H8A22 22 0 0 1-14 67V31A22 22 0 0 1 8 9z" fill="var(--fx-sub)" stroke={INK} strokeWidth="3" transform="translate(8 8)" />
-        <path d="M8 0h150a22 22 0 0 1 22 22v36a22 22 0 0 1-22 22H62L36 102V80H8A22 22 0 0 1-14 58V22A22 22 0 0 1 8 0z" fill="#fff" {...sw} transform="translate(0 0)" />
-        <circle cx="26" cy="38" r="17" fill="#045cec" {...sw} />
-        <circle cx="20" cy="36" r="3.6" fill="#fff" />
-        <circle cx="32" cy="36" r="3.6" fill="#fff" />
-        <path d="M20 44q6 4 12 0" stroke="#fff" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-        <g className="fxhub-dots" fill="#045cec">
-          <circle cx="76" cy="38" r="6" />
-          <circle cx="98" cy="38" r="6" />
-          <circle cx="120" cy="38" r="6" />
-        </g>
-      </g>
-
-      {/* live dashboard */}
-      <g className="fxhub-float fxhub-float--c" transform="translate(470 196)">
-        <rect x="6" y="7" width="120" height="92" rx="13" fill="var(--fx-sub)" stroke={INK} strokeWidth="3" />
-        <rect x="0" y="0" width="120" height="92" rx="13" fill="#fff" {...sw} />
-        <g {...sw} strokeWidth="2.6">
-          <rect className="fxhub-bar" x="18" y="52" width="18" height="28" rx="3" fill="#8fb9ff" />
-          <rect className="fxhub-bar fxhub-bar--2" x="44" y="38" width="18" height="42" rx="3" fill="#2f7bf0" />
-          <rect className="fxhub-bar fxhub-bar--3" x="70" y="24" width="18" height="56" rx="3" fill="#045cec" />
-        </g>
-        <path d="M16 36 48 22l26-10 30-5" stroke={INK} strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="104" cy="7" r="5" fill="var(--fx-sub)" stroke={INK} strokeWidth="2.4" />
-      </g>
-
-      {/* workflow */}
-      <g className="fxhub-float fxhub-float--d" transform="translate(20 258)">
-        <path d="M30 42h44M104 42h40" stroke={INK} strokeWidth="3.4" strokeLinecap="round" strokeDasharray="1 9" fill="none" className="fxhub-flow" />
-        <circle cx="18" cy="42" r="17" fill="#fff" {...sw} />
-        <path d="M11 42h14M19 35v14" stroke="#045cec" strokeWidth="4" strokeLinecap="round" />
-        <rect x="76" y="24" width="36" height="36" rx="9" fill="#045cec" {...sw} />
-        <path d="M86 42h16M94 34v16" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" opacity="0" />
-        <path d="M86 43l6 6 11-13" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-        <circle cx="146" cy="42" r="17" fill="var(--fx-sub)" {...sw} />
-        <path d="M139 42h14M146 35v14" stroke={INK} strokeWidth="4" strokeLinecap="round" />
-      </g>
-
-      {/* database, standing on the platform */}
-      <g className="fxhub-float fxhub-float--e" transform="translate(448 322)">
-        <ellipse cx="30" cy="62" rx="30" ry="9" fill={INK} opacity="0.22" filter="url(#hub-blur-s)" />
-        <path d="M0 14v38c0 7.5 13.4 13.5 30 13.5S60 59.500 60 52V14" fill="#2f7bf0" {...sw} />
-        <path d="M0 33c0 7.500 13.400 13.500 30 13.500S60 40.500 60 33" fill="none" stroke={INK} strokeWidth="3" />
-        <ellipse cx="30" cy="14" rx="30" ry="12" fill="#8fb9ff" {...sw} />
-        <ellipse cx="22" cy="12" rx="9" ry="3.5" fill="#fff" opacity="0.7" />
-      </g>
-
-      {/* the turning gear */}
-      <g transform="translate(120 360)">
-        <ellipse cx="0" cy="26" rx="36" ry="9" fill={INK} opacity="0.22" filter="url(#hub-blur-s)" />
-        <g className="fxhub-gear">
-          <path
-            d="M-8-34h16l3 9a26 26 0 0 1 8 4.500l9-3 8 14-7 6a26 26 0 0 1 0 9.200l7 6-8 14-9-3a26 26 0 0 1-8 4.600l-3 9h-16l-3-9a26 26 0 0 1-8-4.600l-9 3-8-14 7-6a26 26 0 0 1 0-9.200l-7-6 8-14 9 3a26 26 0 0 1 8-4.500z"
-            transform="translate(0 -2) scale(.9)"
-            fill="var(--fx-sub)"
-            {...sw}
-          />
-          <circle cx="0" cy="-2" r="10" fill="#fff" {...sw} />
-        </g>
+        <path d="M276 180h54" stroke={INK} strokeOpacity="0.28" strokeWidth="5" strokeLinecap="round" />
+        {/* a single accent detail that follows the active palette */}
+        <circle cx="371" cy="117" r="4.5" fill="var(--fx-sub)" stroke={INK} strokeWidth="1.8" />
       </g>
     </svg>
   );

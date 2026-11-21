@@ -191,6 +191,22 @@ export const SETTINGS_PAGES: Record<string, { title: string; intro: string; bloc
           { name: "reelText", label: "Short text", type: "textarea", rows: 2, max: 240 },
         ],
       },
+      {
+        key: "media",
+        title: "Project cover cut-outs",
+        intro: "Projects whose cover is an isolated logo or product graphic on a plain background can have that background removed on the website. The stored original is never touched.",
+        defaults: { ...d.media },
+        fields: [
+          {
+            name: "cutoutProjects",
+            label: "Project titles (one per line)",
+            type: "textarea",
+            rows: 4,
+            max: 600,
+            hint: "Use this only for plain-background logos or product graphics. Do NOT list website screenshots, designed posters or photos with gradient backgrounds: if the background is not flat or the cut would damage the artwork, the original is shown unchanged. Match the project title exactly (capitals do not matter). Saving this block also saves the reel fields above, so keep them filled.",
+          },
+        ],
+      },
     ],
   },
   about: {

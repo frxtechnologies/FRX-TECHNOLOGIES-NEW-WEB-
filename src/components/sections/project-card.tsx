@@ -44,9 +44,11 @@ export function ProjectCard({ project, index }: { project: ProjectView; index: n
   );
 
   const style = { "--i": Math.min(index, 10) } as CSSProperties;
+  const cut = project.cutout ? { "data-cut": "" } : {};
   return project.url ? (
     <a
       className="fxw-card"
+      {...cut}
       style={style}
       href={project.url}
       target="_blank"
@@ -56,7 +58,7 @@ export function ProjectCard({ project, index }: { project: ProjectView; index: n
       {body}
     </a>
   ) : (
-    <article className="fxw-card fxw-card--static" style={style}>
+    <article className="fxw-card fxw-card--static" {...cut} style={style}>
       {body}
     </article>
   );

@@ -21,6 +21,7 @@ export function ProjectImage({ images, alt, title }: { images: string[]; alt: st
   const [i, setI] = useState(0);
   const fg = useRef<HTMLImageElement>(null);
   const src = images[i];
+  const direct = !!src?.startsWith("/api/"); // /api/cutout output: already processed and cached
 
   // An image can fail BEFORE React hydrates, in which case onError never fires. Check once mounted.
   useEffect(() => {
@@ -39,7 +40,7 @@ export function ProjectImage({ images, alt, title }: { images: string[]; alt: st
   return (
     <>
       {/* decorative: only the main picture reports a failure, otherwise one broken file would skip two images */}
-      <Image src={src} alt="" fill sizes={SIZES} quality={80} className="fxw-back" aria-hidden="true" />
+      <Image src={src} alt="" fill sizes={SIZES} quality={80} unoptimized={direct} className="fxw-back" aria-hidden="true" />
       <Image
         ref={fg}
         key={src}
@@ -48,6 +49,7 @@ export function ProjectImage({ images, alt, title }: { images: string[]; alt: st
         fill
         sizes={SIZES}
         quality={80}
+        unoptimized={direct}
         className="fxw-fg"
         onError={() => setI((n) => n + 1)}
       />

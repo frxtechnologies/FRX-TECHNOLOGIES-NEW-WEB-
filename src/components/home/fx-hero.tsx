@@ -28,6 +28,32 @@ function Slot({ src, fallback }: { src: string | null; fallback: React.ReactNode
 }
 
 /**
+ * The supporting headline, split into words so each can rise through its own mask (see the hero timeline).
+ * The words stay real inline text (spaces included), so it reads normally to screen readers and with
+ * JavaScript off. One key word (the admin's wording is respected: "systems" if present, otherwise the longest)
+ * gets a blue underline that draws in once the words have landed.
+ */
+function RevealHeadline({ text }: { text: string }) {
+  const words = text.split(" ").filter(Boolean);
+  const bare = (w: string) => w.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+  let key = words.findIndex((w) => bare(w) === "systems");
+  if (key < 0) key = words.reduce((best, w, i) => (bare(w).length > bare(words[best]).length ? i : best), 0);
+  return (
+    <>
+      {words.map((w, i) => (
+        <Fragment key={i}>
+          <span className="fxh-w">
+            <span className="fxh-w-in">{w}</span>
+            {i === key ? <span className="fxh-w-ul" aria-hidden="true" /> : null}
+          </span>
+          {i < words.length - 1 ? " " : null}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
+/**
  * Copy markup used by the admin-editable description: lines become paragraphs and
  * **double-asterisk** phrases become highlighted marks that are revealed by motion.
  */
@@ -103,7 +129,9 @@ export function FxHero({ content, images }: HeroProps) {
             { drawSVG: "100%", duration: 0.95, ease: "power2.inOut", stagger: 0.12 },
             0.75,
           )
-          .from(q(".fxh-sub"), { opacity: 0, y: 22, duration: 0.9 }, 0.7)
+          // the supporting headline: each word rises through its own mask, then a blue underline draws
+          .fromTo(q(".fxh-w-in"), { yPercent: 115 }, { yPercent: 0, duration: 0.85, ease: "expo.out", stagger: 0.07 }, 0.62)
+          .fromTo(q(".fxh-w-ul"), { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.inOut" }, 1.3)
           .from(q(".fxh-p"), { opacity: 0, y: 18, duration: 0.8, stagger: 0.1 }, 0.85)
           // highlighted phrases are "underlined" in one after another
           .to(q(".fxh-mark"), { backgroundSize: "100% 100%", duration: 0.7, ease: "power2.inOut", stagger: 0.16 }, 1.3)
@@ -335,7 +363,9 @@ export function FxHero({ content, images }: HeroProps) {
                 <Slot src={images.bot} fallback={<BotBuddy className="fxh-art fxh-float" />} />
               </span>
             </span>
-            <h2 className="fxh-sub fx-h2 fx-up">{content.supportingHeadline}</h2>
+            <h2 className="fxh-sub fx-h2 fx-up">
+              <RevealHeadline text={content.supportingHeadline} />
+            </h2>
             <div className="fxh-body">
               <Copy text={content.description} />
             </div>

@@ -59,6 +59,8 @@ export type MediaContent = {
   reelUrl: string;
   reelHeading: string;
   reelText: string;
+  /** Project titles (one per line) whose cover has its flat background removed — isolated logos / product graphics only. */
+  cutoutProjects: string;
 };
 
 export type Settings = {
